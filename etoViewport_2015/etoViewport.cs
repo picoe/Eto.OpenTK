@@ -446,7 +446,7 @@ namespace etoViewport_2015
                 if (WorldToScreen(new SizeF(spacing, 0.0f)).Width >= 4.0f)
                 {
                     int k = 0;
-                    for (float i = 0; i > ovpSettings.bounds.Left; i -= spacing)
+                    for (float i = 0; i > -(Width + ovpSettings.cameraPosition.X) * ovpSettings.zoomFactor; i -= spacing)
                     {
                         float r = 0.0f;
                         float g = 0.0f;
@@ -465,13 +465,13 @@ namespace etoViewport_2015
                             k = 0;
                         }
                         k++;
-                        grid.Add(new Vector3(i, ovpSettings.bounds.Top, gridZ));
+                        grid.Add(new Vector3(i, ovpSettings.zoomFactor * Height, gridZ));
                         gridColors.Add(new Vector3(r, g, b));
-                        grid.Add(new Vector3(i, -ovpSettings.bounds.Top, gridZ));
+                        grid.Add(new Vector3(i, ovpSettings.zoomFactor * -Height, gridZ));
                         gridColors.Add(new Vector3(r, g, b));
                     }
                     k = 0;
-                    for (float i = 0; i < -ovpSettings.bounds.Left; i += spacing)
+                    for (float i = 0; i < (Width + ovpSettings.cameraPosition.X) * ovpSettings.zoomFactor; i += spacing)
                     {
                         float r = 0.0f;
                         float g = 0.0f;
@@ -490,13 +490,13 @@ namespace etoViewport_2015
                             k = 0;
                         }
                         k++;
-                        grid.Add(new Vector3(i, ovpSettings.bounds.Top, gridZ));
+                        grid.Add(new Vector3(i, ovpSettings.zoomFactor * Height, gridZ));
                         gridColors.Add(new Vector3(r, g, b));
-                        grid.Add(new Vector3(i, -ovpSettings.bounds.Top, gridZ));
+                        grid.Add(new Vector3(i, ovpSettings.zoomFactor * -Height, gridZ));
                         gridColors.Add(new Vector3(r, g, b));
                     }
                     k = 0;
-                    for (float i = 0; i > ovpSettings.bounds.Top; i -= spacing)
+                    for (float i = 0; i > -(Height + ovpSettings.cameraPosition.Y) * ovpSettings.zoomFactor; i -= spacing)
                     {
                         float r = 0.0f;
                         float g = 0.0f;
@@ -515,13 +515,13 @@ namespace etoViewport_2015
                             k = 0;
                         }
                         k++;
-                        grid.Add(new Vector3(ovpSettings.bounds.Left, i, gridZ));
+                        grid.Add(new Vector3(ovpSettings.zoomFactor * Width, i, gridZ));
                         gridColors.Add(new Vector3(r, g, b));
-                        grid.Add(new Vector3(-ovpSettings.bounds.Left, i, gridZ));
+                        grid.Add(new Vector3(ovpSettings.zoomFactor * -Width, i, gridZ));
                         gridColors.Add(new Vector3(r, g, b));
                     }
                     k = 0;
-                    for (float i = 0; i < -ovpSettings.bounds.Top; i += spacing)
+                    for (float i = 0; i < (Height + ovpSettings.cameraPosition.Y) * ovpSettings.zoomFactor; i += spacing)
                     {
                         float r = 0.0f;
                         float g = 0.0f;
@@ -540,9 +540,9 @@ namespace etoViewport_2015
                             k = 0;
                         }
                         k++;
-                        grid.Add(new Vector3(ovpSettings.bounds.Left, i, gridZ));
+                        grid.Add(new Vector3(ovpSettings.zoomFactor * Width, i, gridZ));
                         gridColors.Add(new Vector3(r, g, b));
-                        grid.Add(new Vector3(-ovpSettings.bounds.Left, i, gridZ));
+                        grid.Add(new Vector3(ovpSettings.zoomFactor * -Width, i, gridZ));
                         gridColors.Add(new Vector3(r, g, b));
                     }
                     gridArray = grid.ToArray();
@@ -561,10 +561,10 @@ namespace etoViewport_2015
                 {
                     axesColorArray[i] = new Vector3(ovpSettings.axisColor.R, ovpSettings.axisColor.G, ovpSettings.axisColor.B);
                 }
-                axesArray[0] = new Vector3(0.0f, ovpSettings.bounds.Top, axisZ);
-                axesArray[1] = new Vector3(0.0f, -ovpSettings.bounds.Top, axisZ);
-                axesArray[2] = new Vector3(ovpSettings.bounds.Left, 0.0f, axisZ);
-                axesArray[3] = new Vector3(-ovpSettings.bounds.Left, 0.0f, axisZ);
+                axesArray[0] = new Vector3(0.0f, Height * ovpSettings.zoomFactor, axisZ);
+                axesArray[1] = new Vector3(0.0f, -Height * ovpSettings.zoomFactor, axisZ);
+                axesArray[2] = new Vector3(Width * ovpSettings.zoomFactor, 0.0f, axisZ);
+                axesArray[3] = new Vector3(-Width * ovpSettings.zoomFactor, 0.0f, axisZ);
             }
         }
     }
