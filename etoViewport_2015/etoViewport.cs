@@ -400,6 +400,7 @@ namespace etoViewport_2015
                 glControl.MouseLeave += removeKeyHandler;
                 defaults();
                 GL.Viewport(0, 0, glControl.Width, glControl.Height);
+                Content = glControl;
                 ok = true;
             }
             catch (Exception)

@@ -7,11 +7,11 @@ using OpenTK;
 
 namespace etoViewport_demo_win
 {
-	public static class Program
-	{
-		[STAThread]
-		public static void Main(string[] args)
-		{
+    public static class Program
+    {
+        [STAThread]
+        public static void Main(string[] args)
+        {
             //check
             try
             {
@@ -21,7 +21,7 @@ namespace etoViewport_demo_win
             {
                 Debugger.Break();
             }
-            var gen = Eto.Platform.Detect;
+            var gen = new Eto.WinForms.Platform();
 
             //gen.Add<GLSurface.IHandler>(() => new MacGLSurfaceHandler());
             gen.Add<GLSurface.IHandler>(() => new WinGLSurfaceHandler());
@@ -29,6 +29,6 @@ namespace etoViewport_demo_win
             new Application().Run(new MainForm());
             // run application with our main form
             // new Application().Run(new MainForm());
-		}
-	}
+        }
+    }
 }
