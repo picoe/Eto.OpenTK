@@ -12,7 +12,7 @@ namespace etoViewport_demo_win
     /// </summary>
 
     public class MainForm : Form
-    {
+	{
         private GLSurface glControl1;
         private GLSurface glControl2;
         etoViewport oVP2, oVP;
@@ -46,7 +46,7 @@ namespace etoViewport_demo_win
         }
 
         public MainForm()
-        {
+		{
             ovpSettings = new OVPSettings();
             ovp2Settings = new OVPSettings();
             List<PointF[]> polyList = new List<PointF[]>();
@@ -58,8 +58,8 @@ namespace etoViewport_demo_win
             testPoly[4] = testPoly[0];
 
             polyList.Add(testPoly);
-            ovpSettings.addPolygon(testPoly, new Color(0, 0, 0));
-            ovp2Settings.addPolygon(testPoly, new Color(0, 0, 0));
+            ovpSettings.addPolygon(testPoly, new Color(0,0,0));
+            ovp2Settings.addPolygon(testPoly, new Color(0,0,0));
 
             testPoly = new PointF[5];
             testPoly[0] = new PointF(-80, -100);
@@ -68,13 +68,13 @@ namespace etoViewport_demo_win
             testPoly[3] = new PointF(-100, -50);
             testPoly[4] = testPoly[0];
             polyList.Add(testPoly);
-            ovpSettings.addPolygon(testPoly, new Color(1, 0, 0));
-            ovp2Settings.addPolygon(testPoly, new Color(1, 0, 0));
+            ovpSettings.addPolygon(testPoly, new Color(1,0,0));
+            ovp2Settings.addPolygon(testPoly, new Color(1,0,0));
             ovp2Settings.zoomFactor = 3;
 
 
             Title = "My Eto Form";
-            ClientSize = new Size(400, 350);
+			ClientSize = new Size(400, 350);
 
             setupViewports();
 
@@ -87,50 +87,35 @@ namespace etoViewport_demo_win
 
             content_.Add(viewport, new Point(0, 0));
 
-            /*
-            {
-                // table with three rows
-                Content = new TableLayout(
-                    null,
-                    // row with three columns
-                    new TableRow(null, new Label { Text = "Hello World!" }, null),
-                    viewport,
-					null
-				)
-			};
-            */
+			// create a few commands that can be used for the menu and toolbar
+			var clickMe = new Command { MenuText = "Click Me!", ToolBarText = "Click Me!" };
+			clickMe.Executed += (sender, e) => MessageBox.Show(this, "I was clicked!");
 
-            // create a few commands that can be used for the menu and toolbar
-            var clickMe = new Command { MenuText = "Click Me!", ToolBarText = "Click Me!" };
-            clickMe.Executed += (sender, e) => MessageBox.Show(this, "I was clicked!");
-
-            var quitCommand = new Command { MenuText = "Quit", Shortcut = Application.Instance.CommonModifier | Keys.Q };
-            quitCommand.Executed += (sender, e) => Application.Instance.Quit();
-
-            var aboutCommand = new Command { MenuText = "About..." };
-            aboutCommand.Executed += (sender, e) => MessageBox.Show(this, "About my app...");
-
-            // create menu
-            Menu = new MenuBar
-            {
-                Items = {
+			var quitCommand = new Command { MenuText = "Quit", Shortcut = Application.Instance.CommonModifier | Keys.Q };
+			quitCommand.Executed += (sender, e) => Application.Instance.Quit();
+			
+			var aboutCommand = new Command { MenuText = "About..." };
+			aboutCommand.Executed += (sender, e) => MessageBox.Show(this, "About my app...");
+					
+			// create menu
+			Menu = new MenuBar
+			{
+				Items = {
 					// File submenu
 					new ButtonMenuItem { Text = "&File", Items = { clickMe } },
 					// new ButtonMenuItem { Text = "&Edit", Items = { /* commands/items */ } },
 					// new ButtonMenuItem { Text = "&View", Items = { /* commands/items */ } },
 				},
-                ApplicationItems = {
+				ApplicationItems = {
 					// application (OS X) or file menu (others)
 					new ButtonMenuItem { Text = "&Preferences..." },
-                },
-                QuitItem = quitCommand,
-                AboutItem = aboutCommand
-            };
-
-            // create toolbar			
-            ToolBar = new ToolBar { Items = { clickMe } };
-
-            viewport.updateViewport();
-        }
-    }
+				},
+				QuitItem = quitCommand,
+				AboutItem = aboutCommand
+			};
+			
+			// create toolbar			
+			ToolBar = new ToolBar { Items = { clickMe } };
+		}
+	}
 }

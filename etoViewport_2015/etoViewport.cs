@@ -342,9 +342,9 @@ namespace etoViewport_2015
                     for (int pt = 0; pt < ovpSettings.polyList[poly].poly.Length - 1; pt++)
                     {
                         polyList.Add(new Vector3(ovpSettings.polyList[poly].poly[pt].X, ovpSettings.polyList[poly].poly[pt].Y, polyZ));
-                        polyColorList.Add(new Vector3(ovpSettings.polyList[poly].color.R / 255.0f, ovpSettings.polyList[poly].color.G / 255.0f, ovpSettings.polyList[poly].color.B / 255.0f));
+                        polyColorList.Add(new Vector3(ovpSettings.polyList[poly].color.R, ovpSettings.polyList[poly].color.G, ovpSettings.polyList[poly].color.B));
                         polyList.Add(new Vector3(ovpSettings.polyList[poly].poly[pt + 1].X, ovpSettings.polyList[poly].poly[pt + 1].Y, polyZ));
-                        polyColorList.Add(new Vector3(ovpSettings.polyList[poly].color.R / 255.0f, ovpSettings.polyList[poly].color.G / 255.0f, ovpSettings.polyList[poly].color.B / 255.0f));
+                        polyColorList.Add(new Vector3(ovpSettings.polyList[poly].color.R, ovpSettings.polyList[poly].color.G, ovpSettings.polyList[poly].color.B));
                     }
                 }
 
@@ -372,16 +372,15 @@ namespace etoViewport_2015
             GL.ShadeModel(ShadingModel.Flat);
             GL.Enable(EnableCap.Blend);
             GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
-            //GL.Enable(EnableCap.DepthTest);
-            //GL.DepthMask(true);
-            //GL.DepthFunc(DepthFunction.Less);
-            //GL.Enable(EnableCap.PolygonOffsetFill);
             GL.PolygonOffset(0.0f, 0.5f);
-            //GL.EnableClientState(ArrayCap.VertexArray);
-            //GL.EnableClientState(ArrayCap.ColorArray);
             GL.LineStipple(1, 61680);
             gridZ = -0.95f;
             axisZ = gridZ + 0.01f;
+        }
+
+        public void updateVP(object sender, EventArgs e)
+        {
+            updateViewport();
         }
 
         public etoViewport(GLSurface viewportControl, OVPSettings svpSettings)
@@ -422,7 +421,7 @@ namespace etoViewport_2015
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
             ovpSettings.bounds = getViewPort();
-            GL.ClearColor(ovpSettings.backColor.R / 255, ovpSettings.backColor.G / 255, ovpSettings.backColor.B / 255, ovpSettings.backColor.A / 255);
+            GL.ClearColor(ovpSettings.backColor.R, ovpSettings.backColor.G, ovpSettings.backColor.B, ovpSettings.backColor.A);
             GL.ClearDepth(1.0);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
         }
@@ -454,96 +453,96 @@ namespace etoViewport_2015
                         float b = 0.0f;
                         if (k <= 9)
                         {
-                            r = ovpSettings.minorGridColor.R / 255.0f;
-                            g = ovpSettings.minorGridColor.G / 255.0f;
-                            b = ovpSettings.minorGridColor.B / 255.0f;
+                            r = ovpSettings.minorGridColor.R;
+                            g = ovpSettings.minorGridColor.G;
+                            b = ovpSettings.minorGridColor.B;
                         }
                         if (k == 10)
                         {
-                            r = ovpSettings.majorGridColor.R / 255.0f;
-                            g = ovpSettings.majorGridColor.G / 255.0f;
-                            b = ovpSettings.majorGridColor.B / 255.0f;
+                            r = ovpSettings.majorGridColor.R;
+                            g = ovpSettings.majorGridColor.G;
+                            b = ovpSettings.majorGridColor.B;
                             k = 0;
                         }
                         k++;
                         grid.Add(new Vector3(i, ovpSettings.bounds.Top, gridZ));
                         gridColors.Add(new Vector3(r, g, b));
-                        grid.Add(new Vector3(i, ovpSettings.bounds.Bottom, gridZ));
+                        grid.Add(new Vector3(i, -ovpSettings.bounds.Top, gridZ));
                         gridColors.Add(new Vector3(r, g, b));
                     }
                     k = 0;
-                    for (float i = 0; i < ovpSettings.bounds.Right; i += spacing)
+                    for (float i = 0; i < -ovpSettings.bounds.Left; i += spacing)
                     {
                         float r = 0.0f;
                         float g = 0.0f;
                         float b = 0.0f;
                         if (k <= 9)
                         {
-                            r = ovpSettings.minorGridColor.R / 255.0f;
-                            g = ovpSettings.minorGridColor.G / 255.0f;
-                            b = ovpSettings.minorGridColor.B / 255.0f;
+                            r = ovpSettings.minorGridColor.R;
+                            g = ovpSettings.minorGridColor.G;
+                            b = ovpSettings.minorGridColor.B;
                         }
                         if (k == 10)
                         {
-                            r = ovpSettings.majorGridColor.R / 255.0f;
-                            g = ovpSettings.majorGridColor.G / 255.0f;
-                            b = ovpSettings.majorGridColor.B / 255.0f;
+                            r = ovpSettings.majorGridColor.R;
+                            g = ovpSettings.majorGridColor.G;
+                            b = ovpSettings.majorGridColor.B;
                             k = 0;
                         }
                         k++;
                         grid.Add(new Vector3(i, ovpSettings.bounds.Top, gridZ));
                         gridColors.Add(new Vector3(r, g, b));
-                        grid.Add(new Vector3(i, ovpSettings.bounds.Bottom, gridZ));
+                        grid.Add(new Vector3(i, -ovpSettings.bounds.Top, gridZ));
                         gridColors.Add(new Vector3(r, g, b));
                     }
                     k = 0;
-                    for (float i = 0; i > ovpSettings.bounds.Bottom; i -= spacing)
+                    for (float i = 0; i > ovpSettings.bounds.Top; i -= spacing)
                     {
                         float r = 0.0f;
                         float g = 0.0f;
                         float b = 0.0f;
                         if (k <= 9)
                         {
-                            r = ovpSettings.minorGridColor.R / 255.0f;
-                            g = ovpSettings.minorGridColor.G / 255.0f;
-                            b = ovpSettings.minorGridColor.B / 255.0f;
+                            r = ovpSettings.minorGridColor.R;
+                            g = ovpSettings.minorGridColor.G;
+                            b = ovpSettings.minorGridColor.B;
                         }
                         if (k == 10)
                         {
-                            r = ovpSettings.majorGridColor.R / 255.0f;
-                            g = ovpSettings.majorGridColor.G / 255.0f;
-                            b = ovpSettings.majorGridColor.B / 255.0f;
+                            r = ovpSettings.majorGridColor.R;
+                            g = ovpSettings.majorGridColor.G;
+                            b = ovpSettings.majorGridColor.B;
                             k = 0;
                         }
                         k++;
                         grid.Add(new Vector3(ovpSettings.bounds.Left, i, gridZ));
                         gridColors.Add(new Vector3(r, g, b));
-                        grid.Add(new Vector3(ovpSettings.bounds.Right, i, gridZ));
+                        grid.Add(new Vector3(-ovpSettings.bounds.Left, i, gridZ));
                         gridColors.Add(new Vector3(r, g, b));
                     }
                     k = 0;
-                    for (float i = 0; i < ovpSettings.bounds.Top; i += spacing)
+                    for (float i = 0; i < -ovpSettings.bounds.Top; i += spacing)
                     {
                         float r = 0.0f;
                         float g = 0.0f;
                         float b = 0.0f;
                         if (k <= 9)
                         {
-                            r = ovpSettings.minorGridColor.R / 255.0f;
-                            g = ovpSettings.minorGridColor.G / 255.0f;
-                            b = ovpSettings.minorGridColor.B / 255.0f;
+                            r = ovpSettings.minorGridColor.R;
+                            g = ovpSettings.minorGridColor.G;
+                            b = ovpSettings.minorGridColor.B;
                         }
                         if (k == 10)
                         {
-                            r = ovpSettings.majorGridColor.R / 255.0f;
-                            g = ovpSettings.majorGridColor.G / 255.0f;
-                            b = ovpSettings.majorGridColor.B / 255.0f;
+                            r = ovpSettings.majorGridColor.R;
+                            g = ovpSettings.majorGridColor.G;
+                            b = ovpSettings.majorGridColor.B;
                             k = 0;
                         }
                         k++;
                         grid.Add(new Vector3(ovpSettings.bounds.Left, i, gridZ));
                         gridColors.Add(new Vector3(r, g, b));
-                        grid.Add(new Vector3(ovpSettings.bounds.Right, i, gridZ));
+                        grid.Add(new Vector3(-ovpSettings.bounds.Left, i, gridZ));
                         gridColors.Add(new Vector3(r, g, b));
                     }
                     gridArray = grid.ToArray();
@@ -560,445 +559,13 @@ namespace etoViewport_2015
                 axesColorArray = new Vector3[4];
                 for (int i = 0; i < axesColorArray.Length; i++)
                 {
-                    axesColorArray[i] = new Vector3(ovpSettings.axisColor.R / 255.0f, ovpSettings.axisColor.G / 255.0f, ovpSettings.axisColor.B / 255.0f);
+                    axesColorArray[i] = new Vector3(ovpSettings.axisColor.R, ovpSettings.axisColor.G, ovpSettings.axisColor.B);
                 }
                 axesArray[0] = new Vector3(0.0f, ovpSettings.bounds.Top, axisZ);
-                axesArray[1] = new Vector3(0.0f, ovpSettings.bounds.Bottom, axisZ);
+                axesArray[1] = new Vector3(0.0f, -ovpSettings.bounds.Top, axisZ);
                 axesArray[2] = new Vector3(ovpSettings.bounds.Left, 0.0f, axisZ);
-                axesArray[3] = new Vector3(ovpSettings.bounds.Right, 0.0f, axisZ);
+                axesArray[3] = new Vector3(-ovpSettings.bounds.Left, 0.0f, axisZ);
             }
         }
     }
-
-
-
-    /*
-    public class EmptyPlaceHolder : Drawable
-    {
-        public EmptyPlaceHolder()
-        {
-            //this.background = Resources.NoMap;
-            this.font = new Font(FontFamilies.Monospace, 12);
-        }
-
-        private Font font;
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            base.OnPaint(e);
-            var gpx = e.Graphics;
-
-            / *
-            for (int y = 0; y < this.ClientSize.Height; y += background.Height) {
-                for (int x = 0; x < this.ClientSize.Width; x += background.Width) {
-                    gpx.DrawImage (background, x, y);
-                }
-            }
-            * /
-
-            gpx.DrawText(font,
-                Eto.Drawing.Colors.White,
-                this.ClientSize.Width / 2,
-                this.ClientSize.Height / 2,
-                "No Data");
-        }
-    }
-
-    //[EventPublication (EventTopics.OnTextureDrawLater)]
-    public event EventHandler OnTextureDrawLater;
-
-    public event EventHandler OnSaveFMap;
-
-    public GLSurface GLSurface { get; set; }
-
-    //[EventSubscription (EventTopics.OnMapLoad, typeof (OnPublisher))]
-    public void HandleMapLoad()
-    {
-        this.panel.Content = this.GLSurface;
-
-        //this.ViewInfo.SetGlSize (this.GLSurface.Size);
-
-        SetViewPort();
-        DrawLater();
-    }
-
-
-    private UITimer timDraw;
-
-    private UITimer timKey;
-
-    private UITimer timTool;
-
-    protected Label lblTile;
-
-    protected Label lblVertex;
-
-    protected Label lblPos;
-
-    private bool drawPending = false;
-
-    private EmptyPlaceHolder emptyPlaceHolder;
-
-    protected Panel panel;
-
-
-    public etoViewport()
-    {
-        emptyPlaceHolder = new EmptyPlaceHolder();
-        // this.panel = new Panel ();
-
-        this.GLSurface = new GLSurface();
-        this.Content = this.emptyPlaceHolder;
-        this.Content = this.GLSurface;
-
-        SetupEventHandlers();
-        SetupBindings();
-    }
-
-    protected void MapPanelTool_Selection(object sender, EventArgs e)
-    {
-    }
-
-    protected void MapPanelTool_SelectionCopy(object sender, EventArgs e)
-    {
-    }
-
-    protected void MapPanelTool_SelectionPaste(object sender, EventArgs e)
-    {
-    }
-
-    protected void MapPanelTool_SelectionPasteOptions(object sender, EventArgs e)
-    {
-    }
-
-    protected void MapPanelTool_SelectionRotateAntiClockwise(object sender, EventArgs e)
-    {
-    }
-    protected void MapPanelTool_SelectionRotateClockwise(object sender, EventArgs e)
-    {
-    }
-    protected void MapPanelTool_SelectionFlipX(object sender, EventArgs e)
-    {
-    }
-    protected void MapPanelTool_ObjectsSelect(object sender, EventArgs e)
-    {
-    }
-    protected void MapPanelTool_Gateways(object sender, EventArgs e)
-    {
-    }
-    protected void MapPanelTool_DrawAutoTexture(object sender, EventArgs e)
-    {
-    }
-
-    protected void MapPanelTool_DrawTileOrentation(object sender, EventArgs e)
-    {
-    }
-
-    protected void MapPanelTool_Save(object sender, EventArgs e)
-    {
-    }
-
-    protected void minimapOptions_Click(object sender, EventArgs e)
-    {
-    }
-
-    protected override void OnPreLoad(EventArgs e)
-    {
-        this.ParentWindow.GotFocus += ParentWindow_GotFocus;
-        base.OnPreLoad(e);
-    }
-
-    void ParentWindow_GotFocus(object sender, EventArgs e)
-    {
-        this.DrawLater();
-    }
-
-    private void SetupBindings()
-    {
-    }
-    private void SetupEventHandlers()
-    {
-    }
-
-    private void MakeGlFont()
-    {
-        if (!this.GLSurface.IsInitialized)
-        {
-            return;
-        }
-        this.GLSurface.MakeCurrent();
-    }
-
-    protected override void OnLoadComplete(EventArgs lcEventArgs)
-    {
-        base.OnLoadComplete(lcEventArgs);
-
-        //GLSurface.KeyDown += KeyboardManager.HandleKeyDown;
-        //GLSurface.KeyUp += KeyboardManager.HandleKeyUp;
-
-        GLSurface.MouseEnter += (sender, e) => {
-            GLSurface.Focus();
-        };
-        / *
-        GLSurface.MouseDown += (sender, args) => {
-            //make sure this manager sees the mouse event first
-            //to get modifers such as CTRL/ALT/SHIFT and activate
-            //any keys necessary before ViewInfo finds out
-            //and queries if CTRL/ALT/SHIFT is active.
-            KeyboardManager.HandleMouseDown (sender, args);
-            ViewInfo.HandleMouseDown (sender, args);
-        };
-        GLSurface.MouseUp += (sender, args) => {
-            ViewInfo.HandleMouseUp (sender, args);
-        };* /
-        //GLSurface.MouseMove += ViewInfo.HandleMouseMove;
-        GLSurface.MouseMove += HandleMouseMove;
-        /*GLSurface.MouseWheel += ViewInfo.HandleMouseWheel;
-
-        GLSurface.LostFocus += ViewInfo.HandleLostFocus;
-        GLSurface.MouseLeave += ViewInfo.HandleMouseLeave;
-
-        GLSurface.GLInitalized += InitalizeGlSurface;
-        * /
-        GLSurface.SizeChanged += ResizeMapView;
-
-        //KeyboardManager.KeyDown += HandleKeyDown;
-    }
-
-
-    private void InitalizeGlSurface(object sender, EventArgs e)
-    {
-        this.GLSurface.MakeCurrent();
-
-        GL.PixelStore(PixelStoreParameter.PackAlignment, 1);
-        GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
-        //GL.ClearColor(0.0F, 0.0F, 0.0F, 1.0F);
-        GL.ClearColor(System.Drawing.Color.CornflowerBlue);
-        GL.Clear(ClearBufferMask.ColorBufferBit);
-        GL.ShadeModel(ShadingModel.Smooth);
-        GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
-        GL.Enable(EnableCap.DepthTest);
-
-        var ambient = new float[4];
-        var specular = new float[4];
-        var diffuse = new float[4];
-
-        ambient[0] = 0.333333343F;
-        ambient[1] = 0.333333343F;
-        ambient[2] = 0.333333343F;
-        ambient[3] = 1.0F;
-        specular[0] = 0.6666667F;
-        specular[1] = 0.6666667F;
-        specular[2] = 0.6666667F;
-        specular[3] = 1.0F;
-        diffuse[0] = 0.75F;
-        diffuse[1] = 0.75F;
-        diffuse[2] = 0.75F;
-        diffuse[3] = 1.0F;
-        GL.Light(LightName.Light0, LightParameter.Diffuse, diffuse);
-        GL.Light(LightName.Light0, LightParameter.Specular, specular);
-        GL.Light(LightName.Light0, LightParameter.Ambient, ambient);
-
-        ambient[0] = 0.25F;
-        ambient[1] = 0.25F;
-        ambient[2] = 0.25F;
-        ambient[3] = 1.0F;
-        specular[0] = 0.5F;
-        specular[1] = 0.5F;
-        specular[2] = 0.5F;
-        specular[3] = 1.0F;
-        diffuse[0] = 0.5625F;
-        diffuse[1] = 0.5625F;
-        diffuse[2] = 0.5625F;
-        diffuse[3] = 1.0F;
-        GL.Light(LightName.Light1, LightParameter.Diffuse, diffuse);
-        GL.Light(LightName.Light1, LightParameter.Specular, specular);
-        GL.Light(LightName.Light1, LightParameter.Ambient, ambient);
-
-        var matDiffuse = new float[4];
-        var matSpecular = new float[4];
-        var matAmbient = new float[4];
-        var matShininess = new float[1];
-
-        matSpecular[0] = 0.0F;
-        matSpecular[1] = 0.0F;
-        matSpecular[2] = 0.0F;
-        matSpecular[3] = 0.0F;
-        matAmbient[0] = 1.0F;
-        matAmbient[1] = 1.0F;
-        matAmbient[2] = 1.0F;
-        matAmbient[3] = 1.0F;
-        matDiffuse[0] = 1.0F;
-        matDiffuse[1] = 1.0F;
-        matDiffuse[2] = 1.0F;
-        matDiffuse[3] = 1.0F;
-        matShininess[0] = 0.0F;
-
-        GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Ambient, matAmbient);
-        GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Specular, matSpecular);
-        GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Diffuse, matDiffuse);
-        GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Shininess, matShininess);
-
-        timDraw = new UITimer { Interval = 0.013 }; // Every Millisecond.
-        timDraw.Elapsed += timDraw_Elapsed;
-        timDraw.Start();
-
-        timKey = new UITimer { Interval = 0.030 }; // Every 30 milliseconds.
-        timKey.Elapsed += timKey_Elapsed;
-        timKey.Start();
-
-        timTool = new UITimer { Interval = 0.1 }; // Every 100 milliseconds.
-        timTool.Elapsed += timTool_Elapsed;
-        timTool.Start();
-
-        // Make the GL Font.
-        MakeGlFont();
-        //SetViewPort();
-        //DrawLater();
-    }
-
-    private void ResizeMapView(object sender, EventArgs e)
-    {
-        SetViewPort();
-        DrawLater();
-    }
-
-    private void SetViewPort()
-    {
-        if (!this.GLSurface.IsInitialized)
-            return;
-
-        this.GLSurface.MakeCurrent();
-
-        var glSize = GLSurface.Size;
-
-        // send the resize event to the Graphics card.
-        GL.Viewport(0, 0, glSize.Width, glSize.Height);
-        GL.Clear(ClearBufferMask.ColorBufferBit);
-        GL.Flush();
-
-        this.GLSurface.SwapBuffers();
-    }
-
-    private Eto.Drawing.Size GLSize
-    {
-        get { return this.GLSurface.Size; }
-    }
-
-    private void DrawPlaceHolder()
-    {
-        if (!this.GLSurface.IsInitialized)
-            return;
-
-        this.Content = this.emptyPlaceHolder;
-    }
-
-    //[EventSubscription (EventTopics.OnMapDrawLater, typeof (OnPublisher))]
-    public void HandleDrawLater(EventArgs e)
-    {
-        this.DrawLater();
-    }
-
-    private void DrawLater()
-    {
-        drawPending = true;
-    }
-
-    private void timDraw_Elapsed(object sender, EventArgs e)
-    {
-        if (!drawPending || !this.GLSurface.IsInitialized)
-        {
-            return;
-        }
-
-        this.GLSurface.MakeCurrent();
-
-        var bgColour = new Eto.Drawing.Color();
-        bgColour.R = 0.5F;
-        bgColour.G = 0.5F;
-        bgColour.B = 0.5F;
-
-        GL.ClearColor(bgColour.R, bgColour.G, bgColour.B, 1.0F);
-        GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-
-        / *
-        if (mainMap != null) // Else just clear the screen.
-        {
-            try {
-                MainMap.GLDraw (new DrawContext {
-                    GlSize = this.GLSurface.Size,
-                    MinimapGl = this.minimapGl,
-                    ViewInfo = this.ViewInfo,
-                    ToolOptions = this.ToolOptions
-                });
-            } catch (Exception ex) {
-                Debugger.Break ();
-                Logger.Error (ex, "Got an exception");
-            }
-        }
-        * /
-        GL.Flush();
-        this.GLSurface.SwapBuffers();
-
-        drawPending = false;
-    }
-
-    private void timTool_Elapsed(object sender, EventArgs e)
-    {
-        this.GLSurface.MakeCurrent();
-    }
-
-    private void timKey_Elapsed(object sender, EventArgs e)
-    {
-        this.GLSurface.MakeCurrent();
-
-        double Rate = 0;
-        double Zoom = 0;
-        double Move = 0;
-        double Roll = 0;
-        double Pan = 0;
-        double OrbitRate = 0;
-
-        DrawLater();
-    }
-
-    protected override void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            if (GLSurface.IsInitialized)
-            {
-                timDraw.Stop();
-                timDraw = null;
-
-                timKey.Stop();
-                timKey = null;
-            }
-        }
-
-        base.Dispose(disposing);
-    }
-
-    private void HandleMouseMove(object sender, MouseEventArgs e)
-    {
-    }
-
-    private void HandleKeyDown(object sender, KeyEventArgs e)
-    {
-    }
-
-    public void RefreshMinimap()
-    {
-    }
-
-    // [EventSubscription (EventTopics.OnMapUpdate, typeof (OnPublisher))]
-    public void HandleMapUpdate(EventArgs e)
-    {
-        this.UpdateMap();
-    }
-
-    private void UpdateMap()
-    {
-    }
-    */
 }

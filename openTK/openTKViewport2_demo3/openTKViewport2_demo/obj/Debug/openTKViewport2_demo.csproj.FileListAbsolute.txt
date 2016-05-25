@@ -1,1 +1,0 @@
-C:\Users\phil\OneDrive\Documents\Visual Studio 2015\Projects\MonteCarlo_Csharp\MonteCarlo\openTK\openTKViewport2_demo3\openTKViewport2_demo\bin\Debug\openTKViewport_demo.exe.config
