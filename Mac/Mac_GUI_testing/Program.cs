@@ -21,6 +21,7 @@ namespace Mac_GUI_testing
 		}
 	}
 
+	/*
 	public class MainForm : Form
 	{
 		public GLSurface glControl1;
@@ -50,10 +51,10 @@ namespace Mac_GUI_testing
 			//rightLayout.BackgroundColor = Color.FromArgb (0, 255, 255);
 			// rightLayout.Add (gl);
 
-			/*Panel right = new Panel () {
+			/ *Panel right = new Panel () {
 				BackgroundColor = Color.FromArgb (255, 255, 0),
 				Content = rightLayout
-			};*/
+			};* /
 
 			glControl1 = new GLSurface ();
 			glControl1.Size = new Size (200, 200);
@@ -76,4 +77,5 @@ namespace Mac_GUI_testing
 
 		}
 	}
+	*/
 }

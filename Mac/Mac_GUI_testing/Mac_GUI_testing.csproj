@@ -56,8 +56,10 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="MainForm_unused.cs" />
+    <Compile Include="MainForm.cs" />
     <Compile Include="etoViewport.cs" />
+    <Compile Include="OVPSettings.cs" />
+    <Compile Include="ovp_Poly.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
