@@ -1,12 +1,11 @@
 ﻿<Properties StartupItem="Mac_GUI_testing/Mac_GUI_testing.csproj">
   <MonoDevelop.Ide.ItemProperties.Mac__GUI__testing PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Mac_GUI_testing/etoViewport.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Eto.Gl/GLSurface.cs">
     <Files>
       <File FileName="Mac_GUI_testing/etoViewport.cs" Line="24" Column="24" />
-      <File FileName="Mac_GUI_testing/Program.cs" Line="54" Column="6" />
-      <File FileName="Mac_GUI_testing/MainForm.cs" Line="7" Column="26" />
-      <File FileName="Mac_GUI_testing/OVPSettings.cs" Line="9" Column="29" />
-      <File FileName="Mac_GUI_testing/ovp_Poly.cs" Line="6" Column="6" />
+      <File FileName="Mac_GUI_testing/Program.cs" Line="18" Column="47" />
+      <File FileName="Eto.Gl.Mac/MacGLView8.cs" Line="1" Column="1" />
+      <File FileName="Eto.Gl/GLSurface.cs" Line="18" Column="33" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />

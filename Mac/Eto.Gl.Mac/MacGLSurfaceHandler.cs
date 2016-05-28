@@ -7,7 +7,7 @@ using OpenTK.Graphics;
 
 namespace Eto.Gl.Mac
 {
-	public class MacGLSurfaceHandler : MacView<MacGLView7, GLSurface, GLSurface.ICallback>, GLSurface.IHandler
+	public class MacGLSurfaceHandler : MacView<MacGLView8, GLSurface, GLSurface.ICallback>, GLSurface.IHandler
     {
 	    private GraphicsMode mode;
 	    private int major;
@@ -21,7 +21,7 @@ namespace Eto.Gl.Mac
 
 		protected override void Initialize()
         {
-		var c = new MacGLView7();//8();
+		var c = new MacGLView8();
 
             this.Control = c;
 
