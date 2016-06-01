@@ -112,7 +112,7 @@ namespace Eto.Gl.Mac
 
         public void InitGL()
         {
-	        OpenTK.Graphics.GraphicsContext.ShareContexts = false;
+	        OpenTK.Graphics.GraphicsContext.ShareContexts = true;
 
 			var gpxMode = GraphicsMode.Default;
 

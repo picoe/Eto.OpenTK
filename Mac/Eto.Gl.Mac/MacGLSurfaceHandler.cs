@@ -21,7 +21,7 @@ namespace Eto.Gl.Mac
 
 		protected override void Initialize()
         {
-		var c = new MacGLView8();
+            var c = new MacGLView8();
 
             this.Control = c;
 
