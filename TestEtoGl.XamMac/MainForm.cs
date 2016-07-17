@@ -12,17 +12,17 @@ using System.Security.Cryptography;
 
 namespace TestEtoGl
 {
-    /// <summary>
-    /// Your application's main form
-    /// </summary>
-    public class MainForm : Form
-    {
+	/// <summary>
+	/// Your application's main form
+	/// </summary>
+	public class MainForm : Form
+	{
 		public class myStuff
 		{
 			public List<string> entries { get; set; }
 		}
 
-        public OVPSettings ovpSettings, ovp2Settings;
+		public OVPSettings ovpSettings, ovp2Settings;
 		public System.Timers.Timer m_timer;
 
 		public PointF[] refPoly;
@@ -66,7 +66,7 @@ namespace TestEtoGl
 					drawing = true;
 					//if ((sw_Preview.Elapsed.TotalMilliseconds - timeOfLastPreviewUpdate) > m_timer.Interval)
 					{
-//						try
+						//						try
 						{
 							Application.Instance.Invoke(new Action(() =>
 							{
@@ -93,7 +93,7 @@ namespace TestEtoGl
 				ovpSettings.polyList.Clear();
 				lock (previewPoly)
 				{
-					ovpSettings.addPolygon(previewPoly.ToArray(), new Color(0,0.5f,0));
+					ovpSettings.addPolygon(previewPoly.ToArray(), new Color(0, 0.5f, 0));
 				}
 				viewport.updateViewport();
 				double progress = (double)currentProgress / (double)numberOfCases;
@@ -104,11 +104,16 @@ namespace TestEtoGl
 
 		public void runCases(object sender, EventArgs e)
 		{
-			Task t = Task.Factory.StartNew(() =>
+			Task t2 = Task.Factory.StartNew(() =>
 			{
 				run2();
 			}
 			);
+
+			if (t2.IsCompleted || t2.IsCanceled || t2.IsFaulted)
+			{
+				t2.Dispose();
+			}
 		}
 
 		public void run2()
