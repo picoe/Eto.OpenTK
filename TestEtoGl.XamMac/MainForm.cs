@@ -109,6 +109,8 @@ namespace TestEtoGl
 				run2();
 			}
 			);
+
+			t.Dispose();
 		}
 
 		public void run2()
