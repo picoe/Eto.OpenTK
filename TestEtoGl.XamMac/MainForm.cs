@@ -20,6 +20,7 @@ namespace TestEtoGl
 		public class myStuff
 		{
 			public List<string> entries { get; set; }
+			public Int32 index { get; set; }
 		}
 
 		public OVPSettings ovpSettings, ovp2Settings;
@@ -32,7 +33,7 @@ namespace TestEtoGl
 		ProgressBar progressBar;
 		Label statusLine;
 
-		ComboBox testComboBox;
+		DropDown testComboBox;
 		Button testComboBox_SelEntry;
 
 		public Int32 numberOfCases;
@@ -90,7 +91,7 @@ namespace TestEtoGl
 		public void previewUpdate()
 		{
 			{
-				ovpSettings.polyList.Clear();
+				//ovpSettings.polyList.Clear();
 				lock (previewPoly)
 				{
 					ovpSettings.addPolygon(previewPoly.ToArray(), new Color(0, 0.5f, 0));
@@ -212,7 +213,7 @@ namespace TestEtoGl
 			PointF[] newPoly = new PointF[5];
 			for (int pt = 0; pt < newPoly.Length; pt++)
 			{
-				newPoly[pt] = new PointF((float)(refPoly[pt].X * myRandom1), (float)(refPoly[pt].Y * myRandom));
+				newPoly[pt] = new PointF((float)(refPoly[pt].X + (100.0f * myRandom1)), (float)(refPoly[pt].Y + (100.0f * myRandom)));
 			}
 
 			Thread.Sleep(10);
@@ -232,7 +233,11 @@ namespace TestEtoGl
 
         public MainForm ()
         {
-			DataContext = new myStuff { entries = new List<string> { "First", "Second" } };
+			DataContext = new myStuff
+			{
+				entries = new List<string> { "First", "Second" },
+				index = 1
+			};
 
 			refPoly = new PointF[5];
 			refPoly[0] = new PointF(100, 100);
@@ -248,7 +253,7 @@ namespace TestEtoGl
 			updateSimUIMTFunc = updateSimUIMT_;
 
 			numberOfCases = 25000;
-			timer_interval = 100;
+			timer_interval = 10;
 
             ovpSettings = new OVPSettings ();
             ovp2Settings = new OVPSettings ();
@@ -293,10 +298,9 @@ namespace TestEtoGl
 			testComboBox_SelEntry.Text = "Change";
 			testComboBox_SelEntry.Click += changeSelEntry;
 
-			testComboBox = new ComboBox();
-			testComboBox.ReadOnly = true;
+			testComboBox = new DropDown();
 			testComboBox.BindDataContext(c => c.DataStore, (myStuff m) => m.entries);
-			testComboBox.SelectedIndex = 0;
+			testComboBox.BindDataContext(c => c.SelectedIndex, (myStuff m) => m.index);
 
 			Panel testing3 = new Panel();
 			testing3.Content = new Splitter
