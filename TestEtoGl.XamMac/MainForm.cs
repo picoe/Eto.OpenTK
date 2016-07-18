@@ -235,10 +235,10 @@ namespace TestEtoGl
 			DataContext = new myStuff { entries = new List<string> { "First", "Second" } };
 
 			refPoly = new PointF[5];
-			refPoly[0] = new PointF(10, 10);
-			refPoly[1] = new PointF(20, 10);
-			refPoly[2] = new PointF(20, 5);
-			refPoly[3] = new PointF(10, 5);
+			refPoly[0] = new PointF(100, 100);
+			refPoly[1] = new PointF(200, 100);
+			refPoly[2] = new PointF(200, 50);
+			refPoly[3] = new PointF(100, 50);
 			refPoly[4] = refPoly[0];
 
 			drawingLock = new object();
@@ -248,7 +248,7 @@ namespace TestEtoGl
 			updateSimUIMTFunc = updateSimUIMT_;
 
 			numberOfCases = 25000;
-			timer_interval = 1000;
+			timer_interval = 100;
 
             ovpSettings = new OVPSettings ();
             ovp2Settings = new OVPSettings ();
@@ -273,9 +273,11 @@ namespace TestEtoGl
 			};
 
 			statusLine = new Label();
+			statusLine.Size = new Size(150, 11);
 			statusLine.Text = "Hello world";
 
 			progressBar = new ProgressBar();
+			progressBar.Height = 15;
 			progressBar.MaxValue = numberOfCases;
 
 			Panel testing2 = new Panel();
@@ -294,6 +296,7 @@ namespace TestEtoGl
 			testComboBox = new ComboBox();
 			testComboBox.ReadOnly = true;
 			testComboBox.BindDataContext(c => c.DataStore, (myStuff m) => m.entries);
+			testComboBox.SelectedIndex = 0;
 
 			Panel testing3 = new Panel();
 			testing3.Content = new Splitter
