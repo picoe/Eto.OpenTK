@@ -385,6 +385,7 @@ namespace TestEtoGl
 		void adjustList_(object sender, EventArgs e)
 		{
 			myList.Add("Entry " + myList.Count.ToString());
+			DataContext = new myStuff { entries = myList };
 		}
 	}
 
