@@ -22,6 +22,8 @@ namespace TestEtoGl
 			public List<string> entries { get; set; }
 		}
 
+		public List<string> myList;
+
 		public OVPSettings ovpSettings, ovp2Settings;
 		public System.Timers.Timer m_timer;
 
@@ -243,9 +245,11 @@ namespace TestEtoGl
 
         public MainForm ()
         {
+			myList = new List<string> { "First", "Second" };
+
 			DataContext = new myStuff
 			{
-				entries = new List<string> { "First", "Second" },
+				entries = myList
 			};
 
 			refPoly = new PointF[5];
@@ -348,6 +352,9 @@ namespace TestEtoGl
 			var abort = new Command { MenuText = "Abort", ToolBarText = "Abort" };
 			abort.Executed += abortTheRun;
 
+			var adjustList = new Command { MenuText = "Add to list", ToolBarText = "Add" };
+			adjustList.Executed += adjustList_;
+
 			var quitCommand = new Command { MenuText = "Quit", Shortcut = Application.Instance.CommonModifier | Keys.Q };
             quitCommand.Executed += (sender, e) => Application.Instance.Quit ();
 
@@ -371,10 +378,16 @@ namespace TestEtoGl
             };
 
             // create toolbar			
-            ToolBar = new ToolBar { Items = { clickMe, abort } };
+            ToolBar = new ToolBar { Items = { clickMe, abort, adjustList } };
 
         }
-    }
+
+		void adjustList_(object sender, EventArgs e)
+		{
+			myList.Add("Entry " + myList.Count.ToString());
+		}
+	}
+
 
 	public static class RNG
 	{
