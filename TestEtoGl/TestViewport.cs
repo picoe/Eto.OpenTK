@@ -408,9 +408,9 @@ namespace TestEtoGl
 							k = 0;
 						}
 						k++;
-						grid.Add (new Vector3 (i, ovpSettings.zoomFactor * Height, gridZ));
+						grid.Add (new Vector3 (i, ovpSettings.cameraPosition.Y + ovpSettings.zoomFactor * Height, gridZ));
 						gridColors.Add (new Vector3 (r, g, b));
-						grid.Add (new Vector3 (i, ovpSettings.zoomFactor * -Height, gridZ));
+						grid.Add (new Vector3 (i, ovpSettings.cameraPosition.Y + ovpSettings.zoomFactor * -Height, gridZ));
 						gridColors.Add (new Vector3 (r, g, b));
 					}
 					k = 0;
@@ -430,9 +430,9 @@ namespace TestEtoGl
 							k = 0;
 						}
 						k++;
-						grid.Add (new Vector3 (i, ovpSettings.zoomFactor * Height, gridZ));
+						grid.Add (new Vector3 (i, ovpSettings.cameraPosition.Y + ovpSettings.zoomFactor * Height, gridZ));
 						gridColors.Add (new Vector3 (r, g, b));
-						grid.Add (new Vector3 (i, ovpSettings.zoomFactor * -Height, gridZ));
+						grid.Add (new Vector3 (i, ovpSettings.cameraPosition.Y + ovpSettings.zoomFactor * -Height, gridZ));
 						gridColors.Add (new Vector3 (r, g, b));
 					}
 					k = 0;
@@ -452,9 +452,9 @@ namespace TestEtoGl
 							k = 0;
 						}
 						k++;
-						grid.Add (new Vector3 (ovpSettings.zoomFactor * Width, i, gridZ));
+						grid.Add (new Vector3 (ovpSettings.cameraPosition.X + ovpSettings.zoomFactor * Width, i, gridZ));
 						gridColors.Add (new Vector3 (r, g, b));
-						grid.Add (new Vector3 (ovpSettings.zoomFactor * -Width, i, gridZ));
+						grid.Add (new Vector3 (ovpSettings.cameraPosition.X + ovpSettings.zoomFactor * -Width, i, gridZ));
 						gridColors.Add (new Vector3 (r, g, b));
 					}
 					k = 0;
@@ -474,9 +474,9 @@ namespace TestEtoGl
 							k = 0;
 						}
 						k++;
-						grid.Add (new Vector3 (ovpSettings.zoomFactor * Width, i, gridZ));
+						grid.Add (new Vector3 (ovpSettings.cameraPosition.X + ovpSettings.zoomFactor * Width, i, gridZ));
 						gridColors.Add (new Vector3 (r, g, b));
-						grid.Add (new Vector3 (ovpSettings.zoomFactor * -Width, i, gridZ));
+						grid.Add (new Vector3 (ovpSettings.cameraPosition.X + ovpSettings.zoomFactor * -Width, i, gridZ));
 						gridColors.Add (new Vector3 (r, g, b));
 					}
 					gridArray = grid.ToArray ();
@@ -493,10 +493,10 @@ namespace TestEtoGl
 				for (int i = 0; i < axesColorArray.Length; i++) {
 					axesColorArray [i] = new Vector3 (ovpSettings.axisColor.R, ovpSettings.axisColor.G, ovpSettings.axisColor.B);
 				}
-				axesArray [0] = new Vector3 (0.0f, Height * ovpSettings.zoomFactor, axisZ);
-				axesArray [1] = new Vector3 (0.0f, -Height * ovpSettings.zoomFactor, axisZ);
-				axesArray [2] = new Vector3 (Width * ovpSettings.zoomFactor, 0.0f, axisZ);
-				axesArray [3] = new Vector3 (-Width * ovpSettings.zoomFactor, 0.0f, axisZ);
+				axesArray [0] = new Vector3 (0.0f, ovpSettings.cameraPosition.Y + Height * ovpSettings.zoomFactor, axisZ);
+				axesArray [1] = new Vector3 (0.0f, ovpSettings.cameraPosition.Y -Height * ovpSettings.zoomFactor, axisZ);
+				axesArray [2] = new Vector3 (ovpSettings.cameraPosition.X + Width * ovpSettings.zoomFactor, 0.0f, axisZ);
+				axesArray [3] = new Vector3 (ovpSettings.cameraPosition.X -Width * ovpSettings.zoomFactor, 0.0f, axisZ);
 			}
 		}
 	}

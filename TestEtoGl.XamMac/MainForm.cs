@@ -20,7 +20,6 @@ namespace TestEtoGl
 		public class myStuff
 		{
 			public List<string> entries { get; set; }
-			public Int32 index { get; set; }
 		}
 
 		public OVPSettings ovpSettings, ovp2Settings;
@@ -53,9 +52,18 @@ namespace TestEtoGl
 		public delegate void abortRun();
 		public abortRun abortRunFunc { get; set; }
 
+		public delegate void configureProgressBar(Int32 maxValue);
+		public configureProgressBar configureProgressBarFunc { get; set; }
+
 		private void updateSimUIMT_()
 		{
 			m_timer.Elapsed += new System.Timers.ElapsedEventHandler(updatePreview);
+		}
+
+		private void configureProgressBar_(Int32 maxValue)
+		{
+			progressBar.MaxValue = maxValue;
+			progressBar.Value = 0;
 		}
 
 		private void updatePreview(object sender, EventArgs e)
@@ -120,6 +128,8 @@ namespace TestEtoGl
 		public void run2()
 		{
 			currentProgress = 0;
+			ovpSettings.polyList.Clear();
+			configureProgressBarFunc?.Invoke(numberOfCases);
 			previewPoly = refPoly.ToArray();
 			m_timer = new System.Timers.Timer();
 			// Set up timers for the UI refresh
@@ -236,14 +246,13 @@ namespace TestEtoGl
 			DataContext = new myStuff
 			{
 				entries = new List<string> { "First", "Second" },
-				index = 1
 			};
 
 			refPoly = new PointF[5];
-			refPoly[0] = new PointF(100, 100);
-			refPoly[1] = new PointF(200, 100);
-			refPoly[2] = new PointF(200, 50);
-			refPoly[3] = new PointF(100, 50);
+			refPoly[0] = new PointF(-50, 50);
+			refPoly[1] = new PointF(50, 50);
+			refPoly[2] = new PointF(50, -50);
+			refPoly[3] = new PointF(-50, -50);
 			refPoly[4] = refPoly[0];
 
 			drawingLock = new object();
@@ -251,6 +260,8 @@ namespace TestEtoGl
 			MinimumSize = new Size(200, 200);
 
 			updateSimUIMTFunc = updateSimUIMT_;
+
+			configureProgressBarFunc = configureProgressBar_;
 
 			numberOfCases = 25000;
 			timer_interval = 10;
@@ -299,8 +310,10 @@ namespace TestEtoGl
 			testComboBox_SelEntry.Click += changeSelEntry;
 
 			testComboBox = new DropDown();
+			testComboBox.DataContext = DataContext;
 			testComboBox.BindDataContext(c => c.DataStore, (myStuff m) => m.entries);
-			testComboBox.BindDataContext(c => c.SelectedIndex, (myStuff m) => m.index);
+			testComboBox.SelectedIndex = 0;
+			//testComboBox.SelectedIndexBinding.BindDataContext((myStuff m) => m.index);
 
 			Panel testing3 = new Panel();
 			testing3.Content = new Splitter
