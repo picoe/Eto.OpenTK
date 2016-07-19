@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Eto.Forms;
 using Eto.Drawing;
 using Eto.Gl;
@@ -19,10 +20,10 @@ namespace TestEtoGl
 	{
 		public class myStuff
 		{
-			public List<string> entries { get; set; }
+			public ObservableCollection<string> entries { get; set; }
 		}
 
-		public List<string> myList;
+		public ObservableCollection<string> myList;
 
 		public OVPSettings ovpSettings, ovp2Settings;
 		public System.Timers.Timer m_timer;
@@ -245,7 +246,7 @@ namespace TestEtoGl
 
         public MainForm ()
         {
-			myList = new List<string> { "First", "Second" };
+			myList = new ObservableCollection<string> { "First", "Second" };
 
 			DataContext = new myStuff
 			{
@@ -384,8 +385,17 @@ namespace TestEtoGl
 
 		void adjustList_(object sender, EventArgs e)
 		{
+			myList.Clear();
 			myList.Add("Entry " + myList.Count.ToString());
-			DataContext = new myStuff { entries = myList };
+			if (testComboBox.SelectedIndex == -1)
+			{
+				testComboBox.SelectedIndex = 0;
+			}
+			if (testComboBox.SelectedIndex >= myList.Count)
+			{
+				testComboBox.SelectedIndex = myList.Count - 1;
+			}
+//			testComboBox.SelectedIndex = 1;
 		}
 	}
 
