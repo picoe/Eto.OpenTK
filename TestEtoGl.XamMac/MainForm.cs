@@ -20,10 +20,10 @@ namespace TestEtoGl
 	{
 		public class myStuff
 		{
-			public ObservableCollection<string> entries { get; set; }
+			public List<ObservableCollection<string>> entries { get; set; }
 		}
 
-		public ObservableCollection<string> myList;
+		public List<ObservableCollection<string>> myList;
 
 		public OVPSettings ovpSettings, ovp2Settings;
 		public System.Timers.Timer m_timer;
@@ -246,7 +246,8 @@ namespace TestEtoGl
 
         public MainForm ()
         {
-			myList = new ObservableCollection<string> { "First", "Second" };
+			myList = new List<ObservableCollection<string>>();
+			myList.Add(new ObservableCollection<string> { "First", "Second" });
 
 			DataContext = new myStuff
 			{
@@ -316,7 +317,7 @@ namespace TestEtoGl
 
 			testComboBox = new DropDown();
 			testComboBox.DataContext = DataContext;
-			testComboBox.BindDataContext(c => c.DataStore, (myStuff m) => m.entries);
+			testComboBox.BindDataContext(c => c.DataStore, (myStuff m) => m.entries[0]);
 			testComboBox.SelectedIndex = 0;
 			//testComboBox.SelectedIndexBinding.BindDataContext((myStuff m) => m.index);
 
@@ -385,15 +386,14 @@ namespace TestEtoGl
 
 		void adjustList_(object sender, EventArgs e)
 		{
-			myList.Clear();
-			myList.Add("Entry " + myList.Count.ToString());
+			myList[0].Add("Entry " + myList[0].Count.ToString());
 			if (testComboBox.SelectedIndex == -1)
 			{
 				testComboBox.SelectedIndex = 0;
 			}
-			if (testComboBox.SelectedIndex >= myList.Count)
+			if (testComboBox.SelectedIndex >= myList[0].Count)
 			{
-				testComboBox.SelectedIndex = myList.Count - 1;
+				testComboBox.SelectedIndex = myList[0].Count - 1;
 			}
 //			testComboBox.SelectedIndex = 1;
 		}

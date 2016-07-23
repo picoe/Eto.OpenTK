@@ -32,7 +32,8 @@ namespace Eto.Gl.XamMac
         public void CreateWithParams (GraphicsMode mode, int major, int minor, GraphicsContextFlags flags)
         {
 			Control = new MacGLView8(mode, major, minor, flags);
-        }
+			Control.CanFocus = true;
+		}
 
         public override bool Enabled { get; set; }
 
@@ -54,7 +55,13 @@ namespace Eto.Gl.XamMac
             Control.SwapBuffers ();
         }
 
-        public override void AttachEvent (string id)
+		public bool CanFocus
+		{
+			get { return Control.CanFocus; }
+			set { Control.CanFocus = value; }
+		}
+
+		public override void AttachEvent (string id)
         {
             switch (id) {
             case GLSurface.GLInitializedEvent:

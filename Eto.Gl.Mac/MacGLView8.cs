@@ -111,6 +111,18 @@ namespace Eto.Gl.XamMac
 			}
 		}
 
+		public bool CanFocus { get; set; }
+
+		public override bool AcceptsFirstResponder()
+		{
+			return CanFocus;
+		}
+
+		public override bool AcceptsFirstMouse(NSEvent theEvent)
+		{
+			return CanFocus;
+		}
+
 		public WeakReference WeakHandler { get; set; }
 
 	}
