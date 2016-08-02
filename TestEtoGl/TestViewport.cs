@@ -13,7 +13,9 @@ namespace TestEtoGl
 	{
 		public bool ok;
 		Vector3 [] polyArray;
-		Vector3 [] polyColorArray;
+		Vector4 [] polyColorArray;
+		int[] first;
+		int[] count;
 		int poly_vbo_size;
 
 		Vector3 [] gridArray;
@@ -195,10 +197,10 @@ namespace TestEtoGl
 				// Fix in case of nulls
 				if (polyArray == null) {
 					polyArray = new Vector3 [2];
-					polyColorArray = new Vector3 [polyArray.Length];
+					polyColorArray = new Vector4 [polyArray.Length];
 					for (int i = 0; i < polyArray.Length; i++) {
 						polyArray [i] = new Vector3 (0.0f);
-						polyColorArray [i] = new Vector3 (1.0f);
+						polyColorArray [i] = new Vector4 (1.0f);
 					}
 				}
 
@@ -250,35 +252,39 @@ namespace TestEtoGl
 
 
 				try {
-					GL.EnableClientState (EnableCap.VertexArray);
-					GL.EnableClientState (EnableCap.ColorArray);
+					GL.EnableClientState (ArrayCap.VertexArray);
+					GL.EnableClientState (ArrayCap.ColorArray);
 					GL.BindBuffer (BufferTarget.ArrayBuffer, vbo_id [0]);
 					GL.VertexPointer (3, VertexPointerType.Float, Vector3.SizeInBytes, new IntPtr (0));
 					GL.BindBuffer (BufferTarget.ArrayBuffer, col_id [0]);
 					GL.ColorPointer (3, ColorPointerType.Float, Vector3.SizeInBytes, new IntPtr (0));
-					GL.DrawArrays (BeginMode.Lines, 0, grid_vbo_size);
-					GL.DisableClientState (EnableCap.VertexArray);
-					GL.DisableClientState (EnableCap.ColorArray);
+					GL.DrawArrays (PrimitiveType.Lines, 0, grid_vbo_size);
+					GL.DisableClientState (ArrayCap.VertexArray);
+					GL.DisableClientState (ArrayCap.ColorArray);
 
-					GL.EnableClientState (EnableCap.VertexArray);
-					GL.EnableClientState (EnableCap.ColorArray);
+					GL.EnableClientState (ArrayCap.VertexArray);
+					GL.EnableClientState (ArrayCap.ColorArray);
 					GL.BindBuffer (BufferTarget.ArrayBuffer, vbo_id [1]);
 					GL.VertexPointer (3, VertexPointerType.Float, Vector3.SizeInBytes, new IntPtr (0));
 					GL.BindBuffer (BufferTarget.ArrayBuffer, col_id [1]);
 					GL.ColorPointer (3, ColorPointerType.Float, Vector3.SizeInBytes, new IntPtr (0));
-					GL.DrawArrays (BeginMode.Lines, 0, axes_vbo_size);
-					GL.DisableClientState (EnableCap.VertexArray);
-					GL.DisableClientState (EnableCap.ColorArray);
+					GL.DrawArrays (PrimitiveType.Lines, 0, axes_vbo_size);
+					GL.DisableClientState (ArrayCap.VertexArray);
+					GL.DisableClientState (ArrayCap.ColorArray);
 
-					GL.EnableClientState (EnableCap.VertexArray);
-					GL.EnableClientState (EnableCap.ColorArray);
+					GL.EnableClientState (ArrayCap.VertexArray);
+					GL.EnableClientState (ArrayCap.ColorArray);
+					GL.Enable(EnableCap.Blend);
+					GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
 					GL.BindBuffer (BufferTarget.ArrayBuffer, vbo_id [2]);
 					GL.VertexPointer (3, VertexPointerType.Float, Vector3.SizeInBytes, new IntPtr (0));
 					GL.BindBuffer (BufferTarget.ArrayBuffer, col_id [2]);
-					GL.ColorPointer (3, ColorPointerType.Float, Vector3.SizeInBytes, new IntPtr (0));
-					GL.DrawArrays (BeginMode.Lines, 0, poly_vbo_size);
-					GL.DisableClientState (EnableCap.VertexArray);
-					GL.DisableClientState (EnableCap.ColorArray);
+					GL.ColorPointer (4, ColorPointerType.Float, Vector4.SizeInBytes, new IntPtr (0));
+					GL.MultiDrawArrays (PrimitiveType.TriangleFan, first, count, first.Length);
+					GL.Disable(EnableCap.Blend);
+					GL.DrawArrays(PrimitiveType.Lines, 0, poly_vbo_size);
+					GL.DisableClientState (ArrayCap.VertexArray);
+					GL.DisableClientState (ArrayCap.ColorArray);
 				} catch (Exception) {
 
 				}
@@ -296,16 +302,26 @@ namespace TestEtoGl
 		{
 			try {
 				List<Vector3> polyList = new List<Vector3> ();
-				List<Vector3> polyColorList = new List<Vector3> ();
+				List<Vector4> polyColorList = new List<Vector4> ();
 				float polyZStep = 1.0f / ovpSettings.polyList.Count ();
+				first = new int[ovpSettings.polyList.Count()];
+				count = new int[ovpSettings.polyList.Count()];
+				int counter = 0;
+				int previouscounter = 0;
+
 				for (int poly = 0; poly < ovpSettings.polyList.Count (); poly++) {
 					float polyZ = poly * polyZStep;
+					first[poly] = counter;
+					previouscounter = counter;
 					for (int pt = 0; pt < ovpSettings.polyList [poly].poly.Length - 1; pt++) {
 						polyList.Add (new Vector3 (ovpSettings.polyList [poly].poly [pt].X, ovpSettings.polyList [poly].poly [pt].Y, polyZ));
-						polyColorList.Add (new Vector3 (ovpSettings.polyList [poly].color.R, ovpSettings.polyList [poly].color.G, ovpSettings.polyList [poly].color.B));
+						counter++;
+						polyColorList.Add (new Vector4 (ovpSettings.polyList [poly].color.R, ovpSettings.polyList [poly].color.G, ovpSettings.polyList [poly].color.B, 0.1f));
 						polyList.Add (new Vector3 (ovpSettings.polyList [poly].poly [pt + 1].X, ovpSettings.polyList [poly].poly [pt + 1].Y, polyZ));
-						polyColorList.Add (new Vector3 (ovpSettings.polyList [poly].color.R, ovpSettings.polyList [poly].color.G, ovpSettings.polyList [poly].color.B));
+						counter++;
+						polyColorList.Add (new Vector4 (ovpSettings.polyList [poly].color.R, ovpSettings.polyList [poly].color.G, ovpSettings.polyList [poly].color.B, 0.1f));
 					}
+					count[poly] = counter - previouscounter;
 				}
 
 				polyArray = polyList.ToArray ();
