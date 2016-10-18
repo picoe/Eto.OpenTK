@@ -387,7 +387,7 @@ namespace Eto.Gl.Gtk
 			return XGetVisualInfoInternal (display, (IntPtr)(int)vinfo_mask, ref template, out nitems);
 		}
 
-		[SuppressUnmanagedCodeSecurity, DllImport (libgdk_name)]
+		[SuppressUnmanagedCodeSecurity, DllImport (libgdk_name, CallingConvention = CallingConvention.Cdecl)]
 		public static extern IntPtr gdk_win32_drawable_get_handle (IntPtr d);
 
 		[SuppressUnmanagedCodeSecurity, DllImport (linux_libx11_name)]
