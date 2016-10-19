@@ -95,6 +95,8 @@ namespace Eto.Gl.XamMac
 
 			context = new GraphicsContext(mode, windowInfo, major, minor, flags);
 
+			MakeCurrent();
+
 			context.LoadAll();
 
 			Initialized?.Invoke(this, EventArgs.Empty);
