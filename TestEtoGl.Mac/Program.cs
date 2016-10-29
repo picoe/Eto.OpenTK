@@ -3,7 +3,6 @@ using Eto.Forms;
 using Eto.Drawing;
 using Eto.Gl;
 using Eto.Gl.Mac;
-using OpenTK;
 
 namespace TestEtoGl.Mac
 {
