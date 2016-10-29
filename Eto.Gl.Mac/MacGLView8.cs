@@ -5,9 +5,8 @@ using OpenTK.Platform;
 
 #if MONOMAC
 using MonoMac.AppKit;
+using MonoMac.CoreGraphics;
 using MonoMac.Foundation;
-using CGRect = System.Drawing.RectangleF;
-using CGSize = System.Drawing.SizeF;
 
 namespace Eto.Gl.Mac
 #elif XAMMAC2

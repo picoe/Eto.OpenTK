@@ -36,8 +36,8 @@
     <Reference Include="OpenTK">
       <HintPath>..\packages\OpenTK.Next.1.1.1616.8959\lib\net20\OpenTK.dll</HintPath>
     </Reference>
-    <Reference Include="Eto, Version=2.2.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\Eto.Forms.2.2.0\lib\net45\Eto.dll</HintPath>
+    <Reference Include="Eto">
+      <HintPath>..\packages\Eto.Forms.2.3.0\lib\net45\Eto.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

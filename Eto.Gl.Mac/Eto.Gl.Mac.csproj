@@ -41,14 +41,14 @@
     <Reference Include="OpenTK">
       <HintPath>..\packages\OpenTK.Next.1.1.1616.8959\lib\net20\OpenTK.dll</HintPath>
     </Reference>
-    <Reference Include="Eto, Version=2.2.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\Eto.Forms.2.2.0\lib\net45\Eto.dll</HintPath>
+    <Reference Include="Eto">
+      <HintPath>..\packages\Eto.Forms.2.3.0\lib\net45\Eto.dll</HintPath>
     </Reference>
-    <Reference Include="Eto.Mac, Version=2.2.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\Eto.Platform.Mac.2.2.0\lib\net45\Eto.Mac.dll</HintPath>
+    <Reference Include="Eto.Mac">
+      <HintPath>..\packages\Eto.Platform.Mac.2.3.0\lib\net45\Eto.Mac.dll</HintPath>
     </Reference>
-    <Reference Include="MonoMac, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\Eto.Platform.Mac.2.2.0\lib\net45\MonoMac.dll</HintPath>
+    <Reference Include="MonoMac">
+      <HintPath>..\packages\Eto.Platform.Mac.2.3.0\lib\net45\MonoMac.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
