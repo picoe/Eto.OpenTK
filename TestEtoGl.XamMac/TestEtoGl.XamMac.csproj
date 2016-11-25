@@ -113,7 +113,7 @@
     <ItemGroup>
       <!-- Xamarin.Mac automatically includes its version of OpenTK, we don't want that -->
       <ReferencePath Remove="/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/4.5/OpenTK.dll" />
-      <ReferencePath Include="$(MSBuildThisFileDirectory)\..\packages\OpenTK.Next.1.1.1616.8959\lib\net20\OpenTK.dll" />
+      <ReferencePath Include="$(MSBuildThisFileDirectory)\..\packages\OpenTK.Next.1.2.2336.6514-pre\lib\net20\OpenTK.dll" />
     </ItemGroup>
   </Target>
 </Project>
