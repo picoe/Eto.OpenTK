@@ -6,7 +6,6 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using System;
 using OpenTK.Graphics.OpenGL;
-using OpenGLviaFramebuffer;
 
 namespace Eto.Gl.WPF_WFControl
 {
@@ -14,7 +13,7 @@ namespace Eto.Gl.WPF_WFControl
 	{
 		public void CreateWithParams(GraphicsMode mode, int major, int minor, GraphicsContextFlags flags)
 		{
-			Control = new OtkWpfWFControl();// mode, major, minor, flags);
+			Control = new OtkWpfWFControl(mode, major, minor, flags);
 		}
 
 		protected override void Initialize()

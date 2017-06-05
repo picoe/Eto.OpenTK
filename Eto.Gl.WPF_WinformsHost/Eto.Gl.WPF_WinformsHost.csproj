@@ -57,6 +57,7 @@
       <HintPath>..\packages\Eto.Platform.Windows.2.3.0\lib\net45\Eto.WinForms.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Eto.Gl\Eto.Gl.csproj">
@@ -69,9 +70,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Eto.Gl.WPF_Renderer\Renderer.cs">
-      <Link>Renderer.cs</Link>
-    </Compile>
     <Compile Include="OtkWpfWFControl.cs" />
     <Compile Include="OtkWpfWFSurfaceHandler.cs" />
   </ItemGroup>
