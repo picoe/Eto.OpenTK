@@ -65,8 +65,11 @@ namespace TestEtoGl
 
 		private void configureProgressBar_(Int32 maxValue)
 		{
-			progressBar.MaxValue = maxValue;
-			progressBar.Value = 0;
+            Application.Instance.Invoke(() =>
+            {
+                progressBar.MaxValue = maxValue;
+                progressBar.Value = 0;
+            });
 		}
 
 		private void updatePreview(object sender, EventArgs e)
