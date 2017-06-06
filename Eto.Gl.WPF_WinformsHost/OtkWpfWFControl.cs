@@ -10,40 +10,44 @@ using OpenTK.Platform;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK;
-using OpenGLviaFramebuffer;
+using System.Windows.Forms;
+using System.Windows.Forms.Integration;
 
 namespace Eto.Gl.WPF_WFControl
 {
-	public class OtkWpfWFControl : UserControl
+	public class OtkWpfWFControl : System.Windows.Controls.UserControl
 	{
 		private GLControl glControl;
 
-		private Renderer renderer;
+        private WindowsFormsHost wfHost;
 
-		public OtkWpfWFControl()
-		{
-			System.Drawing.Size t = new System.Drawing.Size(this.GetSize().Width, this.GetSize().Height);
-			this.renderer = new Renderer(t);
-
+        public OtkWpfWFControl(GraphicsMode mode, int major, int minor, GraphicsContextFlags flags)
+        {
 			glControl = new GLControl();
-			glControl.Paint += GLcontrolOnPaint;
-		}
+            glControl.Dock = DockStyle.Fill;
+            // XXX: Should we add a glControl.Paint that invokes OnDraw()? Have not done for now, since OnDraw is
+            // already getting called and seems to work -- adding another call would result in double-rendering
+            // everything unless we disable the other callsite.
 
-		public void MakeCurrent()
+            wfHost = new WindowsFormsHost();
+            wfHost.Child = glControl;
+
+            this.AddChild(wfHost);
+        }
+
+        public OtkWpfWFControl(GraphicsMode mode) : this(mode, 1, 0, GraphicsContextFlags.Default)
+        { }
+
+		public OtkWpfWFControl() : this(GraphicsMode.Default)
+		{ }
+
+        public void MakeCurrent()
 		{
 			glControl.MakeCurrent();
 		}
 
 		public void SwapBuffers()
 		{
-			glControl.SwapBuffers();
-		}
-
-		private void GLcontrolOnPaint(object sender, EventArgs e)
-		{
-			glControl.MakeCurrent();
-			GL.LoadIdentity();
-			renderer.Render();
 			glControl.SwapBuffers();
 		}
 	}
