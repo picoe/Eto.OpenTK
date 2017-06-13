@@ -31,7 +31,7 @@ namespace TestEtoGl
 		public PointF[] refPoly;
 		public PointF[] previewPoly;
 
-		TestViewport viewport;
+		TestViewport viewport, viewport2;
 		ProgressBar progressBar;
 		Label statusLine;
 
@@ -285,10 +285,11 @@ namespace TestEtoGl
             viewport = new TestViewport (ovpSettings);
             viewport.Size = new Size (250, 250);
 
-			var viewport2 = new TestViewport (ovp2Settings);
+			viewport2 = new TestViewport (ovp2Settings);
             viewport2.Size = new Size(200, 200);
 
 			Panel testing = new Panel();
+			testing.Size = new Size(viewport.Width + viewport2.Width, viewport.Height);
 			testing.Content = new Splitter
 			{
 				Orientation = Orientation.Horizontal,
@@ -342,13 +343,15 @@ namespace TestEtoGl
 				Panel2 = testing
 			};
 
-			Content = new Splitter
+			Splitter mySplitter = new Splitter
 			{
 				Orientation = Orientation.Vertical,
 				FixedPanel = SplitterFixedPanel.None,
 				Panel1 = testing4,
 				Panel2 = testing2
             };
+
+			Content = mySplitter;
 
             // create a few commands that can be used for the menu and toolbar
             var clickMe = new Command { MenuText = "Run", ToolBarText = "Run" };
@@ -385,7 +388,11 @@ namespace TestEtoGl
             // create toolbar			
             ToolBar = new ToolBar { Items = { clickMe, abort, adjustList } };
 
-        }
+			//mySplitter.Panel1.SizeChanged += splitterSize;
+			//mySplitter.Panel2.SizeChanged += splitterSize;
+		}
+
+
 
 		void adjustList_(object sender, EventArgs e)
 		{
@@ -400,6 +407,34 @@ namespace TestEtoGl
 			}
 //			testComboBox.SelectedIndex = 1;
 		}
+
+		protected override void OnWindowStateChanged(EventArgs e)
+		{
+			base.OnWindowStateChanged(e);
+			viewport.updateViewport();
+			viewport2.updateViewport();
+		}
+
+		void splitterSize(object sender, EventArgs e)
+		{
+			viewport.updateViewport();
+			viewport2.updateViewport();
+		}
+
+		protected override void OnSizeChanged(EventArgs e)
+		{
+			base.OnSizeChanged(e);
+			viewport.updateViewport();
+			viewport2.updateViewport();
+		}
+
+		protected override void OnShown(EventArgs e)
+		{
+			base.OnShown(e);
+			viewport.updateViewport();
+			viewport2.updateViewport();
+		}
+
 	}
 
 
