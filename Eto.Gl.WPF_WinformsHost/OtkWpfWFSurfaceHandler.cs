@@ -5,7 +5,6 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using System;
-using OpenTK.Graphics.OpenGL;
 
 namespace Eto.Gl.WPF_WFControl
 {
@@ -37,6 +36,19 @@ namespace Eto.Gl.WPF_WFControl
 			Control.SwapBuffers();
 		}
 
+		public void updateWPFHandler(object sender, EventArgs e)
+		{
+			updateWPF();
+		}
+
+		public void updateWPF()
+		{
+			Control.glControl.MakeCurrent();
+			GL.Viewport(Control.glControl.ClientSize);
+			Callback.OnDraw(Widget, EventArgs.Empty);
+			Control.glControl.SwapBuffers();
+		}
+
 		public override void AttachEvent(string id)
 		{
 			switch (id)
@@ -46,11 +58,13 @@ namespace Eto.Gl.WPF_WFControl
 					break;
 
 				case GLSurface.GLShuttingDownEvent:
-					//Control.ShuttingDown += (sender, e) => Callback.OnShuttingDown(Widget, e);
+					// Control.ShuttingDown += (sender, e) => Callback.OnShuttingDown(Widget, e);
 					break;
 
+				case GLSurface.ShownEvent:
+				case GLSurface.SizeChangedEvent:
 				case GLSurface.GLDrawEvent:
-					//Control.Resize += (sender, e) => Callback.OnDraw(Widget, EventArgs.Empty);
+					Control.glControl.Paint += updateWPFHandler;
 					break;
 
 				default:

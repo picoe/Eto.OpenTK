@@ -17,7 +17,7 @@ namespace Eto.Gl.WPF_WFControl
 {
 	public class OtkWpfWFControl : System.Windows.Controls.UserControl
 	{
-		private GLControl glControl;
+		public GLControl glControl;
 
         private WindowsFormsHost wfHost;
 
