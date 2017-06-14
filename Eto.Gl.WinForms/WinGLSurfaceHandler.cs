@@ -43,11 +43,10 @@ namespace Eto.Gl.Windows
 
 		public void updateView()
 		{
-			Control.MakeCurrent();
-			GL.Viewport(Control.ClientSize);
+			MakeCurrent();
+			GL.Viewport(Control.Size);
 			Callback.OnDraw(Widget, EventArgs.Empty);
-			Control.SwapBuffers();
-			Control.MakeCurrent();
+			SwapBuffers();
 		}
 
 		public override void AttachEvent(string id)
@@ -65,6 +64,7 @@ namespace Eto.Gl.Windows
 				case GLSurface.ShownEvent:
 				case GLSurface.SizeChangedEvent:
 				case GLSurface.GLDrawEvent:
+					Control.SizeChanged += updateViewHandler;
 					Control.Paint += updateViewHandler;
 					//Control.Resize += (sender, e) => Callback.OnDraw(Widget, EventArgs.Empty);
 					break;
