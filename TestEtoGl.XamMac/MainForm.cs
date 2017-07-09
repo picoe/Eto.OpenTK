@@ -282,21 +282,111 @@ namespace TestEtoGl
 
             Title = "My Eto Form";
 
-            viewport = new TestViewport (ovpSettings);
-            viewport.Size = new Size (250, 250);
+			int mode = 1;
 
-			viewport2 = new TestViewport (ovp2Settings);
-            viewport2.Size = new Size(200, 200);
-
-			Panel testing = new Panel();
-			testing.Size = new Size(viewport.Width + viewport2.Width, viewport.Height);
-			testing.Content = new Splitter
+			if (mode == 0)
 			{
-				Orientation = Orientation.Horizontal,
-				FixedPanel = SplitterFixedPanel.None,
-				Panel1 = viewport,
-				Panel2 = viewport2
-			};
+				viewport = new TestViewport(ovpSettings);
+				viewport.Size = new Size(250, 250);
+
+				viewport2 = new TestViewport(ovp2Settings);
+				viewport2.Size = new Size(200, 200);
+
+				Panel testing = new Panel();
+				testing.Size = new Size(viewport.Width + viewport2.Width, viewport.Height);
+				testing.Content = new Splitter
+				{
+					Orientation = Orientation.Horizontal,
+					FixedPanel = SplitterFixedPanel.None,
+					Panel1 = viewport,
+					Panel2 = viewport2
+				};
+
+				Panel testing2 = new Panel();
+				testing2.Content = new Splitter
+				{
+					Orientation = Orientation.Horizontal,
+					FixedPanel = SplitterFixedPanel.None,
+					Panel1 = statusLine,
+					Panel2 = progressBar
+				};
+
+				testComboBox_SelEntry = new Button();
+				testComboBox_SelEntry.Text = "Change";
+				testComboBox_SelEntry.Click += changeSelEntry;
+
+				testComboBox = new DropDown();
+				testComboBox.DataContext = DataContext;
+				testComboBox.BindDataContext(c => c.DataStore, (myStuff m) => m.entries[0]);
+				testComboBox.SelectedIndex = 0;
+				//testComboBox.SelectedIndexBinding.BindDataContext((myStuff m) => m.index);
+
+				Panel testing3 = new Panel();
+				testing3.Content = new Splitter
+				{
+					Orientation = Orientation.Horizontal,
+					FixedPanel = SplitterFixedPanel.None,
+					Panel1 = testComboBox_SelEntry,
+					Panel2 = testComboBox
+				};
+
+				Panel testing4 = new Panel();
+				testing4.Content = new Splitter
+				{
+					Orientation = Orientation.Vertical,
+					FixedPanel = SplitterFixedPanel.None,
+					Panel1 = testing3,
+					Panel2 = testing
+				};
+
+				Splitter mySplitter = new Splitter
+				{
+					Orientation = Orientation.Vertical,
+					FixedPanel = SplitterFixedPanel.None,
+					Panel1 = testing4,
+					Panel2 = testing2
+				};
+
+				Content = mySplitter;
+			}
+			else
+			{
+				PixelLayout mainContent = new PixelLayout();
+				mainContent.Size = new Size(300, 300);
+				Content = mainContent;
+				TabControl tabControl_main = new TabControl();
+				tabControl_main.Size = new Size(300, 300);
+				mainContent.Add(tabControl_main, 1, 20);
+
+				TabPage tab_0 = new TabPage();
+				tab_0.Text = "0";
+				tabControl_main.Pages.Add(tab_0);
+				PixelLayout tabPage_0_content = new PixelLayout();
+				tabPage_0_content.Size = new Size(280, 280);
+
+				TabPage tab_1 = new TabPage();
+				tab_1.Text = "1";
+				tabControl_main.Pages.Add(tab_1);
+				PixelLayout tabPage_1_content = new PixelLayout();
+				tabPage_1_content.Size = new Size(280, 280);
+				tab_1.Content = tabPage_1_content;
+
+				TabPage tab_2 = new TabPage();
+				tab_2.Text = "2";
+				tabControl_main.Pages.Add(tab_2);
+				PixelLayout tabPage_2_content = new PixelLayout();
+				tabPage_2_content.Size = new Size(280, 280);
+				tab_2.Content = tabPage_2_content;
+
+				viewport = new TestViewport(ovpSettings);
+				viewport.Size = new Size(200, 200);
+				tabPage_1_content.Add(viewport, 5, 5);
+
+				viewport2 = new TestViewport(ovp2Settings);
+				viewport2.Size = new Size(200, 200);
+				tabPage_2_content.Add(viewport2, 5, 5);
+			}
+
 
 			statusLine = new Label();
 			statusLine.Size = new Size(150, 11);
@@ -306,55 +396,8 @@ namespace TestEtoGl
 			progressBar.Height = 15;
 			progressBar.MaxValue = numberOfCases;
 
-			Panel testing2 = new Panel();
-			testing2.Content = new Splitter
-			{
-				Orientation = Orientation.Horizontal,
-				FixedPanel = SplitterFixedPanel.None,
-				Panel1 = statusLine,
-				Panel2 = progressBar
-			};
-
-			testComboBox_SelEntry = new Button();
-			testComboBox_SelEntry.Text = "Change";
-			testComboBox_SelEntry.Click += changeSelEntry;
-
-			testComboBox = new DropDown();
-			testComboBox.DataContext = DataContext;
-			testComboBox.BindDataContext(c => c.DataStore, (myStuff m) => m.entries[0]);
-			testComboBox.SelectedIndex = 0;
-			//testComboBox.SelectedIndexBinding.BindDataContext((myStuff m) => m.index);
-
-			Panel testing3 = new Panel();
-			testing3.Content = new Splitter
-			{
-				Orientation = Orientation.Horizontal,
-				FixedPanel = SplitterFixedPanel.None,
-				Panel1 = testComboBox_SelEntry,
-				Panel2 = testComboBox
-			};
-
-			Panel testing4 = new Panel();
-			testing4.Content = new Splitter
-			{
-				Orientation = Orientation.Vertical,
-				FixedPanel = SplitterFixedPanel.None,
-				Panel1 = testing3,
-				Panel2 = testing
-			};
-
-			Splitter mySplitter = new Splitter
-			{
-				Orientation = Orientation.Vertical,
-				FixedPanel = SplitterFixedPanel.None,
-				Panel1 = testing4,
-				Panel2 = testing2
-            };
-
-			Content = mySplitter;
-
-            // create a few commands that can be used for the menu and toolbar
-            var clickMe = new Command { MenuText = "Run", ToolBarText = "Run" };
+			// create a few commands that can be used for the menu and toolbar
+			var clickMe = new Command { MenuText = "Run", ToolBarText = "Run" };
             clickMe.Executed += runCases;
 
 			var abort = new Command { MenuText = "Abort", ToolBarText = "Abort" };
