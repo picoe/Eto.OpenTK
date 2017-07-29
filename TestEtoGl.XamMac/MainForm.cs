@@ -25,7 +25,7 @@ namespace TestEtoGl
 
 		public List<ObservableCollection<string>> myList;
 
-		public OVPSettings ovpSettings, ovp2Settings;
+		public OVPSettings ovpSettings, ovp2Settings, vSettings;
 		public System.Timers.Timer m_timer;
 
 		public PointF[] refPoly;
@@ -276,20 +276,27 @@ namespace TestEtoGl
 			timer_interval = 10;
 
             ovpSettings = new OVPSettings ();
-            ovp2Settings = new OVPSettings ();
+			ovp2Settings = new OVPSettings ();
 
             ovp2Settings.zoomFactor = 3;
 
             Title = "My Eto Form";
 
-			int mode = 0;
+			/*
+			  Test flags.
+			  0 : stamdard viewports in splitter test.
+			  1 : viewports in tabs (WPF has issues here due to the deferred evaluation; still need a better fix)
+			  2 : single viewport in panel, dropdown switches out the view settings.
+			*/
+
+			int mode = 3;
 
 			if (mode == 0)
 			{
-				viewport = new TestViewport(ovpSettings);
+				viewport = new TestViewport(ref ovpSettings);
 				viewport.Size = new Size(250, 250);
 
-				viewport2 = new TestViewport(ovp2Settings);
+				viewport2 = new TestViewport(ref ovp2Settings);
 				viewport2.Size = new Size(200, 200);
 
 				Panel testing = new Panel();
@@ -349,7 +356,7 @@ namespace TestEtoGl
 
 				Content = mySplitter;
 			}
-			else
+			if (mode == 1)
 			{
 				PixelLayout mainContent = new PixelLayout();
 				mainContent.Size = new Size(300, 300);
@@ -378,15 +385,68 @@ namespace TestEtoGl
 				tabPage_2_content.Size = new Size(280, 280);
 				tab_2.Content = tabPage_2_content;
 
-				viewport = new TestViewport(ovpSettings);
+				viewport = new TestViewport(ref ovpSettings);
 				viewport.Size = new Size(200, 200);
 				tabPage_1_content.Add(viewport, 5, 5);
 
-				viewport2 = new TestViewport(ovp2Settings);
+				viewport2 = new TestViewport(ref ovp2Settings);
 				viewport2.Size = new Size(200, 200);
 				tabPage_2_content.Add(viewport2, 5, 5);
 			}
+			if (mode == 3)
+			{
+				ovpSettings.addPolygon(refPoly, Color.FromArgb(0, 255, 0));
+				ovp2Settings.addPolygon(refPoly, Color.FromArgb(255, 0, 0));
 
+				vSettings = new OVPSettings();
+				viewport = new TestViewport(ref vSettings);
+				viewport.Size = new Size(250, 250);
+
+				Panel testing = new Panel();
+				testing.Size = new Size(viewport.Width, viewport.Height);
+				PixelLayout p = new PixelLayout();
+				p.Add(viewport, 0, 0);
+				testing.Content = p;
+	
+				testComboBox_SelEntry = new Button();
+				testComboBox_SelEntry.Text = "Change";
+				testComboBox_SelEntry.Click += changeSelEntry;
+
+				testComboBox = new DropDown();
+				testComboBox.DataContext = DataContext;
+				testComboBox.BindDataContext(c => c.DataStore, (myStuff m) => m.entries[0]);
+				testComboBox.SelectedIndex = 0;
+				testComboBox.SelectedIndexChanged += adjustView_;
+				//testComboBox.SelectedIndexBinding.BindDataContext((myStuff m) => m.index);
+
+				Panel testing3 = new Panel();
+				testing3.Content = new Splitter
+				{
+					Orientation = Orientation.Horizontal,
+					FixedPanel = SplitterFixedPanel.None,
+					Panel1 = testComboBox_SelEntry,
+					Panel2 = testComboBox
+				};
+
+				Panel testing4 = new Panel();
+				testing4.Content = new Splitter
+				{
+					Orientation = Orientation.Vertical,
+					FixedPanel = SplitterFixedPanel.None,
+					Panel1 = testing3,
+					Panel2 = testing
+				};
+
+				Splitter mySplitter = new Splitter
+				{
+					Orientation = Orientation.Vertical,
+					FixedPanel = SplitterFixedPanel.None,
+					Panel1 = testing4,
+					Panel2 = testing
+				};
+
+				Content = mySplitter;
+			}
 
 			statusLine = new Label();
 			statusLine.Size = new Size(150, 11);
@@ -404,7 +464,10 @@ namespace TestEtoGl
 			abort.Executed += abortTheRun;
 
 			var adjustList = new Command { MenuText = "Add to list", ToolBarText = "Add" };
-			adjustList.Executed += adjustList_;
+			if (mode != 3)
+			{
+				adjustList.Executed += adjustList_;
+			}
 
 			var quitCommand = new Command { MenuText = "Quit", Shortcut = Application.Instance.CommonModifier | Keys.Q };
             quitCommand.Executed += (sender, e) => Application.Instance.Quit ();
@@ -435,6 +498,17 @@ namespace TestEtoGl
 			//mySplitter.Panel2.SizeChanged += splitterSize;
 		}
 
+		void adjustView_(object sender, EventArgs e)
+		{
+			if (testComboBox.SelectedIndex == 0)
+			{
+				viewport.changeSettings(ref ovpSettings);
+			}
+			else
+			{
+				viewport.changeSettings(ref ovp2Settings);
+			}
+		}
 
 
 		void adjustList_(object sender, EventArgs e)
@@ -455,27 +529,42 @@ namespace TestEtoGl
 		{
 			base.OnWindowStateChanged(e);
 			viewport.updateViewport();
-			viewport2.updateViewport();
+			viewport.updateViewport();
+			if (viewport2 != null)
+			{
+				viewport2.updateViewport();
+			}
 		}
 
 		void splitterSize(object sender, EventArgs e)
 		{
 			viewport.updateViewport();
-			viewport2.updateViewport();
+			viewport.updateViewport();
+			if (viewport2 != null)
+			{
+				viewport2.updateViewport();
+			}
 		}
 
 		protected override void OnSizeChanged(EventArgs e)
 		{
 			base.OnSizeChanged(e);
 			viewport.updateViewport();
-			viewport2.updateViewport();
+			if (viewport2 != null)
+			{
+				viewport2.updateViewport();
+			}
 		}
 
 		protected override void OnShown(EventArgs e)
 		{
 			base.OnShown(e);
 			viewport.updateViewport();
-			viewport2.updateViewport();
+			viewport.updateViewport();
+			if (viewport2 != null)
+			{
+				viewport2.updateViewport();
+			}
 		}
 
 	}

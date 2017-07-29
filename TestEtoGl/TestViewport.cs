@@ -349,7 +349,13 @@ namespace TestEtoGl
 			axisZ = gridZ + 0.01f;
 		}
 
-		public TestViewport (OVPSettings svpSettings)
+		public void changeSettings(ref OVPSettings newSettings)
+		{
+			ovpSettings = newSettings;
+			updateViewport();
+		}
+
+		public TestViewport (ref OVPSettings svpSettings)
 		{
 			try {
 				ovpSettings = svpSettings;
