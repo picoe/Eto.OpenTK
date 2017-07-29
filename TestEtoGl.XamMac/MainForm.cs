@@ -282,7 +282,7 @@ namespace TestEtoGl
 
             Title = "My Eto Form";
 
-			int mode = 1;
+			int mode = 0;
 
 			if (mode == 0)
 			{
