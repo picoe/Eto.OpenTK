@@ -286,10 +286,10 @@ namespace TestEtoGl
 			  Test flags.
 			  0 : stamdard viewports in splitter test.
 			  1 : viewports in tabs (WPF has issues here due to the deferred evaluation; still need a better fix)
-			  2 : single viewport in panel, dropdown switches out the view settings.
+			  3 : single viewport in panel, dropdown switches out the view settings.
 			*/
 
-			int mode = 3;
+			int mode = 0;
 
 			if (mode == 0)
 			{
