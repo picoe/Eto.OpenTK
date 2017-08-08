@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TestEtoGl.WinForms
+namespace TestEtoGl.WPF_Framebuffer
 {
   static class Program
   {

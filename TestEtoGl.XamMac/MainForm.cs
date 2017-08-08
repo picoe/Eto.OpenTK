@@ -25,13 +25,13 @@ namespace TestEtoGl
 
 		public List<ObservableCollection<string>> myList;
 
-		public OVPSettings ovpSettings, ovp2Settings;
+		public OVPSettings ovpSettings, ovp2Settings, vSettings;
 		public System.Timers.Timer m_timer;
 
 		public PointF[] refPoly;
 		public PointF[] previewPoly;
 
-		TestViewport viewport;
+		TestViewport viewport, viewport2;
 		ProgressBar progressBar;
 		Label statusLine;
 
@@ -65,8 +65,11 @@ namespace TestEtoGl
 
 		private void configureProgressBar_(Int32 maxValue)
 		{
-			progressBar.MaxValue = maxValue;
-			progressBar.Value = 0;
+            Application.Instance.Invoke(() =>
+            {
+                progressBar.MaxValue = maxValue;
+                progressBar.Value = 0;
+            });
 		}
 
 		private void updatePreview(object sender, EventArgs e)
@@ -273,26 +276,177 @@ namespace TestEtoGl
 			timer_interval = 10;
 
             ovpSettings = new OVPSettings ();
-            ovp2Settings = new OVPSettings ();
+			ovp2Settings = new OVPSettings ();
 
             ovp2Settings.zoomFactor = 3;
 
             Title = "My Eto Form";
 
-            viewport = new TestViewport (ovpSettings);
-            viewport.Size = new Size (250, 250);
+			/*
+			  Test flags.
+			  0 : stamdard viewports in splitter test.
+			  1 : viewports in tabs (WPF has issues here due to the deferred evaluation; still need a better fix)
+			  3 : single viewport in panel, dropdown switches out the view settings.
+			*/
 
-			var viewport2 = new TestViewport (ovp2Settings);
-            viewport2.Size = new Size(200, 200);
+			int mode = 0;
 
-			Panel testing = new Panel();
-			testing.Content = new Splitter
+			if (mode == 0)
 			{
-				Orientation = Orientation.Horizontal,
-				FixedPanel = SplitterFixedPanel.None,
-				Panel1 = viewport,
-				Panel2 = viewport2
-			};
+				viewport = new TestViewport(ref ovpSettings);
+				viewport.Size = new Size(250, 250);
+
+				viewport2 = new TestViewport(ref ovp2Settings);
+				viewport2.Size = new Size(200, 200);
+
+				Panel testing = new Panel();
+				testing.Size = new Size(viewport.Width + viewport2.Width, viewport.Height);
+				testing.Content = new Splitter
+				{
+					Orientation = Orientation.Horizontal,
+					FixedPanel = SplitterFixedPanel.None,
+					Panel1 = viewport,
+					Panel2 = viewport2
+				};
+
+				Panel testing2 = new Panel();
+				testing2.Content = new Splitter
+				{
+					Orientation = Orientation.Horizontal,
+					FixedPanel = SplitterFixedPanel.None,
+					Panel1 = statusLine,
+					Panel2 = progressBar
+				};
+
+				testComboBox_SelEntry = new Button();
+				testComboBox_SelEntry.Text = "Change";
+				testComboBox_SelEntry.Click += changeSelEntry;
+
+				testComboBox = new DropDown();
+				testComboBox.DataContext = DataContext;
+				testComboBox.BindDataContext(c => c.DataStore, (myStuff m) => m.entries[0]);
+				testComboBox.SelectedIndex = 0;
+				//testComboBox.SelectedIndexBinding.BindDataContext((myStuff m) => m.index);
+
+				Panel testing3 = new Panel();
+				testing3.Content = new Splitter
+				{
+					Orientation = Orientation.Horizontal,
+					FixedPanel = SplitterFixedPanel.None,
+					Panel1 = testComboBox_SelEntry,
+					Panel2 = testComboBox
+				};
+
+				Panel testing4 = new Panel();
+				testing4.Content = new Splitter
+				{
+					Orientation = Orientation.Vertical,
+					FixedPanel = SplitterFixedPanel.None,
+					Panel1 = testing3,
+					Panel2 = testing
+				};
+
+				Splitter mySplitter = new Splitter
+				{
+					Orientation = Orientation.Vertical,
+					FixedPanel = SplitterFixedPanel.None,
+					Panel1 = testing4,
+					Panel2 = testing2
+				};
+
+				Content = mySplitter;
+			}
+			if (mode == 1)
+			{
+				PixelLayout mainContent = new PixelLayout();
+				mainContent.Size = new Size(300, 300);
+				Content = mainContent;
+				TabControl tabControl_main = new TabControl();
+				tabControl_main.Size = new Size(300, 300);
+				mainContent.Add(tabControl_main, 1, 20);
+
+				TabPage tab_0 = new TabPage();
+				tab_0.Text = "0";
+				tabControl_main.Pages.Add(tab_0);
+				PixelLayout tabPage_0_content = new PixelLayout();
+				tabPage_0_content.Size = new Size(280, 280);
+
+				TabPage tab_1 = new TabPage();
+				tab_1.Text = "1";
+				tabControl_main.Pages.Add(tab_1);
+				PixelLayout tabPage_1_content = new PixelLayout();
+				tabPage_1_content.Size = new Size(280, 280);
+				tab_1.Content = tabPage_1_content;
+
+				TabPage tab_2 = new TabPage();
+				tab_2.Text = "2";
+				tabControl_main.Pages.Add(tab_2);
+				PixelLayout tabPage_2_content = new PixelLayout();
+				tabPage_2_content.Size = new Size(280, 280);
+				tab_2.Content = tabPage_2_content;
+
+				viewport = new TestViewport(ref ovpSettings);
+				viewport.Size = new Size(200, 200);
+				tabPage_1_content.Add(viewport, 5, 5);
+
+				viewport2 = new TestViewport(ref ovp2Settings);
+				viewport2.Size = new Size(200, 200);
+				tabPage_2_content.Add(viewport2, 5, 5);
+			}
+			if (mode == 3)
+			{
+				ovpSettings.addPolygon(refPoly, Color.FromArgb(0, 255, 0));
+				ovp2Settings.addPolygon(refPoly, Color.FromArgb(255, 0, 0));
+
+				vSettings = new OVPSettings();
+				viewport = new TestViewport(ref vSettings);
+				viewport.Size = new Size(250, 250);
+
+				Panel testing = new Panel();
+				testing.Size = new Size(viewport.Width, viewport.Height);
+				PixelLayout p = new PixelLayout();
+				p.Add(viewport, 0, 0);
+				testing.Content = p;
+	
+				testComboBox_SelEntry = new Button();
+				testComboBox_SelEntry.Text = "Change";
+				testComboBox_SelEntry.Click += changeSelEntry;
+
+				testComboBox = new DropDown();
+				testComboBox.DataContext = DataContext;
+				testComboBox.BindDataContext(c => c.DataStore, (myStuff m) => m.entries[0]);
+				testComboBox.SelectedIndex = 0;
+				testComboBox.SelectedIndexChanged += adjustView_;
+				//testComboBox.SelectedIndexBinding.BindDataContext((myStuff m) => m.index);
+
+				Panel testing3 = new Panel();
+				testing3.Content = new Splitter
+				{
+					Orientation = Orientation.Horizontal,
+					FixedPanel = SplitterFixedPanel.None,
+					Panel1 = testComboBox_SelEntry,
+					Panel2 = testComboBox
+				};
+
+				Panel testing4 = new Panel();
+				testing4.Content = new Splitter
+				{
+					Orientation = Orientation.Vertical,
+					FixedPanel = SplitterFixedPanel.None,
+					Panel1 = testing3,
+					Panel2 = testing
+				};
+
+				Splitter mySplitter = new Splitter
+				{
+					Orientation = Orientation.Vertical,
+					FixedPanel = SplitterFixedPanel.None,
+					Panel1 = testing4,
+					Panel2 = testing
+				};
+
+				Content = mySplitter;
+			}
 
 			statusLine = new Label();
 			statusLine.Size = new Size(150, 11);
@@ -302,60 +456,18 @@ namespace TestEtoGl
 			progressBar.Height = 15;
 			progressBar.MaxValue = numberOfCases;
 
-			Panel testing2 = new Panel();
-			testing2.Content = new Splitter
-			{
-				Orientation = Orientation.Horizontal,
-				FixedPanel = SplitterFixedPanel.None,
-				Panel1 = statusLine,
-				Panel2 = progressBar
-			};
-
-			testComboBox_SelEntry = new Button();
-			testComboBox_SelEntry.Text = "Change";
-			testComboBox_SelEntry.Click += changeSelEntry;
-
-			testComboBox = new DropDown();
-			testComboBox.DataContext = DataContext;
-			testComboBox.BindDataContext(c => c.DataStore, (myStuff m) => m.entries[0]);
-			testComboBox.SelectedIndex = 0;
-			//testComboBox.SelectedIndexBinding.BindDataContext((myStuff m) => m.index);
-
-			Panel testing3 = new Panel();
-			testing3.Content = new Splitter
-			{
-				Orientation = Orientation.Horizontal,
-				FixedPanel = SplitterFixedPanel.None,
-				Panel1 = testComboBox_SelEntry,
-				Panel2 = testComboBox
-			};
-
-			Panel testing4 = new Panel();
-			testing4.Content = new Splitter
-			{
-				Orientation = Orientation.Vertical,
-				FixedPanel = SplitterFixedPanel.None,
-				Panel1 = testing3,
-				Panel2 = testing
-			};
-
-			Content = new Splitter
-			{
-				Orientation = Orientation.Vertical,
-				FixedPanel = SplitterFixedPanel.None,
-				Panel1 = testing4,
-				Panel2 = testing2
-            };
-
-            // create a few commands that can be used for the menu and toolbar
-            var clickMe = new Command { MenuText = "Run", ToolBarText = "Run" };
+			// create a few commands that can be used for the menu and toolbar
+			var clickMe = new Command { MenuText = "Run", ToolBarText = "Run" };
             clickMe.Executed += runCases;
 
 			var abort = new Command { MenuText = "Abort", ToolBarText = "Abort" };
 			abort.Executed += abortTheRun;
 
 			var adjustList = new Command { MenuText = "Add to list", ToolBarText = "Add" };
-			adjustList.Executed += adjustList_;
+			if (mode != 3)
+			{
+				adjustList.Executed += adjustList_;
+			}
 
 			var quitCommand = new Command { MenuText = "Quit", Shortcut = Application.Instance.CommonModifier | Keys.Q };
             quitCommand.Executed += (sender, e) => Application.Instance.Quit ();
@@ -382,7 +494,22 @@ namespace TestEtoGl
             // create toolbar			
             ToolBar = new ToolBar { Items = { clickMe, abort, adjustList } };
 
-        }
+			//mySplitter.Panel1.SizeChanged += splitterSize;
+			//mySplitter.Panel2.SizeChanged += splitterSize;
+		}
+
+		void adjustView_(object sender, EventArgs e)
+		{
+			if (testComboBox.SelectedIndex == 0)
+			{
+				viewport.changeSettings(ref ovpSettings);
+			}
+			else
+			{
+				viewport.changeSettings(ref ovp2Settings);
+			}
+		}
+
 
 		void adjustList_(object sender, EventArgs e)
 		{
@@ -397,6 +524,49 @@ namespace TestEtoGl
 			}
 //			testComboBox.SelectedIndex = 1;
 		}
+
+		protected override void OnWindowStateChanged(EventArgs e)
+		{
+			base.OnWindowStateChanged(e);
+			viewport.updateViewport();
+			viewport.updateViewport();
+			if (viewport2 != null)
+			{
+				viewport2.updateViewport();
+			}
+		}
+
+		void splitterSize(object sender, EventArgs e)
+		{
+			viewport.updateViewport();
+			viewport.updateViewport();
+			if (viewport2 != null)
+			{
+				viewport2.updateViewport();
+			}
+		}
+
+		protected override void OnSizeChanged(EventArgs e)
+		{
+			base.OnSizeChanged(e);
+			viewport.updateViewport();
+			if (viewport2 != null)
+			{
+				viewport2.updateViewport();
+			}
+		}
+
+		protected override void OnShown(EventArgs e)
+		{
+			base.OnShown(e);
+			viewport.updateViewport();
+			viewport.updateViewport();
+			if (viewport2 != null)
+			{
+				viewport2.updateViewport();
+			}
+		}
+
 	}
 
 

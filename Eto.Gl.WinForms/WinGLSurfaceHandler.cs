@@ -36,7 +36,20 @@ namespace Eto.Gl.Windows
             Control.SwapBuffers();
         }
 
-        public override void AttachEvent(string id)
+		public void updateViewHandler(object sender, EventArgs e)
+		{
+			updateView();
+		}
+
+		public void updateView()
+		{
+			MakeCurrent();
+			GL.Viewport(Control.Size);
+			Callback.OnDraw(Widget, EventArgs.Empty);
+			SwapBuffers();
+		}
+
+		public override void AttachEvent(string id)
         {
             switch (id)
             {
@@ -48,11 +61,15 @@ namespace Eto.Gl.Windows
                     Control.ShuttingDown += (sender, e) => Callback.OnShuttingDown(Widget, e);
                     break;
 
-                case GLSurface.GLDrawEvent:
-                    Control.Resize += (sender, e) => Callback.OnDraw(Widget, EventArgs.Empty);
-                    break;
+				case GLSurface.ShownEvent:
+				case GLSurface.SizeChangedEvent:
+				case GLSurface.GLDrawEvent:
+					Control.SizeChanged += updateViewHandler;
+					Control.Paint += updateViewHandler;
+					//Control.Resize += (sender, e) => Callback.OnDraw(Widget, EventArgs.Empty);
+					break;
 
-                default:
+				default:
                     base.AttachEvent(id);
                     break;
             }
