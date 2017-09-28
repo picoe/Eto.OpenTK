@@ -108,7 +108,7 @@ namespace TestEtoGl
 				//ovpSettings.polyList.Clear();
 				lock (previewPoly)
 				{
-					ovpSettings.addPolygon(previewPoly.ToArray(), new Color(0, 0.5f, 0));
+					ovpSettings.addPolygon(previewPoly.ToArray(), new Color(0, 0.5f, 0), 0.7f, false);
 				}
 				viewport.updateViewport();
 				double progress = (double)currentProgress / (double)numberOfCases;
@@ -395,8 +395,8 @@ namespace TestEtoGl
 			}
 			if (mode == 3)
 			{
-				ovpSettings.addPolygon(refPoly, Color.FromArgb(0, 255, 0));
-				ovp2Settings.addPolygon(refPoly, Color.FromArgb(255, 0, 0));
+				ovpSettings.addPolygon(refPoly, Color.FromArgb(0, 255, 0), 0.7f, false);
+				ovp2Settings.addPolygon(refPoly, Color.FromArgb(255, 0, 0), 0.7f, false);
 
 				vSettings = new OVPSettings();
 				viewport = new TestViewport(ref vSettings);
@@ -502,11 +502,11 @@ namespace TestEtoGl
 		{
 			if (testComboBox.SelectedIndex == 0)
 			{
-				viewport.changeSettings(ref ovpSettings);
+				viewport.changeSettingsRef(ref ovpSettings);
 			}
 			else
 			{
-				viewport.changeSettings(ref ovp2Settings);
+				viewport.changeSettingsRef(ref ovp2Settings);
 			}
 		}
 
