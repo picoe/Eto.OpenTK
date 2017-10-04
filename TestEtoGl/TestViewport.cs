@@ -380,6 +380,7 @@ namespace TestEtoGl
 			drawGrid_immediate();
 			drawAxes_immediate();
 			drawPolygons_immediate();
+            drawLines_immediate();
 			SwapBuffers();
 		}
 
@@ -634,107 +635,117 @@ namespace TestEtoGl
 			ovpSettings.maxY = maxY;
 		}
 
-		void drawPolygons_VBO()
-		{
-			try
-			{
-				List<Vector3> polyList = new List<Vector3>();
-				List<Vector4> polyColorList = new List<Vector4>();
+        void drawPolygons_VBO()
+        {
+            try
+            {
+                List<Vector3> polyList = new List<Vector3>();
+                List<Vector4> polyColorList = new List<Vector4>();
 
-				// Carve our Z-space up to stack polygons
-				float polyZStep = 1.0f / ovpSettings.polyList.Count();
+                // Carve our Z-space up to stack polygons
+                float polyZStep = 1.0f / ovpSettings.polyList.Count();
 
-				// Create our first and count arrays for the vertex indices, to enable polygon separation when rendering.
-				first = new int[ovpSettings.polyList.Count()];
-				count = new int[ovpSettings.polyList.Count()];
-				int counter = 0; // vertex count that will be used to define 'first' index for each polygon.
-				int previouscounter = 0; // will be used to derive the number of vertices in each polygon.
+                // Create our first and count arrays for the vertex indices, to enable polygon separation when rendering.
+                first = new int[ovpSettings.polyList.Count()];
+                count = new int[ovpSettings.polyList.Count()];
+                int counter = 0; // vertex count that will be used to define 'first' index for each polygon.
+                int previouscounter = 0; // will be used to derive the number of vertices in each polygon.
 
-				for (int poly = 0; poly < ovpSettings.polyList.Count(); poly++)
-				{
-					float alpha = ovpSettings.polyList[poly].alpha;
-					if (ovpSettings.drawnPoly[poly])
-					{
-						// Only modify the alpha if we have filled polygons, otherwise our drawn poly wireframe goes AWOL.
-						if (ovpSettings.enableFilledPolys)
-						{
-							alpha = 0.0f; // avoid drawing a filled shape for a drawn poly.
-						}
-					}
-					float polyZ = poly * polyZStep;
-					first[poly] = counter;
-					previouscounter = counter;
-					if (ovpSettings.enableFilledPolys)
-					{
-						polyList.Add(new Vector3(ovpSettings.polyList[poly].poly[0].X, ovpSettings.polyList[poly].poly[0].Y, polyZ));
-						polyList.Add(new Vector3(ovpSettings.polyList[poly].poly[1].X, ovpSettings.polyList[poly].poly[1].Y, polyZ));
-						polyList.Add(new Vector3(ovpSettings.polyList[poly].poly[2].X, ovpSettings.polyList[poly].poly[2].Y, polyZ));
-						polyColorList.Add(new Vector4(ovpSettings.polyList[poly].color.R, ovpSettings.polyList[poly].color.G, ovpSettings.polyList[poly].color.B, alpha));
-						polyColorList.Add(new Vector4(ovpSettings.polyList[poly].color.R, ovpSettings.polyList[poly].color.G, ovpSettings.polyList[poly].color.B, alpha));
-						polyColorList.Add(new Vector4(ovpSettings.polyList[poly].color.R, ovpSettings.polyList[poly].color.G, ovpSettings.polyList[poly].color.B, alpha));
-						counter += 3;
-						count[poly] = 3;
-					}
-					else
-					{
-						for (int pt = 0; pt < ovpSettings.polyList[poly].poly.Length - 1; pt++)
-						{
-							polyList.Add(new Vector3(ovpSettings.polyList[poly].poly[pt].X, ovpSettings.polyList[poly].poly[pt].Y, polyZ));
-							counter++;
-							polyColorList.Add(new Vector4(ovpSettings.polyList[poly].color.R, ovpSettings.polyList[poly].color.G, ovpSettings.polyList[poly].color.B, alpha));
-							polyList.Add(new Vector3(ovpSettings.polyList[poly].poly[pt + 1].X, ovpSettings.polyList[poly].poly[pt + 1].Y, polyZ));
-							counter++;
-							polyColorList.Add(new Vector4(ovpSettings.polyList[poly].color.R, ovpSettings.polyList[poly].color.G, ovpSettings.polyList[poly].color.B, alpha));
-						}
-						count[poly] = counter - previouscounter; // set our vertex count for the polygon.
-					}
-				}
+                for (int poly = 0; poly < ovpSettings.polyList.Count(); poly++)
+                {
+                    float alpha = ovpSettings.polyList[poly].alpha;
+                    if (ovpSettings.drawnPoly[poly])
+                    {
+                        // Only modify the alpha if we have filled polygons, otherwise our drawn poly wireframe goes AWOL.
+                        if (ovpSettings.enableFilledPolys)
+                        {
+                            alpha = 0.0f; // avoid drawing a filled shape for a drawn poly.
+                        }
+                    }
+                    float polyZ = poly * polyZStep;
+                    first[poly] = counter;
+                    previouscounter = counter;
+                    if (ovpSettings.enableFilledPolys)
+                    {
+                        polyList.Add(new Vector3(ovpSettings.polyList[poly].poly[0].X, ovpSettings.polyList[poly].poly[0].Y, polyZ));
+                        polyList.Add(new Vector3(ovpSettings.polyList[poly].poly[1].X, ovpSettings.polyList[poly].poly[1].Y, polyZ));
+                        polyList.Add(new Vector3(ovpSettings.polyList[poly].poly[2].X, ovpSettings.polyList[poly].poly[2].Y, polyZ));
+                        polyColorList.Add(new Vector4(ovpSettings.polyList[poly].color.R, ovpSettings.polyList[poly].color.G, ovpSettings.polyList[poly].color.B, alpha));
+                        polyColorList.Add(new Vector4(ovpSettings.polyList[poly].color.R, ovpSettings.polyList[poly].color.G, ovpSettings.polyList[poly].color.B, alpha));
+                        polyColorList.Add(new Vector4(ovpSettings.polyList[poly].color.R, ovpSettings.polyList[poly].color.G, ovpSettings.polyList[poly].color.B, alpha));
+                        counter += 3;
+                        count[poly] = 3;
+                    }
+                    else
+                    {
+                        for (int pt = 0; pt < ovpSettings.polyList[poly].poly.Length - 1; pt++)
+                        {
+                            polyList.Add(new Vector3(ovpSettings.polyList[poly].poly[pt].X, ovpSettings.polyList[poly].poly[pt].Y, polyZ));
+                            counter++;
+                            polyColorList.Add(new Vector4(ovpSettings.polyList[poly].color.R, ovpSettings.polyList[poly].color.G, ovpSettings.polyList[poly].color.B, alpha));
+                            polyList.Add(new Vector3(ovpSettings.polyList[poly].poly[pt + 1].X, ovpSettings.polyList[poly].poly[pt + 1].Y, polyZ));
+                            counter++;
+                            polyColorList.Add(new Vector4(ovpSettings.polyList[poly].color.R, ovpSettings.polyList[poly].color.G, ovpSettings.polyList[poly].color.B, alpha));
+                        }
+                        count[poly] = counter - previouscounter; // set our vertex count for the polygon.
+                    }
+                }
 
-				polyArray = polyList.ToArray();
-				polyColorArray = polyColorList.ToArray();
-			}
-			catch (Exception)
-			{
-				// Can ignore - not critical.
-			}
-		}
+                polyArray = polyList.ToArray();
+                polyColorArray = polyColorList.ToArray();
+            }
+            catch (Exception)
+            {
+                // Can ignore - not critical.
+            }
+        }
 
-		void drawPolygons_immediate()
-		{
-			MakeCurrent();
-			try
-			{
-				GL.LoadIdentity();
-				// Carve our Z-space up to stack polygons
-				float polyZStep = 1.0f / ovpSettings.polyList.Count();
-				for (int poly = 0; poly < ovpSettings.polyList.Count(); poly++)
-				{
-					float polyZ = poly * polyZStep;
-					GL.Color4(ovpSettings.polyList[poly].color.R, ovpSettings.polyList[poly].color.G, ovpSettings.polyList[poly].color.B, ovpSettings.polyList[poly].alpha);
-					GL.Begin(PrimitiveType.Lines);
-					for (int pt = 0; pt < ovpSettings.polyList[poly].poly.Length - 1; pt++)
-					{
-						GL.Vertex3(ovpSettings.polyList[poly].poly[pt].X, ovpSettings.polyList[poly].poly[pt].Y, polyZ);
-						GL.Vertex3(ovpSettings.polyList[poly].poly[pt + 1].X, ovpSettings.polyList[poly].poly[pt + 1].Y, polyZ);
-					}
-					GL.End();
-					GL.Begin(PrimitiveType.Triangles);
-					if (ovpSettings.enableFilledPolys)
-					{
-						GL.Vertex3(new Vector3(ovpSettings.polyList[poly].poly[0].X, ovpSettings.polyList[poly].poly[0].Y, polyZ));
-						GL.Vertex3(new Vector3(ovpSettings.polyList[poly].poly[1].X, ovpSettings.polyList[poly].poly[1].Y, polyZ));
-						GL.Vertex3(new Vector3(ovpSettings.polyList[poly].poly[2].X, ovpSettings.polyList[poly].poly[2].Y, polyZ));
-					}
-					GL.End();
-				}
-			}
-			catch (Exception)
-			{
-				// Can ignore - not critical.
-			}
-		}
+        void drawPolygons_immediate()
+        {
+            MakeCurrent();
+            try
+            {
+                GL.LoadIdentity();
+                if (ovpSettings.enableFilledPolys)
+                {
+                    float polyZ = 1.0f / (ovpSettings.polyList.Count() + 1); // push our filled polygons behind the boundary
+                    for (int poly = 0; poly < ovpSettings.polyList.Count(); poly++)
+                    {
+                        GL.Color4(ovpSettings.polyList[poly].color.R, ovpSettings.polyList[poly].color.G, ovpSettings.polyList[poly].color.B, ovpSettings.polyList[poly].alpha);
+                        GL.Enable(EnableCap.Blend);
+                        GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+                        GL.Begin(PrimitiveType.Triangles);
+                        GL.Vertex3(new Vector3(ovpSettings.polyList[poly].poly[0].X, ovpSettings.polyList[poly].poly[0].Y, polyZ));
+                        GL.Vertex3(new Vector3(ovpSettings.polyList[poly].poly[1].X, ovpSettings.polyList[poly].poly[1].Y, polyZ));
+                        GL.Vertex3(new Vector3(ovpSettings.polyList[poly].poly[2].X, ovpSettings.polyList[poly].poly[2].Y, polyZ));
+                        GL.End();
+                    }
+                }
+                else
+                {
+                    // Carve our Z-space up to stack polygons
+                    float polyZStep = 1.0f / ovpSettings.polyList.Count();
+                    for (int poly = 0; poly < ovpSettings.polyList.Count(); poly++)
+                    {
+                        float polyZ = poly * polyZStep;
+                        GL.Color4(ovpSettings.polyList[poly].color.R, ovpSettings.polyList[poly].color.G, ovpSettings.polyList[poly].color.B, ovpSettings.polyList[poly].alpha);
+                        GL.Begin(PrimitiveType.Lines);
+                        for (int pt = 0; pt < ovpSettings.polyList[poly].poly.Length - 1; pt++)
+                        {
+                            GL.Vertex3(ovpSettings.polyList[poly].poly[pt].X, ovpSettings.polyList[poly].poly[pt].Y, polyZ);
+                            GL.Vertex3(ovpSettings.polyList[poly].poly[pt + 1].X, ovpSettings.polyList[poly].poly[pt + 1].Y, polyZ);
+                        }
+                        GL.End();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                // Can ignore - not critical.
+            }
+        }
 
-		void drawLines_VBO()
+        void drawLines_VBO()
 		{
 			try
 			{
@@ -778,7 +789,33 @@ namespace TestEtoGl
 			}
 		}
 
-		public void defaults()
+        void drawLines_immediate()
+        {
+            try
+            {
+                // Carve our Z-space up to stack polygons
+                float polyZStep = 1.0f / ovpSettings.lineList.Count();
+
+                for (int poly = 0; poly < ovpSettings.lineList.Count(); poly++)
+                {
+                    float polyZ = poly * polyZStep;
+                    GL.Color4(ovpSettings.lineList[poly].color.R, ovpSettings.lineList[poly].color.G, ovpSettings.lineList[poly].color.B, ovpSettings.lineList[poly].alpha);
+                    GL.Begin(PrimitiveType.Lines);
+                    for (int pt = 0; pt < ovpSettings.lineList[poly].poly.Length - 1; pt++)
+                    {
+                        GL.Vertex3(ovpSettings.lineList[poly].poly[pt].X, ovpSettings.lineList[poly].poly[pt].Y, polyZ);
+                        GL.Vertex3(ovpSettings.lineList[poly].poly[pt + 1].X, ovpSettings.lineList[poly].poly[pt + 1].Y, polyZ);
+                    }
+                    GL.End();
+                }
+            }
+            catch (Exception)
+            {
+                // Can ignore - not critical.
+            }
+        }
+
+        public void defaults()
 		{
 			MakeCurrent();
 			if (ovpSettings.antiAlias)
