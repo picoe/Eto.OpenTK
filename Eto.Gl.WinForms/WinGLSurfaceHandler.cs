@@ -36,20 +36,22 @@ namespace Eto.Gl.Windows
             Control.SwapBuffers();
         }
 
-		public void updateViewHandler(object sender, EventArgs e)
-		{
-			updateView();
-		}
+        public void updateViewHandler(object sender, EventArgs e)
+        {
+            updateView();
+        }
 
-		public void updateView()
-		{
-			MakeCurrent();
-			GL.Viewport(Control.Size);
-			Callback.OnDraw(Widget, EventArgs.Empty);
-			SwapBuffers();
-		}
+        public void updateView() {
+            if (!Control.IsInitialized)
+                return;
 
-		public override void AttachEvent(string id)
+            MakeCurrent();
+            GL.Viewport(Control.Size);
+            Callback.OnDraw(Widget, EventArgs.Empty);
+            SwapBuffers();
+        }
+
+        public override void AttachEvent(string id)
         {
             switch (id)
             {
