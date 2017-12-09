@@ -23,6 +23,7 @@ namespace Eto.Gl.XamMac
 		int major;
 		int minor;
 		GraphicsContextFlags flags;
+		bool canInit;
 
 		public event EventHandler Initialized;
 
@@ -78,16 +79,21 @@ namespace Eto.Gl.XamMac
 			base.ViewDidMoveToWindow();
 			UpdateContext();
 		}
-
+		
 		public override void SetFrameSize(CGSize newSize)
 		{
 			base.SetFrameSize(newSize);
 			UpdateContext();
 		}
 
-		public void InitGL()
+		public void Initialize()
 		{
-			if (IsInitialized || Window == null)
+			canInit = true;
+		}
+
+		void InitGL()
+		{
+			if (IsInitialized || Window == null || !canInit)
 				return;
 
 			windowInfo = Utilities.CreateMacOSWindowInfo(Window.Handle, Handle);
