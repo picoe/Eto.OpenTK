@@ -61,6 +61,12 @@ namespace Eto.Gl.XamMac
 			set { Control.CanFocus = value; }
 		}
 
+		public override void OnLoadComplete(EventArgs e)
+		{
+			base.OnLoadComplete(e);
+			Control.Initialize();
+		}
+
 		public override void AttachEvent (string id)
         {
             switch (id) {
