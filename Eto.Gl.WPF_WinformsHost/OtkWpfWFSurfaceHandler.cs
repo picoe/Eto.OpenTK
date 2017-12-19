@@ -8,11 +8,12 @@ using System;
 
 namespace Eto.Gl.WPF_WFControl
 {
-	public class WPFWFGLSurfaceHandler : WpfControl<OtkWpfWFControl, GLSurface, GLSurface.ICallback>, GLSurface.IHandler
+	public class WPFWFGLSurfaceHandler : WindowsFormsHostHandler<GLControl, GLSurface, GLSurface.ICallback>, GLSurface.IHandler
 	{
 		public void CreateWithParams(GraphicsMode mode, int major, int minor, GraphicsContextFlags flags)
 		{
-			Control = new OtkWpfWFControl(mode, major, minor, flags);
+			WinFormsControl = new GLControl(mode, major, minor, flags);
+			Control.Focusable = true;
 		}
 
 		protected override void Initialize()
@@ -21,32 +22,23 @@ namespace Eto.Gl.WPF_WFControl
 			HandleEvent(GLSurface.GLDrawEvent);
 		}
 
-		public bool IsInitialized
+		public bool IsInitialized => Control.IsInitialized;
+
+		public void MakeCurrent() => WinFormsControl.MakeCurrent();
+
+		public void SwapBuffers() => WinFormsControl.SwapBuffers();
+
+		public void UpdateWpfHandler(object sender, EventArgs e)
 		{
-			get { return Control.IsInitialized; }
+			UpdateWpf();
 		}
 
-		public void MakeCurrent()
+		public void UpdateWpf()
 		{
-			Control.MakeCurrent();
-		}
-
-		public void SwapBuffers()
-		{
-			Control.SwapBuffers();
-		}
-
-		public void updateWPFHandler(object sender, EventArgs e)
-		{
-			updateWPF();
-		}
-
-		public void updateWPF()
-		{
-			Control.glControl.MakeCurrent();
-			GL.Viewport(Control.glControl.ClientSize);
+			MakeCurrent();
+			GL.Viewport(WinFormsControl.ClientSize);
 			Callback.OnDraw(Widget, EventArgs.Empty);
-			Control.glControl.SwapBuffers();
+			SwapBuffers();
 		}
 
 		public override void AttachEvent(string id)
@@ -64,7 +56,7 @@ namespace Eto.Gl.WPF_WFControl
 				case GLSurface.ShownEvent:
 				case GLSurface.SizeChangedEvent:
 				case GLSurface.GLDrawEvent:
-					Control.glControl.Paint += updateWPFHandler;
+					WinFormsControl.Paint += UpdateWpfHandler;
 					break;
 
 				default:

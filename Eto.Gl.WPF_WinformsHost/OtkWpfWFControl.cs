@@ -1,10 +1,8 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
 using Eto.Wpf;
 using System.Windows.Controls;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using OpenTK.Platform;
 using OpenTK.Graphics;
@@ -15,24 +13,21 @@ using System.Windows.Forms.Integration;
 
 namespace Eto.Gl.WPF_WFControl
 {
-	public class OtkWpfWFControl : System.Windows.Controls.UserControl
+
+
+	public class OtkWpfWFControl : WindowsFormsHost
 	{
 		public GLControl glControl;
-
-        private WindowsFormsHost wfHost;
 
         public OtkWpfWFControl(GraphicsMode mode, int major, int minor, GraphicsContextFlags flags)
         {
 			glControl = new GLControl();
             glControl.Dock = DockStyle.Fill;
-            // XXX: Should we add a glControl.Paint that invokes OnDraw()? Have not done for now, since OnDraw is
-            // already getting called and seems to work -- adding another call would result in double-rendering
-            // everything unless we disable the other callsite.
+			// XXX: Should we add a glControl.Paint that invokes OnDraw()? Have not done for now, since OnDraw is
+			// already getting called and seems to work -- adding another call would result in double-rendering
+			// everything unless we disable the other callsite.
 
-            wfHost = new WindowsFormsHost();
-            wfHost.Child = glControl;
-
-            this.AddChild(wfHost);
+			Child = glControl;
         }
 
         public OtkWpfWFControl(GraphicsMode mode) : this(mode, 1, 0, GraphicsContextFlags.Default)
