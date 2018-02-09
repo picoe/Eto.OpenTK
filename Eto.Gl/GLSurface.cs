@@ -94,17 +94,20 @@ namespace Eto.Gl
         {
             public void OnInitialized (GLSurface w, EventArgs e)
             {
-                w.Platform.Invoke (() => w.OnGLInitalized (e));
+                using (w.Platform.Context)
+                    w.OnGLInitalized(e);
             }
 
             public void OnShuttingDown (GLSurface w, EventArgs e)
             {
-                w.Platform.Invoke (() => w.OnShuttingDown (e));
+                using (w.Platform.Context)
+                    w.OnShuttingDown (e);
             }
 
             public void OnDraw (GLSurface w, EventArgs e)
             {
-                w.Platform.Invoke (() => w.OnDraw (e));
+                using (w.Platform.Context)
+                    w.OnDraw (e);
             }
         }
 

@@ -48,12 +48,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Eto, Version=2.3.6561.30214, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Eto.Forms.2.4.0-build1193\lib\net45\Eto.dll</HintPath>
-    </Reference>
-    <Reference Include="Eto.WinForms, Version=2.3.6561.30218, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Eto.Platform.Windows.2.4.0-build1193\lib\net45\Eto.WinForms.dll</HintPath>
-    </Reference>
     <Reference Include="OpenTK, Version=3.0.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <HintPath>..\packages\OpenTK.3.0.0-pre\lib\net20\OpenTK.dll</HintPath>
     </Reference>
@@ -62,6 +56,13 @@
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="Eto">
+      <HintPath>..\packages\Eto.Forms.2.4.0-build1280\lib\netstandard1.0\Eto.dll</HintPath>
+    </Reference>
+    <Reference Include="Eto.WinForms">
+      <HintPath>..\packages\Eto.Platform.Windows.2.4.0-build1280\lib\net45\Eto.WinForms.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Eto.Gl\Eto.Gl.csproj">
@@ -73,4 +74,5 @@
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <Import Project="..\packages\Eto.Forms.2.4.0-build1280\build\Eto.Forms.targets" Condition="Exists('..\packages\Eto.Forms.2.4.0-build1280\build\Eto.Forms.targets')" />
 </Project>
