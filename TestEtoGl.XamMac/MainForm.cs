@@ -358,12 +358,9 @@ namespace TestEtoGl
 			}
 			if (mode == 1)
 			{
-				PixelLayout mainContent = new PixelLayout();
-				mainContent.Size = new Size(300, 300);
-				Content = mainContent;
 				TabControl tabControl_main = new TabControl();
 				tabControl_main.Size = new Size(300, 300);
-				mainContent.Add(tabControl_main, 1, 20);
+				Content = tabControl_main;
 
 				TabPage tab_0 = new TabPage();
 				tab_0.Text = "0";
@@ -381,9 +378,6 @@ namespace TestEtoGl
 				TabPage tab_2 = new TabPage();
 				tab_2.Text = "2";
 				tabControl_main.Pages.Add(tab_2);
-				PixelLayout tabPage_2_content = new PixelLayout();
-				tabPage_2_content.Size = new Size(280, 280);
-				tab_2.Content = tabPage_2_content;
 
 				viewport = new TestViewport(ref ovpSettings);
 				viewport.Size = new Size(200, 200);
@@ -391,9 +385,9 @@ namespace TestEtoGl
 
 				viewport2 = new TestViewport(ref ovp2Settings);
 				viewport2.Size = new Size(200, 200);
-				tabPage_2_content.Add(viewport2, 5, 5);
+				tab_2.Content = viewport2;
 			}
-			if (mode == 3)
+			if (mode == 2)
 			{
 				ovpSettings.addPolygon(refPoly, Color.FromArgb(0, 255, 0), 0.7f, false);
 				ovp2Settings.addPolygon(refPoly, Color.FromArgb(255, 0, 0), 0.7f, false);
@@ -419,8 +413,7 @@ namespace TestEtoGl
 				testComboBox.SelectedIndexChanged += adjustView_;
 				//testComboBox.SelectedIndexBinding.BindDataContext((myStuff m) => m.index);
 
-				Panel testing3 = new Panel();
-				testing3.Content = new Splitter
+				var testing3 = new Splitter
 				{
 					Orientation = Orientation.Horizontal,
 					FixedPanel = SplitterFixedPanel.None,
@@ -428,8 +421,7 @@ namespace TestEtoGl
 					Panel2 = testComboBox
 				};
 
-				Panel testing4 = new Panel();
-				testing4.Content = new Splitter
+				var testing4 = new Splitter
 				{
 					Orientation = Orientation.Vertical,
 					FixedPanel = SplitterFixedPanel.None,
@@ -437,12 +429,12 @@ namespace TestEtoGl
 					Panel2 = testing
 				};
 
-				Splitter mySplitter = new Splitter
+				var mySplitter = new Splitter
 				{
 					Orientation = Orientation.Vertical,
 					FixedPanel = SplitterFixedPanel.None,
 					Panel1 = testing4,
-					Panel2 = testing
+					Panel2 = new Panel()
 				};
 
 				Content = mySplitter;
@@ -525,6 +517,7 @@ namespace TestEtoGl
 //			testComboBox.SelectedIndex = 1;
 		}
 
+		/* These shouldn't be necessary
 		protected override void OnWindowStateChanged(EventArgs e)
 		{
 			base.OnWindowStateChanged(e);
@@ -566,6 +559,7 @@ namespace TestEtoGl
 				viewport2.updateViewport();
 			}
 		}
+		*/
 
 	}
 

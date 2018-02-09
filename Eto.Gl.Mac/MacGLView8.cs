@@ -23,13 +23,16 @@ namespace Eto.Gl.XamMac
 		int major;
 		int minor;
 		GraphicsContextFlags flags;
-		bool canInit;
+		GraphicsContext context;
+		IWindowInfo windowInfo;
 
 		public event EventHandler Initialized;
 
 		public event EventHandler ShuttingDown;
 
 		public event EventHandler DrawNow;
+
+        public event EventHandler SizeChanged;
 
 
 		public MacGLView8(GraphicsMode mode, int major, int minor, GraphicsContextFlags flags)
@@ -39,9 +42,6 @@ namespace Eto.Gl.XamMac
 			this.minor = minor;
 			this.flags = flags;
 		}
-
-		GraphicsContext context;
-		IWindowInfo windowInfo;
 
 		static MacGLView8()
 		{
@@ -55,14 +55,26 @@ namespace Eto.Gl.XamMac
 
 		public override void DrawRect(CGRect dirtyRect)
 		{
+			// only init on the first draw, otherwise we're not able to init properly?
 			if (!IsInitialized)
 				InitGL();
-
-			MakeCurrent();
+			else
+			{
+				if (NeedsNewContext)
+				{
+					windowInfo = Utilities.CreateMacOSWindowInfo(Window.Handle, Handle);
+					context.Update(windowInfo);
+					NeedsNewContext = false;
+				}
+				MakeCurrent();
+			}
+			
 			DrawNow?.Invoke(this, EventArgs.Empty);
 		}
 
-		public bool IsInitialized { get { return context != null; } }
+		public bool IsInitialized => context != null;
+
+		public bool NeedsNewContext { get; set; } = true;
 
 		public void MakeCurrent()
 		{
@@ -77,24 +89,22 @@ namespace Eto.Gl.XamMac
 		public override void ViewDidMoveToWindow()
 		{
 			base.ViewDidMoveToWindow();
-			UpdateContext();
+			NeedsNewContext = true;
 		}
-		
+
 		public override void SetFrameSize(CGSize newSize)
 		{
 			base.SetFrameSize(newSize);
-			UpdateContext();
-		}
-
-		public void Initialize()
-		{
-			canInit = true;
+			NeedsNewContext = true;
+            SizeChanged?.Invoke(this, EventArgs.Empty);
 		}
 
 		void InitGL()
 		{
-			if (IsInitialized || Window == null || !canInit)
+			if (IsInitialized || Window == null)
 				return;
+
+			NeedsNewContext = false;
 
 			windowInfo = Utilities.CreateMacOSWindowInfo(Window.Handle, Handle);
 
@@ -105,17 +115,6 @@ namespace Eto.Gl.XamMac
 			context.LoadAll();
 
 			Initialized?.Invoke(this, EventArgs.Empty);
-		}
-
-		void UpdateContext()
-		{
-			if (!IsInitialized)
-				InitGL();
-			else if (Window != null)
-			{
-				windowInfo = Utilities.CreateMacOSWindowInfo(Window.Handle, Handle);
-				context.Update(windowInfo);
-			}
 		}
 
 		public bool CanFocus { get; set; }
@@ -132,5 +131,14 @@ namespace Eto.Gl.XamMac
 
 		public WeakReference WeakHandler { get; set; }
 
+		public override void DidChangeBackingProperties()
+		{
+			// this is called when moving from a retina screen to non-retina 
+			// or if the current screen is changed.
+
+			base.DidChangeBackingProperties();
+			NeedsNewContext = true;
+			NeedsDisplay = true;
+		}
 	}
 }

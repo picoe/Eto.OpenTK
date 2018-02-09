@@ -4,14 +4,10 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{D7CEAEBF-7F61-4220-9920-61FDA4B1470F}</ProjectGuid>
-    <ProjectTypeGuids>{948B3504-5B70-4649-8FE4-BDE1FB46EC69};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Exe</OutputType>
     <RootNamespace>TestEtoGl.Mac</RootNamespace>
-    <AssemblyName>TestEtoGl.XamMac</AssemblyName>
+    <AssemblyName>TestEtoGl.Mac</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
-    <SuppressXamMacMigration>true</SuppressXamMacMigration>
-    <ReleaseVersion>0.24</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -55,14 +51,15 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="Eto">
-      <HintPath>..\packages\Eto.Forms.2.3.0\lib\net45\Eto.dll</HintPath>
+      <HintPath>..\packages\Eto.Forms.2.4.0-build1280\lib\netstandard1.0\Eto.dll</HintPath>
     </Reference>
     <Reference Include="Eto.Mac">
-      <HintPath>..\packages\Eto.Platform.Mac.2.3.0\lib\net45\Eto.Mac.dll</HintPath>
+      <HintPath>..\packages\Eto.Platform.Mac.2.4.0-build1280\lib\net45\Eto.Mac.dll</HintPath>
     </Reference>
     <Reference Include="MonoMac">
-      <HintPath>..\packages\Eto.Platform.Mac.2.3.0\lib\net45\MonoMac.dll</HintPath>
+      <HintPath>..\packages\Eto.Platform.Mac.2.4.0-build1280\lib\net45\MonoMac.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -78,7 +75,7 @@
       <Project>{C6D7920E-3FB5-4DAD-80F1-2B76158D493F}</Project>
       <Name>Eto.Gl.Mac</Name>
     </ProjectReference>
-    <ProjectReference Include="..\GLTest\GLTest.csproj">
+    <ProjectReference Include="..\TestEtoGl\TestEtoGl.csproj">
       <Project>{66C691D6-557F-4477-BF96-FA5BC92C715B}</Project>
       <Name>TestEtoGl</Name>
     </ProjectReference>
@@ -90,4 +87,6 @@
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\Eto.Forms.2.4.0-build1280\build\Eto.Forms.targets" Condition="Exists('..\packages\Eto.Forms.2.4.0-build1280\build\Eto.Forms.targets')" />
+  <Import Project="..\packages\Eto.Platform.Mac.2.4.0-build1280\build\Eto.Platform.Mac.targets" Condition="Exists('..\packages\Eto.Platform.Mac.2.4.0-build1280\build\Eto.Platform.Mac.targets')" />
 </Project>

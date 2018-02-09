@@ -63,9 +63,8 @@
       <HintPath>..\packages\Eto.Platform.XamMac2.2.3.0\lib\net45\Eto.XamMac2.dll</HintPath>
     </Reference>
     <Reference Include="OpenTK">
-      <HintPath>..\packages\OpenTK.Next.1.2.2336.6514-pre\lib\net20\OpenTK.dll</HintPath>
+      <HintPath>..\packages\OpenTK.3.0.0-pre\lib\net20\OpenTK.dll</HintPath>
     </Reference>
-    <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -87,11 +86,11 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
-  <Target Name="FixOpenGL" BeforeTargets="CoreCompile">
+  <Target Name="FixOpenGL" BeforeTargets="CoreCompile" AfterTargets="FixDesignTimeFacades">
     <ItemGroup>
       <!-- Xamarin.Mac automatically includes its version of OpenTK, we don't want that -->
-      <ReferencePath Remove="/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/4.5/OpenTK.dll" />
-      <ReferencePath Include="$(MSBuildThisFileDirectory)\..\packages\OpenTK.Next.1.2.2336.6514-pre\lib\net20\OpenTK.dll" />
+      <ReferencePath Remove="/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/reference/full/OpenTK.dll" />
+      <ReferencePath Include="$(MSBuildThisFileDirectory)\..\packages\OpenTK.3.0.0-pre\lib\net20\OpenTK.dll" />
     </ItemGroup>
   </Target>
 </Project>
