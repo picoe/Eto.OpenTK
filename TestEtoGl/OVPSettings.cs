@@ -22,6 +22,7 @@ namespace TestEtoGl
 	{
 		public float minX, maxX, minY, maxY;
 		public bool enableFilledPolys;
+		public bool immediateMode; // if true, don't use VBOs.
 		public bool drawPoints;
 		public RectangleF bounds;
 		public float base_zoom;
@@ -90,7 +91,15 @@ namespace TestEtoGl
 
 		public void addPolygon(PointF[] poly, Color polyColor, float alpha, bool drawn)
 		{
-			pAddPolygon(poly, polyColor, alpha, drawn);
+            if (drawn)
+            {
+                // Drawn polygons are to be treated as lines : they don't get filled.
+                addLine(poly, polyColor, alpha);
+            }
+            else
+            {
+                pAddPolygon(poly, polyColor, alpha, drawn);
+            }
 		}
 
 		void pAddPolygon(PointF[] poly, Color polyColor, float alpha, bool drawn)
@@ -151,6 +160,7 @@ namespace TestEtoGl
 			gridSpacing = 10;
 			antiAlias = true;
 			zoomStep = 1;
+			immediateMode = false;
 			fullReset(defX, defY);
 		}
 
@@ -221,7 +231,6 @@ namespace TestEtoGl
 			}
 
 			// Now we need to check for polyfill, and triangulate the polygon if needed.
-            
 			if (enableFilledPolys)
 			{
 				var tess = new Tess();

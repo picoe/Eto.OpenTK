@@ -49,6 +49,8 @@ namespace TestEtoGl
 		float x_orig;
 		float y_orig;
 
+        ContextMenu menu;
+
 		Point WorldToScreen(float x, float y)
 		{
 			return new Point((int)((x - ovpSettings.cameraPosition.X / (ovpSettings.zoomFactor * ovpSettings.base_zoom)) + Width / 2),
@@ -122,10 +124,10 @@ namespace TestEtoGl
 
 		public void zoomExtents()
 		{
-			polygonExtents();
+			getExtents();
 
-			if ((ovpSettings.polyList.Count == 0) ||
-				((ovpSettings.minX == 0) && (ovpSettings.maxX == 0)) ||
+			if (((ovpSettings.polyList.Count == 0) && (ovpSettings.lineList.Count == 0)) || 
+                ((ovpSettings.minX == 0) && (ovpSettings.maxX == 0)) ||
 				((ovpSettings.minY == 0) && (ovpSettings.maxY == 0)))
 			{
 				reset();
@@ -205,7 +207,14 @@ namespace TestEtoGl
 			{
 				dragging = false;
 			}
-			//e.Handled = true;
+            if (e.Buttons == MouseButtons.Alternate)
+            {
+                if (menu != null)
+                {
+                    menu.Show(this);
+                }
+            }
+			//e.Handled = true
 		}
 
 		public void zoomIn(float delta)
@@ -591,9 +600,13 @@ namespace TestEtoGl
 			updateHostFunc?.Invoke();
 		}
 
-		void polygonExtents()
+		void getExtents()
 		{
-			if (ovpSettings.polyList.Count == 0)
+            float minX = 0;
+            float maxX = 0;
+            float minY = 0, maxY = 0;
+
+			if ((ovpSettings.polyList.Count == 0) && (ovpSettings.lineList.Count == 0))
 			{
 				ovpSettings.minX = 0;
 				ovpSettings.maxX = 0;
@@ -601,111 +614,134 @@ namespace TestEtoGl
 				ovpSettings.maxY = 0;
 				return;
 			}
-			float minX = ovpSettings.polyList[0].poly[0].X;
-			float maxX = ovpSettings.polyList[0].poly[0].X;
-			float minY = ovpSettings.polyList[0].poly[0].Y;
-			float maxY = ovpSettings.polyList[0].poly[0].Y;
-			for (int poly = 0; poly < ovpSettings.polyList.Count; poly++)
-			{
-				float tMinX = ovpSettings.polyList[poly].poly.Min(p => p.X);
-				if (tMinX < minX)
-				{
-					minX = tMinX;
-				}
-				float tMaxX = ovpSettings.polyList[poly].poly.Max(p => p.X);
-				if (tMaxX > maxX)
-				{
-					maxX = tMaxX;
-				}
-				float tMinY = ovpSettings.polyList[poly].poly.Min(p => p.Y);
-				if (tMinY < minY)
-				{
-					minY = tMinY;
-				}
-				float tMaxY = ovpSettings.polyList[poly].poly.Max(p => p.Y);
-				if (tMaxY > maxY)
-				{
-					maxY = tMaxY;
-				}
-			}
 
-			ovpSettings.minX = minX;
+            if (ovpSettings.polyList.Count != 0)
+            {
+                minX = ovpSettings.polyList[0].poly[0].X;
+                maxX = ovpSettings.polyList[0].poly[0].X;
+                minY = ovpSettings.polyList[0].poly[0].Y;
+                maxY = ovpSettings.polyList[0].poly[0].Y;
+                for (int poly = 0; poly < ovpSettings.polyList.Count; poly++)
+                {
+                    float tMinX = ovpSettings.polyList[poly].poly.Min(p => p.X);
+                    if (tMinX < minX)
+                    {
+                        minX = tMinX;
+                    }
+                    float tMaxX = ovpSettings.polyList[poly].poly.Max(p => p.X);
+                    if (tMaxX > maxX)
+                    {
+                        maxX = tMaxX;
+                    }
+                    float tMinY = ovpSettings.polyList[poly].poly.Min(p => p.Y);
+                    if (tMinY < minY)
+                    {
+                        minY = tMinY;
+                    }
+                    float tMaxY = ovpSettings.polyList[poly].poly.Max(p => p.Y);
+                    if (tMaxY > maxY)
+                    {
+                        maxY = tMaxY;
+                    }
+                }
+            }
+
+            if (ovpSettings.lineList.Count != 0)
+            {
+                for (int line = 0; line < ovpSettings.lineList.Count; line++)
+                {
+                    float tMinX = ovpSettings.lineList[line].poly.Min(p => p.X);
+                    if (tMinX < minX)
+                    {
+                        minX = tMinX;
+                    }
+                    float tMaxX = ovpSettings.lineList[line].poly.Max(p => p.X);
+                    if (tMaxX > maxX)
+                    {
+                        maxX = tMaxX;
+                    }
+                    float tMinY = ovpSettings.lineList[line].poly.Min(p => p.Y);
+                    if (tMinY < minY)
+                    {
+                        minY = tMinY;
+                    }
+                    float tMaxY = ovpSettings.lineList[line].poly.Max(p => p.Y);
+                    if (tMaxY > maxY)
+                    {
+                        maxY = tMaxY;
+                    }
+                }
+            }
+
+            ovpSettings.minX = minX;
 			ovpSettings.maxX = maxX;
 			ovpSettings.minY = minY;
 			ovpSettings.maxY = maxY;
 		}
 
-        void drawPolygons_VBO()
-        {
-            try
-            {
-                List<Vector3> polyList = new List<Vector3>();
-                List<Vector4> polyColorList = new List<Vector4>();
+		void drawPolygons_VBO()
+		{
+			try
+			{
+				List<Vector3> polyList = new List<Vector3>();
+				List<Vector4> polyColorList = new List<Vector4>();
 
-                // Carve our Z-space up to stack polygons
-                float polyZStep = 1.0f / ovpSettings.polyList.Count();
+				// Carve our Z-space up to stack polygons
+				float polyZStep = 1.0f / ovpSettings.polyList.Count();
 
-                // Create our first and count arrays for the vertex indices, to enable polygon separation when rendering.
-                first = new int[ovpSettings.polyList.Count()];
-                count = new int[ovpSettings.polyList.Count()];
-                int counter = 0; // vertex count that will be used to define 'first' index for each polygon.
-                int previouscounter = 0; // will be used to derive the number of vertices in each polygon.
+				// Create our first and count arrays for the vertex indices, to enable polygon separation when rendering.
+				first = new int[ovpSettings.polyList.Count()];
+				count = new int[ovpSettings.polyList.Count()];
+				int counter = 0; // vertex count that will be used to define 'first' index for each polygon.
+				int previouscounter = 0; // will be used to derive the number of vertices in each polygon.
 
-                for (int poly = 0; poly < ovpSettings.polyList.Count(); poly++)
-                {
-                    float alpha = ovpSettings.polyList[poly].alpha;
-                    if (ovpSettings.drawnPoly[poly])
-                    {
-                        // Only modify the alpha if we have filled polygons, otherwise our drawn poly wireframe goes AWOL.
-                        if (ovpSettings.enableFilledPolys)
-                        {
-                            alpha = 0.0f; // avoid drawing a filled shape for a drawn poly.
-                        }
-                    }
-                    float polyZ = poly * polyZStep;
-                    first[poly] = counter;
-                    previouscounter = counter;
-                    if (ovpSettings.enableFilledPolys)
-                    {
-                        polyList.Add(new Vector3(ovpSettings.polyList[poly].poly[0].X, ovpSettings.polyList[poly].poly[0].Y, polyZ));
-                        polyList.Add(new Vector3(ovpSettings.polyList[poly].poly[1].X, ovpSettings.polyList[poly].poly[1].Y, polyZ));
-                        polyList.Add(new Vector3(ovpSettings.polyList[poly].poly[2].X, ovpSettings.polyList[poly].poly[2].Y, polyZ));
-                        polyColorList.Add(new Vector4(ovpSettings.polyList[poly].color.R, ovpSettings.polyList[poly].color.G, ovpSettings.polyList[poly].color.B, alpha));
-                        polyColorList.Add(new Vector4(ovpSettings.polyList[poly].color.R, ovpSettings.polyList[poly].color.G, ovpSettings.polyList[poly].color.B, alpha));
-                        polyColorList.Add(new Vector4(ovpSettings.polyList[poly].color.R, ovpSettings.polyList[poly].color.G, ovpSettings.polyList[poly].color.B, alpha));
-                        counter += 3;
-                        count[poly] = 3;
-                    }
-                    else
-                    {
-                        for (int pt = 0; pt < ovpSettings.polyList[poly].poly.Length - 1; pt++)
-                        {
-                            polyList.Add(new Vector3(ovpSettings.polyList[poly].poly[pt].X, ovpSettings.polyList[poly].poly[pt].Y, polyZ));
-                            counter++;
-                            polyColorList.Add(new Vector4(ovpSettings.polyList[poly].color.R, ovpSettings.polyList[poly].color.G, ovpSettings.polyList[poly].color.B, alpha));
-                            polyList.Add(new Vector3(ovpSettings.polyList[poly].poly[pt + 1].X, ovpSettings.polyList[poly].poly[pt + 1].Y, polyZ));
-                            counter++;
-                            polyColorList.Add(new Vector4(ovpSettings.polyList[poly].color.R, ovpSettings.polyList[poly].color.G, ovpSettings.polyList[poly].color.B, alpha));
-                        }
-                        count[poly] = counter - previouscounter; // set our vertex count for the polygon.
-                    }
-                }
+				for (int poly = 0; poly < ovpSettings.polyList.Count(); poly++)
+				{
+					float alpha = ovpSettings.polyList[poly].alpha;
+					float polyZ = poly * polyZStep;
+					first[poly] = counter;
+					previouscounter = counter;
+					if ((ovpSettings.enableFilledPolys) && (!ovpSettings.drawnPoly[poly]))
+					{
+						polyList.Add(new Vector3(ovpSettings.polyList[poly].poly[0].X, ovpSettings.polyList[poly].poly[0].Y, polyZ));
+						polyList.Add(new Vector3(ovpSettings.polyList[poly].poly[1].X, ovpSettings.polyList[poly].poly[1].Y, polyZ));
+						polyList.Add(new Vector3(ovpSettings.polyList[poly].poly[2].X, ovpSettings.polyList[poly].poly[2].Y, polyZ));
+						polyColorList.Add(new Vector4(ovpSettings.polyList[poly].color.R, ovpSettings.polyList[poly].color.G, ovpSettings.polyList[poly].color.B, alpha));
+						polyColorList.Add(new Vector4(ovpSettings.polyList[poly].color.R, ovpSettings.polyList[poly].color.G, ovpSettings.polyList[poly].color.B, alpha));
+						polyColorList.Add(new Vector4(ovpSettings.polyList[poly].color.R, ovpSettings.polyList[poly].color.G, ovpSettings.polyList[poly].color.B, alpha));
+						counter += 3;
+						count[poly] = 3;
+					}
+					else
+					{
+						for (int pt = 0; pt < ovpSettings.polyList[poly].poly.Length - 1; pt++)
+						{
+							polyList.Add(new Vector3(ovpSettings.polyList[poly].poly[pt].X, ovpSettings.polyList[poly].poly[pt].Y, polyZ));
+							counter++;
+							polyColorList.Add(new Vector4(ovpSettings.polyList[poly].color.R, ovpSettings.polyList[poly].color.G, ovpSettings.polyList[poly].color.B, alpha));
+							polyList.Add(new Vector3(ovpSettings.polyList[poly].poly[pt + 1].X, ovpSettings.polyList[poly].poly[pt + 1].Y, polyZ));
+							counter++;
+							polyColorList.Add(new Vector4(ovpSettings.polyList[poly].color.R, ovpSettings.polyList[poly].color.G, ovpSettings.polyList[poly].color.B, alpha));
+						}
+						count[poly] = counter - previouscounter; // set our vertex count for the polygon.
+					}
+				}
 
-                polyArray = polyList.ToArray();
-                polyColorArray = polyColorList.ToArray();
-            }
-            catch (Exception)
-            {
-                // Can ignore - not critical.
-            }
-        }
+				polyArray = polyList.ToArray();
+				polyColorArray = polyColorList.ToArray();
+			}
+			catch (Exception)
+			{
+				// Can ignore - not critical.
+			}
+		}
 
-        void drawPolygons_immediate()
-        {
-            MakeCurrent();
-            try
-            {
-                GL.LoadIdentity();
+		void drawPolygons_immediate()
+		{
+			MakeCurrent();
+			try
+			{
+				GL.LoadIdentity();
                 if (ovpSettings.enableFilledPolys)
                 {
                     float polyZ = 1.0f / (ovpSettings.polyList.Count() + 1); // push our filled polygons behind the boundary
@@ -739,13 +775,13 @@ namespace TestEtoGl
                     }
                 }
             }
-            catch (Exception)
-            {
-                // Can ignore - not critical.
-            }
-        }
+			catch (Exception)
+			{
+				// Can ignore - not critical.
+			}
+		}
 
-        void drawLines_VBO()
+		void drawLines_VBO()
 		{
 			try
 			{
@@ -840,6 +876,7 @@ namespace TestEtoGl
 		{
 			try
 			{
+				immediateMode = svpSettings.immediateMode;
 				ovpSettings = svpSettings;
 				MouseDown += downHandler;
 				MouseMove += dragHandler;
@@ -856,6 +893,11 @@ namespace TestEtoGl
 				ok = false;
 			}
 		}
+
+        public void setContextMenu(ref ContextMenu menu_)
+        {
+            menu = menu_;
+        }
 
 		public void changeSettingsRef(ref OVPSettings newSettings)
 		{
