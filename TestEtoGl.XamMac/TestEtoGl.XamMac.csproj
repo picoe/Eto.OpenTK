@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>TestEtoGl.XamMac</RootNamespace>
     <AssemblyName>TestEtoGl.XamMac</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
     <ReleaseVersion>0.24</ReleaseVersion>
   </PropertyGroup>
@@ -36,6 +36,7 @@
     <ExternalConsole>false</ExternalConsole>
     <PackageSigningKey>Developer ID Installer</PackageSigningKey>
     <PlatformTarget>x64</PlatformTarget>
+    <AOTMode>None</AOTMode>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
@@ -58,20 +59,22 @@
     <XamMacArch>
     </XamMacArch>
     <PackageSigningKey>Developer ID Installer</PackageSigningKey>
+    <AOTMode>None</AOTMode>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.Mac" />
     <Reference Include="System.Drawing" />
-    <Reference Include="Eto">
-      <HintPath>..\packages\Eto.Forms.2.3.0\lib\net45\Eto.dll</HintPath>
-    </Reference>
-    <Reference Include="Eto.XamMac2">
-      <HintPath>..\packages\Eto.Platform.XamMac2.2.3.0\lib\net45\Eto.XamMac2.dll</HintPath>
-    </Reference>
     <Reference Include="OpenTK">
       <HintPath>..\packages\OpenTK.3.0.0-pre\lib\net20\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="Eto">
+      <HintPath>..\packages\Eto.Forms.2.4.1\lib\netstandard1.0\Eto.dll</HintPath>
+    </Reference>
+    <Reference Include="Eto.XamMac2">
+      <HintPath>..\packages\Eto.Platform.XamMac2.2.4.1\lib\net45\Eto.XamMac2.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -116,8 +119,10 @@
   <Target Name="FixOpenGL" BeforeTargets="CoreCompile">
     <ItemGroup>
       <!-- Xamarin.Mac automatically includes its version of OpenTK, we don't want that -->
-      <ReferencePath Remove="/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/4.5/OpenTK.dll" />
-      <ReferencePath Include="$(MSBuildThisFileDirectory)\..\packages\OpenTK.Next.1.2.2336.6514-pre\lib\net20\OpenTK.dll" />
+      <ReferencePath Remove="/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/reference/net_4_5/OpenTK.dll" />
+      <ReferencePath Include="../packages/OpenTK.3.0.0-pre/lib/net20/OpenTK.dll" />
     </ItemGroup>
   </Target>
+  <Import Project="..\packages\Eto.Forms.2.4.1\build\Eto.Forms.targets" Condition="Exists('..\packages\Eto.Forms.2.4.1\build\Eto.Forms.targets')" />
+  <Import Project="..\packages\Eto.Platform.XamMac2.2.4.1\build\Eto.Platform.XamMac2.targets" Condition="Exists('..\packages\Eto.Platform.XamMac2.2.4.1\build\Eto.Platform.XamMac2.targets')" />
 </Project>

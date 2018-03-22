@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2027
+VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eto.Gl.Gtk2", "Eto.Gl.Gtk2\Eto.Gl.Gtk2.csproj", "{06F7AC59-0E70-4646-BBFA-C105D9664FD0}"
 EndProject
@@ -9,9 +9,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eto.Gl.WinForms", "Eto.Gl.W
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eto.Gl.Mac", "Eto.Gl.Mac\Eto.Gl.Mac.csproj", "{C6D7920E-3FB5-4DAD-80F1-2B76158D493F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestEtoGl.Mac", "TestEtoGl.Mac\TestEtoGl.Mac.csproj", "{D7CEAEBF-7F61-4220-9920-61FDA4B1470F}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestEtoGl", "TestEtoGl\TestEtoGl.csproj", "{66C691D6-557F-4477-BF96-FA5BC92C715B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestEtoGl.WinForms", "TestEtoGl.WinForms\TestEtoGl.WinForms.csproj", "{2A29DA7C-7CB0-458A-9EA8-85811AD952E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestEtoGl.XamMac", "TestEtoGl.XamMac\TestEtoGl.XamMac.csproj", "{E201F515-1163-401A-ABC0-17A0E6A85764}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eto.Gl.XamMac", "Eto.Gl.XamMac\Eto.Gl.XamMac.csproj", "{D260DEBB-3D35-46A4-AB23-F2A19CC10E28}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eto.Gl", "Eto.Gl\Eto.Gl.csproj", "{510CE98D-2169-48A0-889C-E743417EE5E1}"
 EndProject
@@ -20,8 +26,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestEtoGl.WPF_WinformsHost", "TestEtoGl.WPF_WinformsHost\TestEtoGl.WPF_WinformsHost.csproj", "{B1EB0BB0-C662-4314-A3D3-20E1AD0F98D6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eto.Gl.WPF_WinformsHost", "Eto.Gl.WPF_WinformsHost\Eto.Gl.WPF_WinformsHost.csproj", "{43C9116A-2F41-4F57-88E5-6B49BFB7881B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestEtoGl.Mac", "TestEtoGl.Mac\TestEtoGl.Mac.csproj", "{5DD54367-9089-4371-BF0A-1BE772B623E6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +45,10 @@ Global
 		{C6D7920E-3FB5-4DAD-80F1-2B76158D493F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6D7920E-3FB5-4DAD-80F1-2B76158D493F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6D7920E-3FB5-4DAD-80F1-2B76158D493F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7CEAEBF-7F61-4220-9920-61FDA4B1470F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7CEAEBF-7F61-4220-9920-61FDA4B1470F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7CEAEBF-7F61-4220-9920-61FDA4B1470F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7CEAEBF-7F61-4220-9920-61FDA4B1470F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{66C691D6-557F-4477-BF96-FA5BC92C715B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{66C691D6-557F-4477-BF96-FA5BC92C715B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{66C691D6-557F-4477-BF96-FA5BC92C715B}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -49,6 +57,14 @@ Global
 		{2A29DA7C-7CB0-458A-9EA8-85811AD952E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A29DA7C-7CB0-458A-9EA8-85811AD952E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A29DA7C-7CB0-458A-9EA8-85811AD952E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E201F515-1163-401A-ABC0-17A0E6A85764}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E201F515-1163-401A-ABC0-17A0E6A85764}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E201F515-1163-401A-ABC0-17A0E6A85764}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E201F515-1163-401A-ABC0-17A0E6A85764}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D260DEBB-3D35-46A4-AB23-F2A19CC10E28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D260DEBB-3D35-46A4-AB23-F2A19CC10E28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D260DEBB-3D35-46A4-AB23-F2A19CC10E28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D260DEBB-3D35-46A4-AB23-F2A19CC10E28}.Release|Any CPU.Build.0 = Release|Any CPU
 		{510CE98D-2169-48A0-889C-E743417EE5E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{510CE98D-2169-48A0-889C-E743417EE5E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{510CE98D-2169-48A0-889C-E743417EE5E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -65,16 +81,9 @@ Global
 		{43C9116A-2F41-4F57-88E5-6B49BFB7881B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43C9116A-2F41-4F57-88E5-6B49BFB7881B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43C9116A-2F41-4F57-88E5-6B49BFB7881B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5DD54367-9089-4371-BF0A-1BE772B623E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5DD54367-9089-4371-BF0A-1BE772B623E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5DD54367-9089-4371-BF0A-1BE772B623E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5DD54367-9089-4371-BF0A-1BE772B623E6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {BCC1ED0C-8D6E-4E42-9D38-E4240C2AFDDA}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0
