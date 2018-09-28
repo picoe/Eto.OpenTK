@@ -67,7 +67,7 @@
     <Reference Include="Xamarin.Mac" />
     <Reference Include="System.Drawing" />
     <Reference Include="OpenTK">
-      <HintPath>..\packages\OpenTK.3.0.0-pre\lib\net20\OpenTK.dll</HintPath>
+      <HintPath>..\packages\OpenTK.3.0.1\lib\net20\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="Eto">
@@ -120,7 +120,7 @@
     <ItemGroup>
       <!-- Xamarin.Mac automatically includes its version of OpenTK, we don't want that -->
       <ReferencePath Remove="/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/reference/net_4_5/OpenTK.dll" />
-      <ReferencePath Include="../packages/OpenTK.3.0.0-pre/lib/net20/OpenTK.dll" />
+      <ReferencePath Include="../packages/OpenTK.3.0.1/lib/net20/OpenTK.dll" />
     </ItemGroup>
   </Target>
   <Import Project="..\packages\Eto.Forms.2.4.1\build\Eto.Forms.targets" Condition="Exists('..\packages\Eto.Forms.2.4.1\build\Eto.Forms.targets')" />

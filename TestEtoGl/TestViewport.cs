@@ -537,7 +537,7 @@ namespace TestEtoGl
 
 					// Allow alpha blending
 					GL.Enable(EnableCap.Blend);
-					GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+					GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 
 					// Poly data
 					GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_id[2]);
@@ -749,7 +749,7 @@ namespace TestEtoGl
                     {
                         GL.Color4(ovpSettings.polyList[poly].color.R, ovpSettings.polyList[poly].color.G, ovpSettings.polyList[poly].color.B, ovpSettings.polyList[poly].alpha);
                         GL.Enable(EnableCap.Blend);
-                        GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+                        GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
                         GL.Begin(PrimitiveType.Triangles);
                         GL.Vertex3(new Vector3(ovpSettings.polyList[poly].poly[0].X, ovpSettings.polyList[poly].poly[0].Y, polyZ));
                         GL.Vertex3(new Vector3(ovpSettings.polyList[poly].poly[1].X, ovpSettings.polyList[poly].poly[1].Y, polyZ));
@@ -865,7 +865,7 @@ namespace TestEtoGl
 			GL.Disable(EnableCap.Lighting);
 			GL.ShadeModel(ShadingModel.Flat);
 			GL.Enable(EnableCap.Blend);
-			GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+			GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 			GL.PolygonOffset(0.0f, 0.5f);
 			GL.LineStipple(1, 61680);
 			gridZ = -0.95f;
