@@ -329,7 +329,38 @@ namespace Eto.Gl.Windows
                 return ClientSize.Width / (float)ClientSize.Height;
             }
         }
-        
+
+        /// <summary>
+        /// Gets or sets a value indicating whether vsync is active for this GLControl.
+        /// </summary>
+        [Description("Indicates whether GLControl updates are synced to the monitor's refresh rate.")]
+        public bool VSync
+        {
+            get
+            {
+                if (!IsHandleCreated)
+                    return false;
+
+                EnsureValidHandle();
+                return Context.SwapInterval > 0; // value of 0 means no waiting for v-blanks, draw as soon as frame is ready. 1 means waiting for the next v-blank
+            }
+            set
+            {
+                // The winforms designer sets this to false by default which forces control creation.
+                // However, events are typically connected after the VSync = false assignment, which
+                // can lead to "event xyz is not fired" issues.
+                // Work around this issue by deferring VSync mode setting to the HandleCreated event.
+                if (!IsHandleCreated)
+                {
+                    initialVsyncValue = value;
+                    return;
+                }
+
+                EnsureValidHandle();
+                Context.SwapInterval = (value) ? 1 : 0; // if vsync, set to 1 for the swap interval.
+            }
+        }
+
         /// <summary>
         /// Gets the GraphicsMode of the GraphicsContext attached to this GLControl.
         /// </summary>

@@ -393,7 +393,10 @@ namespace TestEtoGl
 			SwapBuffers();
 		}
 
-		void _updateVP_VBO()
+        // Need this to handle the OpenTK memory violation if VBO isn't supported. Without this, the exception is managed by the runtime and the tool crashes.
+        // We can, however, handle this gracefully.
+        [System.Runtime.ExceptionServices.HandleProcessCorruptedStateExceptions]
+        void _updateVP_VBO()
 		{
 			if (!IsInitialized)
 				return;
