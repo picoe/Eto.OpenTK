@@ -2,6 +2,7 @@ using Eto.Drawing;
 using Eto.GtkSharp.Forms;
 using OpenTK.Graphics;
 using OpenTK;
+using OpenTK.Graphics.OpenGL;
 
 namespace Eto.Gl.Gtk
 {
@@ -51,7 +52,12 @@ namespace Eto.Gl.Gtk
 			case GLSurface.GLDrawEvent:
 				Control.Resize += (sender, args) => {
 					if (Control.IsInitialized)
-						Callback.OnDraw (this.Widget, args);
+                    {
+                        MakeCurrent();
+                        GL.Viewport(0, 0, Widget.Width, Widget.Height);
+                        Callback.OnDraw(this.Widget, args);
+                        SwapBuffers();
+                    }
 				};
                 break;
 
