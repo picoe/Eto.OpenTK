@@ -20,7 +20,10 @@ namespace Eto.Gl.XamMac
 	{
 		static MacGLSurfaceHandler()
 		{
-			Toolkit.Init();
+			Toolkit.Init(new ToolkitOptions
+			{
+				Backend = PlatformBackend.PreferNative // prevent SDL2 from being detected if it is installed.
+			});
 		}
 
 		protected override void Initialize()
