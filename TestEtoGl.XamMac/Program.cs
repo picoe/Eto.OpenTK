@@ -2,7 +2,7 @@ using System;
 using Eto.Forms;
 using Eto.Drawing;
 using Eto.Gl;
-using Eto.Gl.XamMac;
+using Eto.Gl.Mac;
 using OpenTK;
 
 namespace TestEtoGl.XamMac

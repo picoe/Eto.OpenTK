@@ -7,18 +7,14 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>TestEtoGl.Gtk2</RootNamespace>
     <AssemblyName>TestEtoGl.Gtk2</AssemblyName>
-    <ReleaseVersion>0.24</ReleaseVersion>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug</OutputPath>
     <DefineConstants>DEBUG;</DefineConstants>
+    <OutputPath>..\artifacts\bin\Debug\net462</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -26,7 +22,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release</OutputPath>
+    <OutputPath>..\artifacts\bin\Release\net462</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -54,10 +50,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="..\TestEtoGl.XamMac\MainForm.cs">
-      <Link>MainForm.cs</Link>
-    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -69,17 +61,17 @@
       <Project>{66C691D6-557F-4477-BF96-FA5BC92C715B}</Project>
       <Name>TestEtoGl</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Eto.Gl.Gtk2\Eto.Gl.Gtk2.csproj">
+    <ProjectReference Include="..\Eto.Gl.Gtk\Eto.Gl.Gtk2.csproj">
       <Project>{06F7AC59-0E70-4646-BBFA-C105D9664FD0}</Project>
       <Name>Eto.Gl.Gtk2</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Eto.Forms">
-      <Version>2.4.1</Version>
+      <Version>2.5.0-beta.1</Version>
     </PackageReference>
     <PackageReference Include="Eto.Platform.Gtk2">
-      <Version>2.4.1</Version>
+      <Version>2.5.0-beta.1</Version>
     </PackageReference>
   </ItemGroup>
 </Project>

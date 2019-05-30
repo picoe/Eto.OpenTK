@@ -8,9 +8,8 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>TestEtoGl.XamMac</RootNamespace>
     <AssemblyName>TestEtoGl.XamMac</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
-    <ReleaseVersion>0.24</ReleaseVersion>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
   </PropertyGroup>
@@ -18,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug</OutputPath>
+    <OutputPath>..\artifacts\bin\Debug\net462</OutputPath>
     <DefineConstants>DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -42,7 +41,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release</OutputPath>
+    <OutputPath>..\artifacts\bin\Release\net462</OutputPath>
     <DefineConstants>
     </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -67,7 +66,6 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.Mac" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <ItemGroup>
@@ -93,9 +91,9 @@
       <Project>{510CE98D-2169-48A0-889C-E743417EE5E1}</Project>
       <Name>Eto.Gl</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Eto.Gl.XamMac\Eto.Gl.XamMac.csproj">
+    <ProjectReference Include="..\Eto.Gl.Mac\Eto.Gl.XamMac2.csproj">
       <Project>{D260DEBB-3D35-46A4-AB23-F2A19CC10E28}</Project>
-      <Name>Eto.Gl.XamMac</Name>
+      <Name>Eto.Gl.XamMac2</Name>
     </ProjectReference>
     <ProjectReference Include="..\TestEtoGl\TestEtoGl.csproj">
       <Project>{66C691D6-557F-4477-BF96-FA5BC92C715B}</Project>
@@ -104,7 +102,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
-    <Compile Include="MainForm.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Eto.Forms">
+      <Version>2.4.1</Version>
+    </PackageReference>
+    <PackageReference Include="Eto.Platform.XamMac2">
+      <Version>2.4.1</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
   <Target Name="FixOpenGL" AfterTargets="_CompileToNative">

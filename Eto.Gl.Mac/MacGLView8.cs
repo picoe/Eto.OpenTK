@@ -7,17 +7,15 @@ using OpenTK.Platform;
 using MonoMac.AppKit;
 using MonoMac.CoreGraphics;
 using MonoMac.Foundation;
-
-namespace Eto.Gl.Mac
 #elif XAMMAC2
 using AppKit;
 using Foundation;
 using CoreGraphics;
-
-namespace Eto.Gl.XamMac
 #endif
+
+namespace Eto.Gl.Mac
 {
-	public class MacGLView8 : NSView, IMacControl
+    public class MacGLView8 : NSView, IMacControl
 	{
 		GraphicsMode mode;
 		int major;

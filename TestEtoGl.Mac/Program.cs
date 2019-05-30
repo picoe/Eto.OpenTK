@@ -13,7 +13,8 @@ namespace TestEtoGl.Mac
 		{
 			var gen = new Eto.Mac.Platform();
 
-			gen.Add<GLSurface.IHandler> (() => new MacGLSurfaceHandler ());
+            // shouldn't be needed, Eto needs fixing
+			gen.Add<GLSurface.IHandler>(() => new MacGLSurfaceHandler());
 
 			// run application with our main form
 			new Application(gen).Run(new MainForm());

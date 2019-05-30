@@ -6,3 +6,4 @@ packages/
 *.suo
 UpgradeLog.htm
 *.user
+.DS_Store

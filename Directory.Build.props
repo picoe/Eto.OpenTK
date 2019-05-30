@@ -17,8 +17,18 @@
 
     <BaseOutputPath>$(ArtifactsDir)bin\</BaseOutputPath>
     
+    <PackageOutputPath>$(ArtifactsDir)nupkg\</PackageOutputPath>
+    
     <!-- RestoreProjectStyle is not default, we should always use it -->
     <RestoreProjectStyle Condition="'$(RestoreProjectStyle)' == '' AND $(UsePackagesConfig) != 'True'">PackageReference</RestoreProjectStyle>
+  </PropertyGroup>
+  
+  
+  <PropertyGroup>
+    <!-- nuget properties -->
+    <Version Condition="$(Version) == ''">0.24</Version>
+
+    
   </PropertyGroup>
   <Import Condition="Exists('$(BasePath)..\Eto.OpenTK.props')" Project="$(BasePath)..\Eto.OpenTK.props" />
 </Project>

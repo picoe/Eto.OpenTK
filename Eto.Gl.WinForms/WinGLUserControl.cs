@@ -27,7 +27,6 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using Eto.WinForms;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Platform;

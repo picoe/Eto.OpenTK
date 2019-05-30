@@ -5,18 +5,20 @@ using Eto.Mac.Forms;
 using OpenTK.Graphics;
 using OpenTK;
 using Eto.Mac;
+using Eto.Gl;
 
 #if MONOMAC
 using MonoMac.AppKit;
-
-namespace Eto.Gl.Mac
 #elif XAMMAC2
 using AppKit;
-
-namespace Eto.Gl.XamMac
 #endif
+
+[assembly: Eto.ExportHandler(typeof(GLSurface), typeof(Eto.Gl.Mac.MacGLSurfaceHandler))]
+
+namespace Eto.Gl.Mac
 {
-	public class MacGLSurfaceHandler : MacView<MacGLView8, GLSurface, GLSurface.ICallback>, GLSurface.IHandler
+
+    public class MacGLSurfaceHandler : MacView<MacGLView8, GLSurface, GLSurface.ICallback>, GLSurface.IHandler
 	{
 		static MacGLSurfaceHandler()
 		{

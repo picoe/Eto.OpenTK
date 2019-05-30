@@ -1,13 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net45</TargetFramework>
+    <DefineConstants>MONOMAC</DefineConstants>
+    <MacBuildBundle>False</MacBuildBundle>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Drawing" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Eto.Platform.Windows" Version="2.4.1" />
+    <PackageReference Include="Eto.Platform.Mac64" Version="2.4.1" />
     <PackageReference Include="OpenTK" Version="3.0.1" />
   </ItemGroup>
   <ItemGroup>
