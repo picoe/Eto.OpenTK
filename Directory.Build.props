@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <BasePath>$(MSBuildThisFileDirectory)</BasePath>
+    
+    <OSPlatform Condition="$(OSPlatform) == '' and '$(OS)' == 'Unix' and !Exists('/Library/Frameworks')">Linux</OSPlatform>
+    <OSPlatform Condition="$(OSPlatform) == '' and '$(OS)' == 'Unix' and Exists('/Library/Frameworks')">Mac</OSPlatform>
+    <OSPlatform Condition="$(OSPlatform) == '' and '$(OS)' != 'Unix'">Windows</OSPlatform>
+
+    <ArtifactsDir Condition="$(BuildOutoutDir) == ''">$(BasePath)artifacts\</ArtifactsDir>
+
+    <!-- Prevent VS from copying files from the GAC to the output folder -->
+    <DoNotCopyLocalIfInGac>true</DoNotCopyLocalIfInGac>
+    
+    <!-- So we can build on multiple platforms using the same source -->
+    <BaseIntermediateOutputPath>$(ArtifactsDir)obj\$(OSPlatform)\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
+
+    <BaseOutputPath>$(ArtifactsDir)bin\</BaseOutputPath>
+    
+    <!-- RestoreProjectStyle is not default, we should always use it -->
+    <RestoreProjectStyle Condition="'$(RestoreProjectStyle)' == '' AND $(UsePackagesConfig) != 'True'">PackageReference</RestoreProjectStyle>
+  </PropertyGroup>
+  <Import Condition="Exists('$(BasePath)..\Eto.OpenTK.props')" Project="$(BasePath)..\Eto.OpenTK.props" />
+</Project>

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26430.16
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28917.181
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eto.Gl.Gtk2", "Eto.Gl.Gtk2\Eto.Gl.Gtk2.csproj", "{06F7AC59-0E70-4646-BBFA-C105D9664FD0}"
 EndProject
@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eto.Gl.WinForms", "Eto.Gl.W
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eto.Gl.Mac", "Eto.Gl.Mac\Eto.Gl.Mac.csproj", "{C6D7920E-3FB5-4DAD-80F1-2B76158D493F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestEtoGl.Mac", "TestEtoGl.Mac\TestEtoGl.Mac.csproj", "{D7CEAEBF-7F61-4220-9920-61FDA4B1470F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestEtoGl.Mac", "TestEtoGl.Mac\TestEtoGl.Mac.csproj", "{5DD54367-9089-4371-BF0A-1BE772B623E6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestEtoGl", "TestEtoGl\TestEtoGl.csproj", "{66C691D6-557F-4477-BF96-FA5BC92C715B}"
 EndProject
@@ -26,6 +26,11 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestEtoGl.WPF_WinformsHost", "TestEtoGl.WPF_WinformsHost\TestEtoGl.WPF_WinformsHost.csproj", "{B1EB0BB0-C662-4314-A3D3-20E1AD0F98D6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eto.Gl.WPF_WinformsHost", "Eto.Gl.WPF_WinformsHost\Eto.Gl.WPF_WinformsHost.csproj", "{43C9116A-2F41-4F57-88E5-6B49BFB7881B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{A4E13914-032E-461F-BC5C-5A88D42AE19D}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,10 +50,10 @@ Global
 		{C6D7920E-3FB5-4DAD-80F1-2B76158D493F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6D7920E-3FB5-4DAD-80F1-2B76158D493F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6D7920E-3FB5-4DAD-80F1-2B76158D493F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D7CEAEBF-7F61-4220-9920-61FDA4B1470F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D7CEAEBF-7F61-4220-9920-61FDA4B1470F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D7CEAEBF-7F61-4220-9920-61FDA4B1470F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D7CEAEBF-7F61-4220-9920-61FDA4B1470F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DD54367-9089-4371-BF0A-1BE772B623E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DD54367-9089-4371-BF0A-1BE772B623E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DD54367-9089-4371-BF0A-1BE772B623E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DD54367-9089-4371-BF0A-1BE772B623E6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{66C691D6-557F-4477-BF96-FA5BC92C715B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{66C691D6-557F-4477-BF96-FA5BC92C715B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{66C691D6-557F-4477-BF96-FA5BC92C715B}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -85,13 +90,12 @@ Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7B6C542A-8C6C-4200-8971-67942032E485}
+	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0
 		$0.TextStylePolicy = $1
-		$1.FileWidth = 120
-		$1.TabsToSpaces = False
-		$1.inheritsSet = VisualStudio
-		$1.inheritsScope = text/plain
 		version = 0.24
 		StartupItem = SharpFlame.Gui.Linux\SharpFlame.Gui.Linux.csproj
 	EndGlobalSection
