@@ -26,8 +26,8 @@
   
   <PropertyGroup>
     <!-- nuget properties -->
-    <Version Condition="$(Version) == ''">0.24</Version>
-
+    <Version Condition="$(Version) == ''">0.1.0</Version>
+    <Authors>Many</Authors>
     
   </PropertyGroup>
   <Import Condition="Exists('$(BasePath)..\Eto.OpenTK.props')" Project="$(BasePath)..\Eto.OpenTK.props" />
