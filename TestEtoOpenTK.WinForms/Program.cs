@@ -16,7 +16,7 @@ namespace TestEtoGl.WPF_Framebuffer
     static void Main()
     {
       var platform = new Eto.WinForms.Platform();
-      platform.Add<GLSurface.IHandler>(() => new Eto.Gl.Windows.WinGLSurfaceHandler());
+      platform.Add<GLSurface.IHandler>(() => new Eto.OpenTK.WinForms.WinGLSurfaceHandler());
 
       new Application(platform).Run(new MainForm());
     }
