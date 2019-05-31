@@ -16,7 +16,7 @@ namespace TestEtoGl.WPF_WinformsHost
     static void Main()
     {
       var platform = new Eto.Wpf.Platform();
-      platform.Add<GLSurface.IHandler>(() => new Eto.Gl.Wpf.WpfWinGLSurfaceHandler());
+      platform.Add<GLSurface.IHandler>(() => new Eto.OpenTK.Wpf.WpfWinGLSurfaceHandler());
 
       new Application(platform).Run(new MainForm());
     }
