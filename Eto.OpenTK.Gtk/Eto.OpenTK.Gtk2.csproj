@@ -7,6 +7,8 @@
     <RootNamespace>Eto.OpenTK.Gtk2</RootNamespace>
     <AssemblyName>Eto.OpenTK.Gtk2</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <Title>OpenTK Gtk2 implementation for Eto.Forms</Title>
+    <Description>This provides the Gtk#2 implementation of Eto.OpenTK for Eto.Forms</Description>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -78,6 +80,6 @@
     <!-- don't include any GTK references in nuspec so we can actually compile on any platform -->
     <ItemGroup>
       <_FrameworkAssemblyReferences Remove="@(_FrameworkAssemblyReferences)" Condition="%(Identity) == 'Mono.Cairo'"/>
-    </ItemGroup>
+  </ItemGroup>
   </Target>
 </Project>

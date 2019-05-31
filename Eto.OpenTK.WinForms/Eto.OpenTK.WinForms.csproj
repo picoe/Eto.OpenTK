@@ -1,6 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net45</TargetFramework>
+    <Title>OpenTK WinForms implementation for Eto.Forms</Title>
+    <Description>This provides the Windows Forms implementation of Eto.OpenTK for Eto.Forms</Description>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System.Windows.Forms" />

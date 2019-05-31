@@ -11,6 +11,8 @@
     <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <UseXamMacFullFramework>true</UseXamMacFullFramework>
+    <Title>OpenTK Xamarin.Mac implementation for Eto.Forms</Title>
+    <Description>This provides the Xamarin.Mac implementation of Eto.OpenTK for Eto.Forms</Description>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

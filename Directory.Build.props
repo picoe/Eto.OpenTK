@@ -27,7 +27,11 @@
   <PropertyGroup>
     <!-- nuget properties -->
     <Version Condition="$(Version) == ''">0.1.0</Version>
-    <Authors>Many</Authors>
+    <Authors>Eto.OpenTK Authors</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>OpenTK;OpenGL</PackageTags>
+    <RepositoryUrl>https://github.com/picoe/Eto.OpenTK</RepositoryUrl>
+    <Copyright>Copyright (c) 2016-2019 etoViewport authors, see AUTHORS file.</Copyright>
     
   </PropertyGroup>
   <Import Condition="Exists('$(BasePath)..\Eto.OpenTK.props')" Project="$(BasePath)..\Eto.OpenTK.props" />
