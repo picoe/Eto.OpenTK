@@ -79,7 +79,7 @@
   <Target Name="RemoveCairo" BeforeTargets="GenerateNuspec">
     <!-- don't include any GTK references in nuspec so we can actually compile on any platform -->
     <ItemGroup>
-      <_FrameworkAssemblyReferences Remove="@(_FrameworkAssemblyReferences)" Condition="%(Identity) == 'Mono.Cairo'"/>
+      <_FrameworkAssemblyReferences Remove="@(_FrameworkAssemblyReferences)" Condition="%(Identity) == 'Mono.Cairo'" />
   </ItemGroup>
   </Target>
 </Project>
