@@ -1,0 +1,51 @@
+variables:
+  solution: 'Eto.OpenTK.sln'
+  build.version: '0.1.0-ci-$(Build.BuildNumber)'
+  build.configuration: 'Release'
+
+trigger:
+  - master
+  - refs/tags/*
+
+jobs:
+- job: Mac
+  pool:
+    vmImage: 'macOS-10.14'
+  variables:
+    build.platform: 'Mac'
+  steps:
+  - script: sudo $AGENT_HOMEDIRECTORY/scripts/select-xamarin-sdk.sh 5_18_1
+    displayName: 'Select Xamarin SDK version'
+  - task: MSBuild@1
+    displayName: Restore, Build and Package
+    inputs:
+      solution: '$(solution)'
+      platform: '$(build.platform)'
+      configuration: '$(build.configuration)'
+      msbuildArguments: '/restore /t:Pack /p:Version=$(build.version)'
+  - task: PublishBuildArtifacts@1
+    displayName: Publish nupkg
+    inputs:
+      pathtoPublish: artifacts/nuget/$(build.configuration)
+      artifactName: nuget
+      publishLocation: container
+
+- job: Windows
+  pool:
+    vmImage: 'windows-2019'
+  variables:
+    build.platform: 'Windows'
+  steps:
+  - task: MSBuild@1
+    displayName: Restore, Build and Package
+    inputs:
+      solution: '$(solution)'
+      platform: '$(build.platform)'
+      configuration: '$(build.configuration)'
+      msbuildArguments: '/restore /t:Pack /p:Version=$(build.version)'
+  - task: PublishBuildArtifacts@1
+    displayName: Publish nupkg
+    inputs:
+      pathtoPublish: artifacts/nuget/$(build.configuration)
+      artifactName: nuget
+      publishLocation: container

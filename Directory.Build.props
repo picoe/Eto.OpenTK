@@ -17,7 +17,7 @@
 
     <BaseOutputPath>$(ArtifactsDir)bin\</BaseOutputPath>
     
-    <PackageOutputPath>$(ArtifactsDir)nupkg\</PackageOutputPath>
+    <PackageOutputPath>$(ArtifactsDir)nuget\$(Configuration)\</PackageOutputPath>
     
     <!-- RestoreProjectStyle is not default, we should always use it -->
     <RestoreProjectStyle Condition="'$(RestoreProjectStyle)' == '' AND $(UsePackagesConfig) != 'True'">PackageReference</RestoreProjectStyle>
