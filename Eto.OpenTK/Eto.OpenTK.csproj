@@ -15,5 +15,9 @@ Add the platform-specific package for each platform you wish to support. E.g. Et
       <Link>Eto.OpenTK-LICENSE</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="..\AUTHORS">
+      <Link>Eto.OpenTK-AUTHORS</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>
