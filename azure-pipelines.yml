@@ -1,4 +1,4 @@
-variables:
+﻿variables:
   solution: 'Eto.OpenTK.sln'
   build.version: '0.1.0-ci-$(Build.BuildNumber)'
   build.configuration: 'Release'
@@ -22,7 +22,7 @@ jobs:
       solution: '$(solution)'
       platform: '$(build.platform)'
       configuration: '$(build.configuration)'
-      msbuildArguments: '/restore /t:Pack /p:Version=$(build.version)'
+      msbuildArguments: '/restore /t:Build;Pack /p:Version=$(build.version)'
   - task: PublishBuildArtifacts@1
     displayName: Publish nupkg
     inputs:
@@ -42,7 +42,7 @@ jobs:
       solution: '$(solution)'
       platform: '$(build.platform)'
       configuration: '$(build.configuration)'
-      msbuildArguments: '/restore /t:Pack /p:Version=$(build.version)'
+      msbuildArguments: '/restore /t:Build;Pack /p:Version=$(build.version)'
   - task: PublishBuildArtifacts@1
     displayName: Publish nupkg
     inputs:

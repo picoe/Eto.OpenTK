@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>TestEtoOpenTK.XamMac</RootNamespace>
     <AssemblyName>TestEtoOpenTK.XamMac</AssemblyName>
-    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
     <IsPackable>False</IsPackable>
   </PropertyGroup>
