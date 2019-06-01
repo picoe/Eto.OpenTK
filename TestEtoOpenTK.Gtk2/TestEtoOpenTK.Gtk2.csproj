@@ -1,80 +1,39 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{02F28D06-103A-4800-9E40-E9717D77449F}</ProjectGuid>
+    <TargetFramework>net462</TargetFramework>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>TestEtoOpenTK.Gtk2</RootNamespace>
-    <AssemblyName>TestEtoOpenTK.Gtk2</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <AssemblySearchPaths>$(AssemblySearchPaths);{GAC}</AssemblySearchPaths>
+    <IsPackable>False</IsPackable>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <DefineConstants>DEBUG;</DefineConstants>
-    <OutputPath>..\artifacts\bin\Debug\net462</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>full</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\artifacts\bin\Release\net462</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
+    <StartAction>Project</StartAction>
+    <ExternalConsole>False</ExternalConsole>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
+    <PackageReference Include="OpenTK" Version="3.0.1" />
+    <PackageReference Include="Eto.Platform.Gtk2" Version="2.5.0-beta.1" />
+    <Reference Include="Mono.Cairo, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
     <Reference Include="atk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <Package>gtk-sharp-2.0</Package>
-    </Reference>
-    <Reference Include="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
       <Package>gtk-sharp-2.0</Package>
     </Reference>
     <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
       <Package>gtk-sharp-2.0</Package>
     </Reference>
-    <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
-      <Package>glib-sharp-2.0</Package>
+    <Reference Include="gtk-dotnet, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <Package>gtk-dotnet-2.0</Package>
     </Reference>
     <Reference Include="pango-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
       <Package>gtk-sharp-2.0</Package>
     </Reference>
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <Package>gtk-sharp-2.0</Package>
+    </Reference>
+    <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+      <Package>glib-sharp-2.0</Package>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <ProjectReference Include="..\TestEtoOpenTK\TestEtoOpenTK.csproj" />
+    <ProjectReference Include="..\Eto.OpenTK.Gtk\Eto.OpenTK.Gtk2.csproj" />
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ItemGroup>
-    <ProjectReference Include="..\Eto.OpenTK\Eto.OpenTK.csproj">
-      <Project>{510CE98D-2169-48A0-889C-E743417EE5E1}</Project>
-      <Name>Eto.OpenTK</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TestEtoOpenTK\TestEtoOpenTK.csproj">
-      <Project>{66C691D6-557F-4477-BF96-FA5BC92C715B}</Project>
-      <Name>TestEtoOpenTK</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Eto.OpenTK.Gtk\Eto.OpenTK.Gtk2.csproj">
-      <Project>{06F7AC59-0E70-4646-BBFA-C105D9664FD0}</Project>
-      <Name>Eto.OpenTK.Gtk2</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Eto.Forms">
-      <Version>2.5.0-beta.1</Version>
-    </PackageReference>
-    <PackageReference Include="Eto.Platform.Gtk2">
-      <Version>2.5.0-beta.1</Version>
-    </PackageReference>
-  </ItemGroup>
-  <Target Name="Pack">
-    <!-- do nothing -->
-  </Target>
 </Project>
