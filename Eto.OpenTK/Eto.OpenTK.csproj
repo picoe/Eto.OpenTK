@@ -11,11 +11,11 @@ Add the platform-specific package for each platform you wish to support. E.g. Et
     <PackageReference Include="OpenTK" Version="3.0.1" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\LICENSE">
+    <None Include="..\LICENSE" Pack="True" PackagePath=".">
       <Link>Eto.OpenTK-LICENSE</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\AUTHORS">
+    <None Include="..\AUTHORS" Pack="True" PackagePath=".">
       <Link>Eto.OpenTK-AUTHORS</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
