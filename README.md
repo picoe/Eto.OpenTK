@@ -1,5 +1,5 @@
-# etoViewport
-Eto OpenGL viewport (C#)
+# Eto.OpenTK
+OpenGL viewport control for [Eto.Forms](https://github.com/picoe/Eto) using OpenTK
 
 MIT licensed.
 

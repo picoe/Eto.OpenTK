@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net45</TargetFramework>
+    <DefineConstants>MONOMAC</DefineConstants>
+    <MacBuildBundle>False</MacBuildBundle>
+    <Title>OpenTK Mac64 implementation for Eto.Forms</Title>
+    <Description>This provides the Mac64 implementation of Eto.OpenTK for Eto.Forms</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Eto.Platform.Mac64" Version="2.4.1" />
+    <PackageReference Include="OpenTK" Version="3.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Eto.OpenTK\Eto.OpenTK.csproj" />
+  </ItemGroup>
+</Project>

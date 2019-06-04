@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net45</TargetFramework>
+    <Title>OpenTK Control for Eto.Forms</Title>
+    <Description>This provides the control to use in your Eto.Forms application.
+Add the platform-specific package for each platform you wish to support. E.g. Eto.OpenTK.Gtk2, Eto.OpenTK.Mac64, Eto.OpenTK.Wpf, etc.
+    </Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Eto.Forms" Version="2.4.1" />
+    <PackageReference Include="OpenTK" Version="3.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\LICENSE" Pack="True" PackagePath=".">
+      <Link>Eto.OpenTK-LICENSE</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\AUTHORS" Pack="True" PackagePath=".">
+      <Link>Eto.OpenTK-AUTHORS</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>
