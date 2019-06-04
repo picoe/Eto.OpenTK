@@ -26,6 +26,11 @@
   
   <PropertyGroup>
     <!-- nuget properties -->
+    
+    <!-- set version from tag -->
+    <BuildVersion Condition="$(Branch.StartsWith('refs/tags/'))">$(Branch.Substring(10))</BuildVersion>
+    <Version Condition="$(BuildVersion) != ''">$(BuildVersion)</Version>
+    
     <Version Condition="$(Version) == ''">0.1.0</Version>
     <Authors>Eto.OpenTK Authors</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
