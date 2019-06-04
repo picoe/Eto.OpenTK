@@ -28,7 +28,8 @@
     <!-- nuget properties -->
     
     <!-- set version from tag -->
-    <BuildVersion Condition="$(BuildBranch.StartsWith('refs/tags/'))">$(BuildBranch.Substring(10))</BuildVersion>
+    <Version Condition="$(BuildBranch.StartsWith('refs/tags/'))">$(BuildBranch.Substring(10))</Version>
+    <!-- set version for CI build -->
     <Version Condition="$(Version) == '' AND $(BuildVersion) != ''">$(BuildVersion)</Version>
     
     <Version Condition="$(Version) == ''">0.1.0-dev</Version>
