@@ -28,10 +28,10 @@
     <!-- nuget properties -->
     
     <!-- set version from tag -->
-    <BuildVersion Condition="$(Branch.StartsWith('refs/tags/'))">$(Branch.Substring(10))</BuildVersion>
-    <Version Condition="$(BuildVersion) != ''">$(BuildVersion)</Version>
+    <BuildVersion Condition="$(BuildBranch.StartsWith('refs/tags/'))">$(BuildBranch.Substring(10))</BuildVersion>
+    <Version Condition="$(Version) == '' AND $(BuildVersion) != ''">$(BuildVersion)</Version>
     
-    <Version Condition="$(Version) == ''">0.1.0</Version>
+    <Version Condition="$(Version) == ''">0.1.0-dev</Version>
     <Authors>Eto.OpenTK Authors</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>OpenTK;OpenGL</PackageTags>
