@@ -217,11 +217,12 @@ namespace Eto.OpenTK.WinForms
         protected override void OnPaint(PaintEventArgs e)
         {
             EnsureValidHandle();
+            if (context != null)
+            {
+                context.Update(windowInfo);
+            }
 
             base.OnPaint(e);
-
-            // prompt view to update when it is repainted
-            OnResize(EventArgs.Empty);
         }
 
         /// <summary>
