@@ -17,6 +17,8 @@ namespace Eto.OpenTK.Wpf
         public void CreateWithParams(GraphicsMode mode, int major, int minor, GraphicsContextFlags flags)
         {
             WinFormsControl = new WinGLUserControl(mode, major, minor, flags);
+            Control.Focusable = true;
+            Control.Background = System.Windows.SystemColors.ControlBrush;
         }
 
         protected override void Initialize()
@@ -25,29 +27,15 @@ namespace Eto.OpenTK.Wpf
             HandleEvent(GLSurface.GLDrawEvent);
         }
 
-        public bool IsInitialized
-        {
-            get { return Control.IsInitialized; }
-        }
+        public bool IsInitialized => WinFormsControl.IsInitialized;
 
-        public void MakeCurrent()
-        {
-            WinFormsControl.MakeCurrent();
-        }
+        public void MakeCurrent() => WinFormsControl.MakeCurrent();
 
-        public void SwapBuffers()
-        {
-            WinFormsControl.SwapBuffers();
-        }
+        public void SwapBuffers() => WinFormsControl.SwapBuffers();
 
-        public void updateViewHandler(object sender, EventArgs e)
+        public void UpdateView()
         {
-            updateView();
-        }
-
-        public void updateView()
-        {
-            if (!Control.IsInitialized)
+            if (!WinFormsControl.IsInitialized)
                 return;
 
             MakeCurrent();
@@ -68,12 +56,8 @@ namespace Eto.OpenTK.Wpf
                     WinFormsControl.ShuttingDown += (sender, e) => Callback.OnShuttingDown(Widget, e);
                     break;
 
-                case GLSurface.ShownEvent:
-                case GLSurface.SizeChangedEvent:
                 case GLSurface.GLDrawEvent:
-                    WinFormsControl.SizeChanged += updateViewHandler;
-                    WinFormsControl.Paint += updateViewHandler;
-                    //Control.Resize += (sender, e) => Callback.OnDraw(Widget, EventArgs.Empty);
+                    WinFormsControl.Paint += (sender, e) => UpdateView();
                     break;
 
                 default:

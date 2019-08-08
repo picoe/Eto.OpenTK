@@ -1,9 +1,8 @@
-﻿variables:
+variables:
   solution: 'Eto.OpenTK.sln'
-  build.version: '0.1.0-ci-$(Build.BuildNumber)'
+  build.version: '0.1.2-ci-$(Build.BuildNumber)'
   build.configuration: 'Release'
   build.arguments: /restore /t:Build;Pack /p:BuildVersion=$(build.version) /p:BuildBranch=$(Build.SourceBranch)
-  
 
 trigger:
   - master
