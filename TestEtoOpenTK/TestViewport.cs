@@ -182,11 +182,13 @@ namespace TestEtoGl
 				object locking = new object();
 				lock (locking)
 				{
-					// Scaling factor is arbitrary - just based on testing to avoid insane panning speeds.
-					float new_X = (ovpSettings.cameraPosition.X - (((float)e.Location.X - x_orig) / 100.0f));
-					float new_Y = (ovpSettings.cameraPosition.Y + (((float)e.Location.Y - y_orig) / 100.0f));
-					ovpSettings.cameraPosition = new PointF(new_X, new_Y);
-				}
+                    // Scaling factor is arbitrary - just based on testing to avoid insane panning speeds.
+                    float new_X = (ovpSettings.cameraPosition.X - (((float)e.Location.X - x_orig) * ovpSettings.zoomFactor));
+                    float new_Y = (ovpSettings.cameraPosition.Y + (((float)e.Location.Y - y_orig) * ovpSettings.zoomFactor));
+                    ovpSettings.cameraPosition = new PointF(new_X, new_Y);
+                    x_orig = e.Location.X;
+                    y_orig = e.Location.Y;
+                }
 			}
 			updateViewport();
 			//e.Handled = true;
