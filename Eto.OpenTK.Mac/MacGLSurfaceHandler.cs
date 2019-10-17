@@ -18,7 +18,7 @@ using AppKit;
 namespace Eto.OpenTK.Mac
 {
 
-    public class MacGLSurfaceHandler : MacView<MacGLView8, GLSurface, GLSurface.ICallback>, GLSurface.IHandler
+	public class MacGLSurfaceHandler : MacView<MacGLView8, GLSurface, GLSurface.ICallback>, GLSurface.IHandler
 	{
 		static MacGLSurfaceHandler()
 		{
@@ -101,7 +101,11 @@ namespace Eto.OpenTK.Mac
 					break;
 
 				case Eto.Forms.Control.SizeChangedEvent:
-					Control.SizeChanged += (sender, e) => Callback.OnSizeChanged(Widget, EventArgs.Empty);
+					Control.SizeChanged += (sender, e) =>
+					{
+						OnSizeChanged(EventArgs.Empty);
+						Callback.OnSizeChanged(Widget, EventArgs.Empty);
+					};
 					break;
 
 				default:
