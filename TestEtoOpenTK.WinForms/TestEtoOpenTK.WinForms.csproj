@@ -1,12 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFramework>net48</TargetFramework>
     <OutputType>WinExe</OutputType>
     <IsPackable>False</IsPackable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Eto.Platform.Windows" Version="2.5.0-beta.1" />
-    <PackageReference Include="OpenTK" Version="3.0.1" />
+    <PackageReference Include="Eto.Platform.Windows" Version="2.5.6" />
+    <PackageReference Include="OpenTK" Version="3.2.0" Condition="$(TargetFramework.StartsWith('net4'))" />
+    <PackageReference Include="OpenTK" Version="4.4.0" Condition="!$(TargetFramework.StartsWith('net4'))" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TestEtoOpenTK\TestEtoOpenTK.csproj" />

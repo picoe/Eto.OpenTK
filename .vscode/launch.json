@@ -1,0 +1,69 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Mac - NET5.0",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-mac",
+            "program": "${workspaceFolder}/artifacts/bin/Debug/net5.0/TestEtoOpenTK.Mac64.app/Contents/MacOS/TestEtoOpenTK.Mac64",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
+        {
+            "name": "Mac - mono",
+            "type": "mono",
+            "request": "launch",
+            "preLaunchTask": "build-mac",
+            "program": ".",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "runtimeExecutable": "${workspaceFolder}/artifacts/bin/Debug/net48/TestEtoOpenTK.Mac64.app/Contents/MacOS/TestEtoOpenTK.Mac64",
+            "passDebugOptionsViaEnvironmentVariable": true
+        },
+        {
+            "name": "Gtk - NET5.0",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-gtk",
+            "program": "${workspaceFolder}/artifacts/bin/Debug/net5.0/TestEtoOpenTK.Gtk.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
+        {
+            "name": "Gtk - NET4.8",
+            "type": "mono",
+            "request": "launch",
+            "preLaunchTask": "build-gtk",
+            "program": "${workspaceFolder}/artifacts/bin/Debug/net48/TestEtoOpenTK.Gtk.exe",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+        },
+        {
+            "name": "Wpf",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-wpf",
+            "program": "${workspaceFolder}/artifacts/bin/Debug/net5.0-windows/TestEtoOpenTK.Wpf.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
+        {
+            "name": ".NET Core Attach",
+            "type": "coreclr",
+            "request": "attach",
+            "processId": "${command:pickProcess}"
+        }
+    ]
+}

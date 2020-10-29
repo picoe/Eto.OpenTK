@@ -1,17 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net45</TargetFramework>
+    <TargetFrameworks>net5.0-windows;net45</TargetFrameworks>
     <Title>OpenTK WPF implementation for Eto.Forms</Title>
     <Description>This provides the WPF implementation of Eto.OpenTK for Eto.Forms</Description>
+    <UseWpf>True</UseWpf>
+    <DefineConstants Condition="!$(TargetFramework.StartsWith('net4'))">$(DefineConstants);OPENTK4</DefineConstants>
+    <DefineConstants Condition="$(TargetFramework.StartsWith('net4'))">$(DefineConstants);OPENTK3</DefineConstants>
   </PropertyGroup>
-  <ItemGroup>
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
     <Compile Include="..\Eto.OpenTK.WinForms\Win32Helper.cs" Link="Win32Helper.cs" />
     <Compile Include="..\Eto.OpenTK.WinForms\WinGLUserControl.cs" Link="WinGLUserControl.cs" />
     <Compile Include="..\Eto.OpenTK.WinForms\WinGLUserControl.designer.cs" Link="WinGLUserControl.designer.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Eto.Platform.Wpf" Version="2.4.1" />
-    <PackageReference Include="OpenTK" Version="3.0.1" />
+    <PackageReference Include="Eto.Platform.Wpf" Version="2.5.0" />
+    <PackageReference Include="OpenTK.GLWpfControl" Version="4.0.0" Condition="!$(TargetFramework.StartsWith('net4'))" />
+    <PackageReference Include="OpenTK" Version="3.2.0" Condition="$(TargetFramework.StartsWith('net4'))" />
+    <PackageReference Include="OpenTK" Version="4.4.0" Condition="!$(TargetFramework.StartsWith('net4'))" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Eto.OpenTK\Eto.OpenTK.csproj" />

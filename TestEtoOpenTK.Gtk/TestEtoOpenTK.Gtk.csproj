@@ -1,16 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net5.0-windows;net48</TargetFrameworks>
+    <TargetFrameworks>net48;net5.0</TargetFrameworks>
     <OutputType>WinExe</OutputType>
     <IsPackable>False</IsPackable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Eto.Platform.Wpf" Version="2.5.9" />
     <PackageReference Include="OpenTK" Version="3.2.0" Condition="$(TargetFramework.StartsWith('net4'))" />
     <PackageReference Include="OpenTK" Version="4.4.0" Condition="!$(TargetFramework.StartsWith('net4'))" />
+    <PackageReference Include="Eto.Platform.Gtk" Version="2.5.9" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TestEtoOpenTK\TestEtoOpenTK.csproj" />
-    <ProjectReference Include="..\Eto.OpenTK.Wpf\Eto.OpenTK.Wpf.csproj" />
+    <ProjectReference Include="..\Eto.OpenTK.Gtk\Eto.OpenTK.Gtk.csproj" />
   </ItemGroup>
 </Project>

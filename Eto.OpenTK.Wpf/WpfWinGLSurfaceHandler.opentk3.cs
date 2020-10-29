@@ -1,12 +1,13 @@
-﻿using Eto.Drawing;
+﻿#if OPENTK3
+using Eto.Drawing;
 using Eto.Forms;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using System;
 using Eto.Wpf.Forms;
-using Eto.OpenTK.WinForms;
 using Eto.OpenTK;
+using Eto.OpenTK.WinForms;
 
 [assembly: Eto.ExportHandler(typeof(GLSurface), typeof(Eto.OpenTK.Wpf.WpfWinGLSurfaceHandler))]
 
@@ -14,9 +15,9 @@ namespace Eto.OpenTK.Wpf
 {
     public class WpfWinGLSurfaceHandler : WindowsFormsHostHandler<WinGLUserControl, GLSurface, GLSurface.ICallback>, GLSurface.IHandler
     {
-        public void CreateWithParams(GraphicsMode mode, int major, int minor, GraphicsContextFlags flags)
+        public void Create()
         {
-            WinFormsControl = new WinGLUserControl(mode, major, minor, flags);
+            WinFormsControl = new WinGLUserControl(GraphicsMode.Default, 3, 0, GraphicsContextFlags.Default);
             Control.Focusable = true;
             Control.Background = System.Windows.SystemColors.ControlBrush;
         }
@@ -67,3 +68,4 @@ namespace Eto.OpenTK.Wpf
         }
     }
 }
+#endif

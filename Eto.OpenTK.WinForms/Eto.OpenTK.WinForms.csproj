@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net45</TargetFramework>
+    <TargetFrameworks>net45;netcoreapp3.1;net5.0</TargetFrameworks>
     <Title>OpenTK WinForms implementation for Eto.Forms</Title>
     <Description>This provides the Windows Forms implementation of Eto.OpenTK for Eto.Forms</Description>
   </PropertyGroup>
@@ -9,8 +9,9 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Eto.Platform.Windows" Version="2.4.1" />
-    <PackageReference Include="OpenTK" Version="3.0.1" />
+    <PackageReference Include="Eto.Platform.Windows" Version="2.5.0" />
+    <PackageReference Include="OpenTK" Version="3.2.0" Condition="$(TargetFramework.StartsWith('net4'))" />
+    <PackageReference Include="OpenTK" Version="4.4.0" Condition="!$(TargetFramework.StartsWith('net4'))" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Eto.OpenTK\Eto.OpenTK.csproj" />

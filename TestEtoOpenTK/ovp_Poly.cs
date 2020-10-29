@@ -1,6 +1,6 @@
 ﻿using Eto.Drawing;
 
-namespace TestEtoGl
+namespace TestEtoOpenTK
 {
 	public class ovp_Poly
 	{
