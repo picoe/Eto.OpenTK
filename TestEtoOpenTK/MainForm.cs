@@ -17,6 +17,33 @@ namespace TestEtoOpenTK
 	/// </summary>
 	public class MainForm : Form
 	{
+		// test settings
+
+		/// <summary>
+		/// Test flags.
+		/// 	0 : stamdard viewports in splitter test.
+		/// 	1 : viewports in tabs (WPF has issues here due to the deferred evaluation; still need a better fix)
+		/// 	2 : single viewport in panel
+		///		3 : simple view
+		/// </summary>
+		int mode = 3;
+
+		/// <summary>
+		/// True to update the viewport directly, false to use Invalidate()
+		/// </summary>
+		bool directUpdate = true;
+		/// <summary>
+		/// Number of rectangles to draw when run
+		/// </summary>
+		Int32 numberOfCases = 1000;
+		/// <summary>
+		/// Interval for the update timer
+		/// </summary>
+		double timerInterval = 1.0 / 30.0; // 30 hz
+
+
+
+
 		static Random random = new Random();
 		OVPSettings ovpSettings, ovp2Settings;
 		PointF[] refPoly;
@@ -25,20 +52,24 @@ namespace TestEtoOpenTK
 		ProgressBar progressBar;
 		Label statusLine;
 
-		Int32 numberOfCases = 1000;
-		double timerInterval = 1.0 / 30.0; // 60 hz
 		Int32 currentProgress;
 		CancellationTokenSource cancelSource;
 
 		public void PreviewUpdate()
 		{
 			Application.Instance.Invoke(() => {
-			lock (ovpSettings)
-			{
-				// invalidate as there's no point updating the view directly
-				// viewport.Invalidate();
-				viewport.UpdateViewport();
-			}
+				if (directUpdate)
+				{
+					lock (ovpSettings)
+					{
+						viewport.UpdateViewport();
+					}
+				}
+				else
+				{
+					// can only trigger a render this way..
+					viewport.Invalidate();
+				}
 				double progress = (double)currentProgress / (double)numberOfCases;
 				statusLine.Text = $"{(progress * 100):#.##} % complete";
 				progressBar.Value = currentProgress;
@@ -47,6 +78,8 @@ namespace TestEtoOpenTK
 
 		public void StartRun()
 		{
+			if (viewport == null)
+				return;
 			cancelSource?.Cancel();
 			progressBar.MaxValue = numberOfCases;
 			progressBar.Value = 0;
@@ -64,17 +97,19 @@ namespace TestEtoOpenTK
 			timer.Elapsed += (sender, e) => PreviewUpdate();
 			timer.Start();
 
-			// Set our parallel task options based on user settings.
-			var po = new ParallelOptions();
-
 			cancelSource = new CancellationTokenSource();
 			var cancellationToken = cancelSource.Token;
-			po.MaxDegreeOfParallelism = 4;
 
-			Parallel.For(0, numberOfCases, po, (i, loopState) =>
+			for (int i = 0; i < numberOfCases; i++)
 			{
 				PointF[] newPoly = CreatePoly();
 				Interlocked.Increment(ref currentProgress);
+				
+				// add a small delay so we can see progress happening
+				Thread.Sleep(5);
+
+				// locking essentially limits to how fast we can draw as it is locked while drawing.. 
+				// perhaps using immutable lists instead will avoid locking.
 				lock (ovpSettings)
 				{
 					ovpSettings.addPolygon(newPoly, new Color(0, 0.5f, 0), 0.7f, false);
@@ -83,9 +118,9 @@ namespace TestEtoOpenTK
 				if (cancellationToken.IsCancellationRequested)
 				{
 					timer.Stop();
-					loopState.Stop();
+					break;
 				}
-			});
+			};
 
 			timer.Stop();
 			timer.Dispose();
@@ -102,8 +137,6 @@ namespace TestEtoOpenTK
 			{
 				newPoly[pt] = new PointF((float)(refPoly[pt].X + (400.0f * myRandom1) - 200f), (float)(refPoly[pt].Y + (400.0f * myRandom) - 200f));
 			}
-
-			Thread.Sleep(50);
 
 			return newPoly;
 		}
@@ -137,14 +170,6 @@ namespace TestEtoOpenTK
 			progressBar = new ProgressBar();
 			progressBar.MaxValue = numberOfCases;
 
-			/*
-			  Test flags.
-			  0 : stamdard viewports in splitter test.
-			  1 : viewports in tabs (WPF has issues here due to the deferred evaluation; still need a better fix)
-			  2 : single viewport in panel
-			*/
-
-			int mode = 2;
 
 			if (mode == 0)
 			{
@@ -202,6 +227,10 @@ namespace TestEtoOpenTK
 			if (mode == 2)
 			{
 				Content = viewport = new TestViewport(ovpSettings) { Size = new Size(600, 400) };
+			}
+			if (mode == 3)
+			{
+				Content = new SimpleView { Size = new Size(600, 400) };
 			}
 
 			// create a few commands that can be used for the menu and toolbar

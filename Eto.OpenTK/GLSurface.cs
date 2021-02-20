@@ -66,9 +66,7 @@ namespace Eto.OpenTK
         public new interface IHandler : Control.IHandler
         {
             void Create();
-
             bool IsInitialized { get; }
-
             void MakeCurrent();
             void SwapBuffers();
         }

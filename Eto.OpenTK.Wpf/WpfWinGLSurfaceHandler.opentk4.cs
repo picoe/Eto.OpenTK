@@ -43,6 +43,7 @@ namespace Eto.OpenTK.Wpf
 		{
 			IsInitialized = true;
 			Callback.OnInitialized(Widget, EventArgs.Empty);
+            Control.InvalidateVisual();
 		}
 
 		public override Color BackgroundColor { get; set; }

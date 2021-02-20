@@ -39,7 +39,7 @@
             "stopAtEntry": false
         },
         {
-            "name": "Gtk - NET4.8",
+            "name": "Gtk - mono",
             "type": "mono",
             "request": "launch",
             "preLaunchTask": "build-gtk",
@@ -49,11 +49,22 @@
             "console": "internalConsole",
         },
         {
-            "name": "Wpf",
+            "name": "Wpf - NET5.0",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build-wpf",
             "program": "${workspaceFolder}/artifacts/bin/Debug/net5.0-windows/TestEtoOpenTK.Wpf.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
+        {
+            "name": "Wpf - NET4.8",
+            "type": "clr",
+            "request": "launch",
+            "preLaunchTask": "build-wpf",
+            "program": "${workspaceFolder}/artifacts/bin/Debug/net48/TestEtoOpenTK.Wpf.exe",
             "args": [],
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",

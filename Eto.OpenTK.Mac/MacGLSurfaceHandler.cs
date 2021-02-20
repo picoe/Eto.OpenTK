@@ -51,14 +51,8 @@ namespace Eto.OpenTK.Mac
 		public override void Invalidate(Rectangle rect, bool invalidateChildren)
 		{
 			Control.NeedsToDraw(rect.ToNS());
-			base.Invalidate(rect, invalidateChildren);
 		}
 
-		public override void Invalidate(bool invalidateChildren)
-		{
-			Control.NeedsToDraw(Control.Bounds);
-			base.Invalidate(invalidateChildren);
-		}
 		public override void AttachEvent(string id)
 		{
 			switch (id)

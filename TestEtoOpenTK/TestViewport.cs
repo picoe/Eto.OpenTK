@@ -41,8 +41,8 @@ namespace TestEtoOpenTK
         int axes_vbo_size;
 
         public OVPSettings ovpSettings; // note that this is a reference to the real settings.
-        float axisZ;
-        float gridZ;
+        float axisZ = 0;
+        float gridZ = 0;
 
         // Use for drag handling.
         bool dragging;
