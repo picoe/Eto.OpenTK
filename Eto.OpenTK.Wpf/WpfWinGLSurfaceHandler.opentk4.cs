@@ -22,19 +22,27 @@ namespace Eto.OpenTK.Wpf
         {
             Control = new global::OpenTK.Wpf.GLWpfControl();
             Control.Focusable = true;
-			Control.Loaded += Control_Loaded;
 			Settings = new GLWpfControlSettings { RenderContinuously = false };
+			Control.Ready += Control_Ready;
         }
 
-		private void Control_Loaded(object sender, EventArgs e)
+		protected override void Initialize()
 		{
-			Control.Ready += Control_Ready;
+			base.Initialize();
+			// not getting handled automatically via an override.. :|
+            HandleEvent(GLSurface.GLDrawEvent);
+		}
+
+		public override void OnLoad(EventArgs e)
+		{
+			base.OnLoad(e);
 			Control.Start(Settings);
 		}
 
 		private void Control_Ready()
 		{
 			IsInitialized = true;
+			Callback.OnInitialized(Widget, EventArgs.Empty);
 		}
 
 		public override Color BackgroundColor { get; set; }
@@ -50,8 +58,7 @@ namespace Eto.OpenTK.Wpf
             if (!Control.IsInitialized)
                 return;
 
-			var size = Widget.Size;
-            GL.Viewport(0, 0, size.Width, size.Height);
+			// viewport size is automatically set
             Callback.OnDraw(Widget, EventArgs.Empty);
         }
 
@@ -60,7 +67,7 @@ namespace Eto.OpenTK.Wpf
             switch (id)
             {
                 case GLSurface.GLInitializedEvent:
-                    Control.Ready += () => Callback.OnInitialized(Widget, EventArgs.Empty);
+                    // handled implicitly
                     break;
 
                 case GLSurface.GLShuttingDownEvent:
