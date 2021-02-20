@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28917.181
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eto.OpenTK.Gtk2", "Eto.OpenTK.Gtk\Eto.OpenTK.Gtk2.csproj", "{06F7AC59-0E70-4646-BBFA-C105D9664FD0}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eto.OpenTK.WinForms", "Eto.OpenTK.WinForms\Eto.OpenTK.WinForms.csproj", "{A0DCCC13-936C-4D5A-AD8C-ADFF75816A8F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eto.OpenTK.Mac64", "Eto.OpenTK.Mac\Eto.OpenTK.Mac64.csproj", "{C6D7920E-3FB5-4DAD-80F1-2B76158D493F}"
@@ -21,8 +19,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eto.OpenTK.XamMac2", "Eto.O
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eto.OpenTK", "Eto.OpenTK\Eto.OpenTK.csproj", "{510CE98D-2169-48A0-889C-E743417EE5E1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestEtoOpenTK.Gtk2", "TestEtoOpenTK.Gtk2\TestEtoOpenTK.Gtk2.csproj", "{02F28D06-103A-4800-9E40-E9717D77449F}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestEtoOpenTK.Wpf", "TestEtoOpenTK.Wpf\TestEtoOpenTK.Wpf.csproj", "{B1EB0BB0-C662-4314-A3D3-20E1AD0F98D6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eto.OpenTK.Wpf", "Eto.OpenTK.Wpf\Eto.OpenTK.Wpf.csproj", "{43C9116A-2F41-4F57-88E5-6B49BFB7881B}"
@@ -32,6 +28,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{A4E13914
 		Directory.Build.props = Directory.Build.props
 		azure-pipelines.yml = azure-pipelines.yml
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eto.OpenTK.Gtk", "Eto.OpenTK.Gtk\Eto.OpenTK.Gtk.csproj", "{8A082C5C-46BA-4E17-98B5-11D089199EC4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestEtoOpenTK.Gtk", "TestEtoOpenTK.Gtk\TestEtoOpenTK.Gtk.csproj", "{1A918FDB-1DC2-4075-AF0F-E9C26AC48858}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,16 +43,6 @@ Global
 		Release|Linux = Release|Linux
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{06F7AC59-0E70-4646-BBFA-C105D9664FD0}.Debug|Windows.ActiveCfg = Debug|Any CPU
-		{06F7AC59-0E70-4646-BBFA-C105D9664FD0}.Debug|Mac.ActiveCfg = Debug|Any CPU
-		{06F7AC59-0E70-4646-BBFA-C105D9664FD0}.Debug|Mac.Build.0 = Debug|Any CPU
-		{06F7AC59-0E70-4646-BBFA-C105D9664FD0}.Debug|Linux.ActiveCfg = Debug|Any CPU
-		{06F7AC59-0E70-4646-BBFA-C105D9664FD0}.Debug|Linux.Build.0 = Debug|Any CPU
-		{06F7AC59-0E70-4646-BBFA-C105D9664FD0}.Release|Windows.ActiveCfg = Release|Any CPU
-		{06F7AC59-0E70-4646-BBFA-C105D9664FD0}.Release|Mac.ActiveCfg = Release|Any CPU
-		{06F7AC59-0E70-4646-BBFA-C105D9664FD0}.Release|Mac.Build.0 = Release|Any CPU
-		{06F7AC59-0E70-4646-BBFA-C105D9664FD0}.Release|Linux.ActiveCfg = Release|Any CPU
-		{06F7AC59-0E70-4646-BBFA-C105D9664FD0}.Release|Linux.Build.0 = Release|Any CPU
 		{A0DCCC13-936C-4D5A-AD8C-ADFF75816A8F}.Debug|Windows.ActiveCfg = Debug|Any CPU
 		{A0DCCC13-936C-4D5A-AD8C-ADFF75816A8F}.Debug|Windows.Build.0 = Debug|Any CPU
 		{A0DCCC13-936C-4D5A-AD8C-ADFF75816A8F}.Debug|Mac.ActiveCfg = Debug|Any CPU
@@ -141,16 +131,6 @@ Global
 		{510CE98D-2169-48A0-889C-E743417EE5E1}.Release|Mac.Build.0 = Release|Any CPU
 		{510CE98D-2169-48A0-889C-E743417EE5E1}.Release|Linux.ActiveCfg = Release|Any CPU
 		{510CE98D-2169-48A0-889C-E743417EE5E1}.Release|Linux.Build.0 = Release|Any CPU
-		{02F28D06-103A-4800-9E40-E9717D77449F}.Debug|Windows.ActiveCfg = Debug|Any CPU
-		{02F28D06-103A-4800-9E40-E9717D77449F}.Debug|Mac.ActiveCfg = Debug|Any CPU
-		{02F28D06-103A-4800-9E40-E9717D77449F}.Debug|Mac.Build.0 = Debug|Any CPU
-		{02F28D06-103A-4800-9E40-E9717D77449F}.Debug|Linux.ActiveCfg = Debug|Any CPU
-		{02F28D06-103A-4800-9E40-E9717D77449F}.Debug|Linux.Build.0 = Debug|Any CPU
-		{02F28D06-103A-4800-9E40-E9717D77449F}.Release|Windows.ActiveCfg = Release|Any CPU
-		{02F28D06-103A-4800-9E40-E9717D77449F}.Release|Mac.ActiveCfg = Release|Any CPU
-		{02F28D06-103A-4800-9E40-E9717D77449F}.Release|Mac.Build.0 = Release|Any CPU
-		{02F28D06-103A-4800-9E40-E9717D77449F}.Release|Linux.ActiveCfg = Release|Any CPU
-		{02F28D06-103A-4800-9E40-E9717D77449F}.Release|Linux.Build.0 = Release|Any CPU
 		{B1EB0BB0-C662-4314-A3D3-20E1AD0F98D6}.Debug|Windows.ActiveCfg = Debug|Any CPU
 		{B1EB0BB0-C662-4314-A3D3-20E1AD0F98D6}.Debug|Windows.Build.0 = Debug|Any CPU
 		{B1EB0BB0-C662-4314-A3D3-20E1AD0F98D6}.Debug|Mac.ActiveCfg = Debug|Any CPU
@@ -167,6 +147,30 @@ Global
 		{43C9116A-2F41-4F57-88E5-6B49BFB7881B}.Release|Windows.Build.0 = Release|Any CPU
 		{43C9116A-2F41-4F57-88E5-6B49BFB7881B}.Release|Mac.ActiveCfg = Release|Any CPU
 		{43C9116A-2F41-4F57-88E5-6B49BFB7881B}.Release|Linux.ActiveCfg = Release|Any CPU
+		{8A082C5C-46BA-4E17-98B5-11D089199EC4}.Debug|Windows.ActiveCfg = Debug|Any CPU
+		{8A082C5C-46BA-4E17-98B5-11D089199EC4}.Debug|Windows.Build.0 = Debug|Any CPU
+		{8A082C5C-46BA-4E17-98B5-11D089199EC4}.Debug|Mac.ActiveCfg = Debug|Any CPU
+		{8A082C5C-46BA-4E17-98B5-11D089199EC4}.Debug|Mac.Build.0 = Debug|Any CPU
+		{8A082C5C-46BA-4E17-98B5-11D089199EC4}.Debug|Linux.ActiveCfg = Debug|Any CPU
+		{8A082C5C-46BA-4E17-98B5-11D089199EC4}.Debug|Linux.Build.0 = Debug|Any CPU
+		{8A082C5C-46BA-4E17-98B5-11D089199EC4}.Release|Windows.ActiveCfg = Release|Any CPU
+		{8A082C5C-46BA-4E17-98B5-11D089199EC4}.Release|Windows.Build.0 = Release|Any CPU
+		{8A082C5C-46BA-4E17-98B5-11D089199EC4}.Release|Mac.ActiveCfg = Release|Any CPU
+		{8A082C5C-46BA-4E17-98B5-11D089199EC4}.Release|Mac.Build.0 = Release|Any CPU
+		{8A082C5C-46BA-4E17-98B5-11D089199EC4}.Release|Linux.ActiveCfg = Release|Any CPU
+		{8A082C5C-46BA-4E17-98B5-11D089199EC4}.Release|Linux.Build.0 = Release|Any CPU
+		{1A918FDB-1DC2-4075-AF0F-E9C26AC48858}.Debug|Windows.ActiveCfg = Debug|Any CPU
+		{1A918FDB-1DC2-4075-AF0F-E9C26AC48858}.Debug|Windows.Build.0 = Debug|Any CPU
+		{1A918FDB-1DC2-4075-AF0F-E9C26AC48858}.Debug|Mac.ActiveCfg = Debug|Any CPU
+		{1A918FDB-1DC2-4075-AF0F-E9C26AC48858}.Debug|Mac.Build.0 = Debug|Any CPU
+		{1A918FDB-1DC2-4075-AF0F-E9C26AC48858}.Debug|Linux.ActiveCfg = Debug|Any CPU
+		{1A918FDB-1DC2-4075-AF0F-E9C26AC48858}.Debug|Linux.Build.0 = Debug|Any CPU
+		{1A918FDB-1DC2-4075-AF0F-E9C26AC48858}.Release|Windows.ActiveCfg = Release|Any CPU
+		{1A918FDB-1DC2-4075-AF0F-E9C26AC48858}.Release|Windows.Build.0 = Release|Any CPU
+		{1A918FDB-1DC2-4075-AF0F-E9C26AC48858}.Release|Mac.ActiveCfg = Release|Any CPU
+		{1A918FDB-1DC2-4075-AF0F-E9C26AC48858}.Release|Mac.Build.0 = Release|Any CPU
+		{1A918FDB-1DC2-4075-AF0F-E9C26AC48858}.Release|Linux.ActiveCfg = Release|Any CPU
+		{1A918FDB-1DC2-4075-AF0F-E9C26AC48858}.Release|Linux.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,22 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net48;net5.0</TargetFrameworks>
-    <IsPackable>False</IsPackable>
+    <TargetFrameworks>netcoreapp3.1;net461</TargetFrameworks>
+    <Title>OpenTK Gtk#3 implementation for Eto.Forms</Title>
+    <Description>This provides the Gtk#3 implementation of Eto.OpenTK for Eto.Forms</Description>
     <DefineConstants Condition="!$(TargetFramework.StartsWith('net4'))">$(DefineConstants);OPENTK4</DefineConstants>
     <DefineConstants Condition="$(TargetFramework.StartsWith('net4'))">$(DefineConstants);OPENTK3</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Eto.Forms" Version="2.5.9" />
     <PackageReference Include="OpenTK" Version="3.2.0" Condition="$(TargetFramework.StartsWith('net4'))" />
     <PackageReference Include="OpenTK" Version="4.4.0" Condition="!$(TargetFramework.StartsWith('net4'))" />
-    <PackageReference Include="Unofficial.LibTessDotNet" Version="2.0.2" />
+    <PackageReference Include="Eto.Platform.Gtk" Version="2.5.9" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Eto.OpenTK\Eto.OpenTK.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="OpenTK.dll.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 </Project>

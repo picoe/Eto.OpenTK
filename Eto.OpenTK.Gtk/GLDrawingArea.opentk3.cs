@@ -1,3 +1,4 @@
+#if OPENTK3
 ////////////////////////////////////////////////////////////////////////////////
 // Gtk GLWidget Sharp - Gtk OpenGL Widget for CSharp using OpenTK
 ////////////////////////////////////////////////////////////////////////////////
@@ -40,10 +41,11 @@ namespace Eto.OpenTK.Gtk
 		static int graphicsContextCount;
 
         const string macos_libgdk_name = "libgdk-quartz-2.0.0.dylib";
-        const string linux_libx11_name = "libX11.so.6";
-		const string linux_libgdk_x11_name = "libgdk-x11-2.0.so.0";
-		const string linux_libgl_name = "libGL.so.1";
+		const string linux_libgdk_x11_name = "libgdk-3.so.0";
 		const string libgdk_name = "libgdk-win32-2.0-0.dll";
+
+        const string linux_libx11_name = "libX11.so.6";
+		const string linux_libgl_name = "libGL.so.1";
 		const string libX11_name = "libX11";
 
 		/// <summary>Use a single buffer versus a double buffer.</summary>
@@ -125,6 +127,7 @@ namespace Eto.OpenTK.Gtk
             this.DoubleBuffered = false;
 
 			CanFocus = true;
+			CanDefault = true;
 
 			SingleBuffer = graphicsMode.Buffers == 1;
 			ColorBPP = graphicsMode.ColorFormat.BitsPerPixel;
@@ -138,8 +141,12 @@ namespace Eto.OpenTK.Gtk
 			GlVersionMinor = glVersionMinor;
 			GraphicsContextFlags = graphicsContextFlags;
 
+			Events |= Gdk.EventMask.ExposureMask;
+
+			Drawn += HandleDrawn;
         }
 
+#if GTK2
         ~GLDrawingArea ()
 		{
 			Dispose (false);
@@ -152,17 +159,30 @@ namespace Eto.OpenTK.Gtk
 			base.Dispose ();
 		}
 
-		public virtual void Dispose (bool disposing)
+		protected virtual void Dispose (bool disposing)
 		{
 			if (disposing) {
-				graphicsContext.MakeCurrent (windowInfo);
-				OnShuttingDown ();
-				if (GraphicsContext.ShareContexts && (Interlocked.Decrement (ref graphicsContextCount) == 0)) {
-					OnGraphicsContextShuttingDown ();
-					sharedContextInitialized = false;
-				}
-				graphicsContext.Dispose ();
+				Cleanup();
 			}
+		}
+
+#else
+		protected override void Dispose (bool disposing)
+		{
+			if (disposing) {
+				Cleanup();
+			}
+		}
+#endif
+		void Cleanup()
+		{
+			graphicsContext.MakeCurrent (windowInfo);
+			OnShuttingDown ();
+			if (GraphicsContext.ShareContexts && (Interlocked.Decrement (ref graphicsContextCount) == 0)) {
+				OnGraphicsContextShuttingDown ();
+				sharedContextInitialized = false;
+			}
+			graphicsContext.Dispose ();
 		}
 
 		public virtual void MakeCurrent ()
@@ -211,11 +231,11 @@ namespace Eto.OpenTK.Gtk
 		}
 
 		// Called when this GLWidget needs to render a frame
-		public event EventHandler Resize;
+		public event EventHandler Draw;
 
-		protected virtual void OnResize ()
+		protected virtual void OnDraw ()
 		{
-			Resize?.Invoke (this, EventArgs.Empty);
+			Draw?.Invoke (this, EventArgs.Empty);
 		}
 
 		// Called when this GLWidget is being Disposed
@@ -265,11 +285,12 @@ namespace Eto.OpenTK.Gtk
                 IntPtr viewHandle = gdk_quartz_window_get_nsview (GdkWindow.Handle);
 				windowInfo = Utilities.CreateMacOSWindowInfo(windowHandle, viewHandle);
 			} else if (Configuration.RunningOnX11) {
+				// Display
 
-				IntPtr display = gdk_x11_display_get_xdisplay (Display.Handle);
+				IntPtr display = gdk_x11_display_get_xdisplay(Display.Handle);
 				int screen = Screen.Number;
-				IntPtr windowHandle = gdk_x11_drawable_get_xid (GdkWindow.Handle);
-				IntPtr rootWindow = gdk_x11_drawable_get_xid (RootWindow.Handle);
+				IntPtr windowHandle = gdk_x11_window_get_xid(Window.Handle);
+				IntPtr rootWindow = gdk_x11_window_get_xid(RootWindow.Handle);
 
 				IntPtr visualInfo;
 				if (graphicsMode.Index.HasValue) {
@@ -308,21 +329,17 @@ namespace Eto.OpenTK.Gtk
 			//QueueDraw();
 		}
 
-        // Called when the widget needs to be (fully or partially) redrawn.
-        protected override bool OnExposeEvent(Gdk.EventExpose eventExpose)
-        {
-            if (!initialized)
-            {
-                // initializing during the expose event crashes in ubuntu 15.10
-                global::Gtk.Application.Invoke((sender, e) => InitializeContext());
-                return base.OnExposeEvent(eventExpose);
-            }
-            else
-            {
-                MakeCurrent();
-            }
+		[GLib.ConnectBefore]
 
-            bool result = base.OnExposeEvent(eventExpose);
+		protected virtual void HandleDrawn(object o, global::Gtk.DrawnArgs args)
+		{
+			if (!initialized)
+            {
+				global::Gtk.Application.Invoke((sender, e) => InitializeContext());
+				return;
+			}
+
+			MakeCurrent();
 
             if (Configuration.RunningOnMacOS)
             {
@@ -332,17 +349,15 @@ namespace Eto.OpenTK.Gtk
                 //GL.Ortho(-1.0, 1.0, -1.0, 1.0, 0.0, 4.0);
             }
 
-            OnResize();
-            eventExpose.Window.Display.Sync(); // Add Sync call to fix resize rendering problem (Jay L. T. Cornwall) - How does this affect VSync?           
-            return result;
+            OnDraw();
         }
 
-		protected override bool OnConfigureEvent (Gdk.EventConfigure evnt)
-		{
-			bool result = base.OnConfigureEvent (evnt);
-			graphicsContext?.Update (windowInfo);
-			return result;
-		}
+		// protected override bool OnConfigureEvent (Gdk.EventConfigure evnt)
+		// {
+		// 	bool result = base.OnConfigureEvent (evnt);
+		// 	graphicsContext?.Update (windowInfo);
+		// 	return result;
+		// }
 
 		public enum XVisualClass : int
 		{
@@ -411,6 +426,10 @@ namespace Eto.OpenTK.Gtk
 		/// <returns> The ID of drawable's X resource. </returns>
 		[SuppressUnmanagedCodeSecurity, DllImport (linux_libgdk_x11_name)]
 		static extern IntPtr gdk_x11_drawable_get_xid (IntPtr gdkDisplay);
+
+		[SuppressUnmanagedCodeSecurity, DllImport (linux_libgdk_x11_name)]
+		private static extern IntPtr gdk_x11_window_get_xid(IntPtr gdkDisplay);
+		
 
 		/// <summary> Returns the X display of a GdkDisplay. </summary>
 		/// <remarks> Display* gdk_x11_display_get_xdisplay(GdkDisplay *display); </remarks>
@@ -514,3 +533,4 @@ namespace Eto.OpenTK.Gtk
 		}
 	}
 }
+#endif

@@ -1,88 +1,19 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D260DEBB-3D35-46A4-AB23-F2A19CC10E28}</ProjectGuid>
-    <ProjectTypeGuids>{A3F8F2AB-B479-4A4A-A458-A89E7DC349F1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <OutputType>Library</OutputType>
+    <TargetFrameworks>net45</TargetFrameworks>
     <RootNamespace>Eto.OpenTK.Mac</RootNamespace>
-    <AssemblyName>Eto.OpenTK.XamMac2</AssemblyName>
-    <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <UseXamMacFullFramework>true</UseXamMacFullFramework>
     <Title>OpenTK Xamarin.Mac implementation for Eto.Forms</Title>
     <Description>This provides the Xamarin.Mac implementation of Eto.OpenTK for Eto.Forms</Description>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\artifacts\bin\Debug\net45</OutputPath>
-    <DefineConstants>DEBUG;XAMMAC2;</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-    <EnableCodeSigning>false</EnableCodeSigning>
-    <CreatePackage>false</CreatePackage>
-    <EnablePackageSigning>false</EnablePackageSigning>
-    <IncludeMonoRuntime>false</IncludeMonoRuntime>
-    <UseSGen>false</UseSGen>
-    <HttpClientHandler>HttpClientHandler</HttpClientHandler>
-    <TlsProvider>Default</TlsProvider>
-    <LinkMode>None</LinkMode>
-    <XamMacArch>
-    </XamMacArch>
-    <AOTMode>None</AOTMode>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <Optimize>true</Optimize>
-    <OutputPath>..\artifacts\bin\Release\net45</OutputPath>
-    <DefineConstants>XAMMAC2</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-    <EnableCodeSigning>false</EnableCodeSigning>
-    <CreatePackage>false</CreatePackage>
-    <EnablePackageSigning>false</EnablePackageSigning>
-    <IncludeMonoRuntime>false</IncludeMonoRuntime>
-    <UseSGen>false</UseSGen>
-    <HttpClientHandler>HttpClientHandler</HttpClientHandler>
-    <TlsProvider>Default</TlsProvider>
-    <LinkMode>None</LinkMode>
-    <XamMacArch>
-    </XamMacArch>
-    <AOTMode>None</AOTMode>
-  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Xamarin.Mac" />
-    <Reference Include="System.Runtime.Serialization" />
+    <ProjectReference Include="..\Eto.OpenTK\Eto.OpenTK.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MacGLSurfaceHandler.cs" />
-    <Compile Include="MacGLView8.cs" />
+    <PackageReference Include="Eto.Platform.XamMac2" Version="2.5.6" />
+    <PackageReference Include="OpenTK" Version="3.2.0" Condition="$(TargetFramework.StartsWith('net4'))" />
+    <PackageReference Include="OpenTK" Version="4.4.0" Condition="!$(TargetFramework.StartsWith('net4'))" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Eto.OpenTK\Eto.OpenTK.csproj">
-      <Project>{510CE98D-2169-48A0-889C-E743417EE5E1}</Project>
-      <Name>Eto.OpenTK</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Eto.Platform.XamMac2">
-      <Version>2.4.1</Version>
-    </PackageReference>
-    <PackageReference Include="OpenTK">
-      <Version>3.0.1</Version>
-    </PackageReference>
-    <PackageReference Include="NuGet.Build.Tasks.Pack">
-      <Version>5.1.0</Version>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
+
+  <Import Project="..\Xamarin.Mac.targets" />
 </Project>

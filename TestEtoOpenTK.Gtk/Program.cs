@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TestEtoGl.Gtk2
+namespace TestEtoOpenTK.Gtk2
 {
 	static class Program
 	{

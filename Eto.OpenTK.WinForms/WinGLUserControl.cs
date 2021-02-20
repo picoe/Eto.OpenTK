@@ -1,4 +1,5 @@
-﻿//
+﻿#if OPENTK3
+//
 // The Open Toolkit Library License
 //
 // Copyright (c) 2006 - 2009 the Open Toolkit library, except where noted.
@@ -463,3 +464,4 @@ namespace Eto.OpenTK.WinForms
         */
     }
 }
+#endif

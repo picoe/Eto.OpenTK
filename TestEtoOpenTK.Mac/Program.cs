@@ -4,7 +4,7 @@ using Eto.Drawing;
 using Eto.OpenTK;
 using Eto.OpenTK.Mac;
 
-namespace TestEtoGl.Mac
+namespace TestEtoOpenTK.Mac
 {
 	public static class Program
 	{

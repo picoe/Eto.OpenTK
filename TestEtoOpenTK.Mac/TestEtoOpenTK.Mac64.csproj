@@ -1,13 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFrameworks>net48;net5.0</TargetFrameworks>
     <OutputType>WinExe</OutputType>
     <DefineConstants>MONOMAC</DefineConstants>
     <IsPackable>False</IsPackable>
+    <DefineConstants Condition="!$(TargetFramework.StartsWith('net4'))">$(DefineConstants);OPENTK4</DefineConstants>
+    <DefineConstants Condition="$(TargetFramework.StartsWith('net4'))">$(DefineConstants);OPENTK3</DefineConstants>
+    <RuntimeIdentifiers>osx-x64</RuntimeIdentifiers>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Eto.Platform.Mac64" Version="2.5.0-beta.1" />
-    <PackageReference Include="OpenTK" Version="3.0.1" />
+    <PackageReference Include="Eto.Platform.Mac64" Version="2.5.9" />
+    <PackageReference Include="OpenTK" Version="3.2.0" Condition="$(TargetFramework.StartsWith('net4'))" />
+    <PackageReference Include="OpenTK" Version="4.4.0" Condition="!$(TargetFramework.StartsWith('net4'))" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TestEtoOpenTK\TestEtoOpenTK.csproj" />

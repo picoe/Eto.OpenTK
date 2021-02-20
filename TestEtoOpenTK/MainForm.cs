@@ -9,299 +9,177 @@ using System.Timers;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
-using System.Security.Cryptography;
 
-namespace TestEtoGl
+namespace TestEtoOpenTK
 {
 	/// <summary>
 	/// Your application's main form
 	/// </summary>
 	public class MainForm : Form
 	{
-		public class myStuff
-		{
-			public List<ObservableCollection<string>> entries { get; set; }
-		}
+		// test settings
 
-		public List<ObservableCollection<string>> myList;
+		/// <summary>
+		/// Test flags.
+		/// 	0 : stamdard viewports in splitter test.
+		/// 	1 : viewports in tabs (WPF has issues here due to the deferred evaluation; still need a better fix)
+		/// 	2 : single viewport in panel
+		///		3 : simple view
+		/// </summary>
+		int mode = 3;
 
-		public OVPSettings ovpSettings, ovp2Settings, vSettings;
-		public System.Timers.Timer m_timer;
+		/// <summary>
+		/// True to update the viewport directly, false to use Invalidate()
+		/// </summary>
+		bool directUpdate = true;
+		/// <summary>
+		/// Number of rectangles to draw when run
+		/// </summary>
+		Int32 numberOfCases = 1000;
+		/// <summary>
+		/// Interval for the update timer
+		/// </summary>
+		double timerInterval = 1.0 / 30.0; // 30 hz
 
-		public PointF[] refPoly;
-		public PointF[] previewPoly;
+
+
+
+		static Random random = new Random();
+		OVPSettings ovpSettings, ovp2Settings;
+		PointF[] refPoly;
 
 		TestViewport viewport, viewport2;
 		ProgressBar progressBar;
 		Label statusLine;
 
-		DropDown testComboBox;
-		Button testComboBox_SelEntry;
+		Int32 currentProgress;
+		CancellationTokenSource cancelSource;
 
-		public Int32 numberOfCases;
-		public Int32 timer_interval;
-		public object drawingLock;
-		public Int64 timeOfLastPreviewUpdate;
-		public Stopwatch sw;
-		public double swTime;
-		public Stopwatch sw_Preview;
-		public Int32 currentProgress;
-		public bool runAbort;
-		public bool drawing;
-
-		public delegate void updateSimUIMT();
-		public updateSimUIMT updateSimUIMTFunc { get; set; }
-
-		public delegate void abortRun();
-		public abortRun abortRunFunc { get; set; }
-
-		public delegate void configureProgressBar(Int32 maxValue);
-		public configureProgressBar configureProgressBarFunc { get; set; }
-
-		private void updateSimUIMT_()
+		public void PreviewUpdate()
 		{
-			m_timer.Elapsed += new System.Timers.ElapsedEventHandler(updatePreview);
-		}
-
-		private void configureProgressBar_(Int32 maxValue)
-		{
-            Application.Instance.Invoke(() =>
-            {
-                progressBar.MaxValue = maxValue;
-                progressBar.Value = 0;
-            });
-		}
-
-		private void updatePreview(object sender, EventArgs e)
-		{
-			if (Monitor.TryEnter(drawingLock))
-			{
-				try
+			Application.Instance.Invoke(() => {
+				if (directUpdate)
 				{
-					drawing = true;
-					//if ((sw_Preview.Elapsed.TotalMilliseconds - timeOfLastPreviewUpdate) > m_timer.Interval)
+					lock (ovpSettings)
 					{
-						//						try
-						{
-							Application.Instance.Invoke(new Action(() =>
-							{
-								// also sets commonVars.drawing to 'false'
-								previewUpdate();
-							}));
-						}
+						viewport.UpdateViewport();
 					}
 				}
-				catch (Exception)
+				else
 				{
+					// can only trigger a render this way..
+					viewport.Invalidate();
 				}
-				finally
-				{
-					Monitor.Exit(drawingLock);
-					drawing = false;
-				}
-			}
-		}
-
-		public void previewUpdate()
-		{
-			{
-				//ovpSettings.polyList.Clear();
-				lock (previewPoly)
-				{
-					ovpSettings.addPolygon(previewPoly.ToArray(), new Color(0, 0.5f, 0), 0.7f, false);
-				}
-				viewport.updateViewport();
 				double progress = (double)currentProgress / (double)numberOfCases;
-				statusLine.Text = (progress * 100).ToString("#.##") + "% complete";
-				progressBar.Value = currentProgress; // * 100.0f;
-			}
+				statusLine.Text = $"{(progress * 100):#.##} % complete";
+				progressBar.Value = currentProgress;
+			});
 		}
 
-		public void runCases(object sender, EventArgs e)
+		public void StartRun()
 		{
-			Task t2 = Task.Factory.StartNew(() =>
-			{
-				run2();
-			}
-			);
-
-			if (t2.IsCompleted || t2.IsCanceled || t2.IsFaulted)
-			{
-				t2.Dispose();
-			}
+			if (viewport == null)
+				return;
+			cancelSource?.Cancel();
+			progressBar.MaxValue = numberOfCases;
+			progressBar.Value = 0;
+			Task.Factory.StartNew(Run);
 		}
 
-		public void run2()
+		public void Run()
 		{
 			currentProgress = 0;
 			ovpSettings.polyList.Clear();
-			configureProgressBarFunc?.Invoke(numberOfCases);
-			previewPoly = refPoly.ToArray();
-			m_timer = new System.Timers.Timer();
+
 			// Set up timers for the UI refresh
-			m_timer.AutoReset = true;
-			m_timer.Interval = timer_interval;
-			updateSimUIMTFunc?.Invoke();
-			m_timer.Start();
+			var timer = new System.Timers.Timer();
+			timer.Interval = (int)(1000 * timerInterval);
+			timer.Elapsed += (sender, e) => PreviewUpdate();
+			timer.Start();
 
-			swTime = 0.0; // reset time for the batch
-			timeOfLastPreviewUpdate = 0;
-			sw = new Stopwatch();
-			sw.Stop();
-			sw.Reset();
-			sw_Preview = new Stopwatch();
-			sw_Preview.Stop();
-			sw_Preview.Reset();
+			cancelSource = new CancellationTokenSource();
+			var cancellationToken = cancelSource.Token;
 
-			// Set our parallel task options based on user settings.
-			ParallelOptions po = new ParallelOptions();
-			// Attempt at parallelism.
-			CancellationTokenSource cancelSource = new CancellationTokenSource();
-			CancellationToken cancellationToken = cancelSource.Token;
-			po.MaxDegreeOfParallelism = 4;
-
-			// Run a task to enable cancelling from another thread.
-			Task t = Task.Factory.StartNew(() =>
+			for (int i = 0; i < numberOfCases; i++)
 			{
-				if (abortRunFunc != null)
+				PointF[] newPoly = CreatePoly();
+				Interlocked.Increment(ref currentProgress);
+				
+				// add a small delay so we can see progress happening
+				Thread.Sleep(5);
+
+				// locking essentially limits to how fast we can draw as it is locked while drawing.. 
+				// perhaps using immutable lists instead will avoid locking.
+				lock (ovpSettings)
 				{
-					abortRunFunc();
-					if (runAbort)
-					{
-						cancelSource.Cancel();
-					}
+					ovpSettings.addPolygon(newPoly, new Color(0, 0.5f, 0), 0.7f, false);
 				}
-			}
-			);
 
-			sw.Start();
-			sw_Preview.Start();
-
-			try
-			{
-				Parallel.For(0, numberOfCases, po, (i, loopState) =>
+				if (cancellationToken.IsCancellationRequested)
 				{
-					try
-					{
-						PointF[] newPoly = randomScale_MT();
-						Interlocked.Increment(ref currentProgress);
-						if (!drawing)
-						{
-							lock (previewPoly)
-							{
-								previewPoly = newPoly.ToArray();
-							}
-						}
-						if (runAbort)
-						{
-							cancelSource.Cancel();
-							cancellationToken.ThrowIfCancellationRequested();
-						}
-					}
-					catch (OperationCanceledException)
-					{
-						m_timer.Stop();
-						runAbort = false; // reset state to allow user to abort save of results.
-						sw.Stop();
-						loopState.Stop();
-					}
-				});
-			}
-			catch (Exception ex)
-			{
-				var err = ex.ToString();
-			}
+					timer.Stop();
+					break;
+				}
+			};
 
-			t.Dispose();
-			sw.Stop();
-			sw.Reset();
-			sw_Preview.Stop();
-			sw_Preview.Reset();
-			m_timer.Stop();
-			m_timer.Dispose();
+			timer.Stop();
+			timer.Dispose();
+			timer = null;
 		}
 
-		private PointF[] randomScale_MT()
+		private PointF[] CreatePoly()
 		{
-			double myRandom = RNG.random_gauss3()[0];
-			double myRandom1 = RNG.random_gauss3()[1];
+			double myRandom = random.NextDouble();
+			double myRandom1 = random.NextDouble();
 
 			PointF[] newPoly = new PointF[5];
 			for (int pt = 0; pt < newPoly.Length; pt++)
 			{
-				newPoly[pt] = new PointF((float)(refPoly[pt].X + (100.0f * myRandom1)), (float)(refPoly[pt].Y + (100.0f * myRandom)));
+				newPoly[pt] = new PointF((float)(refPoly[pt].X + (400.0f * myRandom1) - 200f), (float)(refPoly[pt].Y + (400.0f * myRandom) - 200f));
 			}
-
-			Thread.Sleep(10);
 
 			return newPoly;
 		}
 
-		public void abortTheRun(object sender, EventArgs e)
+		public void AbortTheRun(object sender, EventArgs e)
 		{
-			runAbort = true;
+			cancelSource?.Cancel();
 		}
 
-		private void changeSelEntry(object sender, EventArgs e)
+		public MainForm()
 		{
-			testComboBox.SelectedIndex = Math.Abs(testComboBox.SelectedIndex - 1);
-		}
-
-        public MainForm ()
-        {
-			myList = new List<ObservableCollection<string>>();
-			myList.Add(new ObservableCollection<string> { "First", "Second" });
-
-			DataContext = new myStuff
-			{
-				entries = myList
-			};
-
 			refPoly = new PointF[5];
-			refPoly[0] = new PointF(-50, 50);
-			refPoly[1] = new PointF(50, 50);
-			refPoly[2] = new PointF(50, -50);
-			refPoly[3] = new PointF(-50, -50);
+			refPoly[0] = new PointF(-10, 10);
+			refPoly[1] = new PointF(10, 10);
+			refPoly[2] = new PointF(10, -10);
+			refPoly[3] = new PointF(-10, -10);
 			refPoly[4] = refPoly[0];
 
-			drawingLock = new object();
+			MinimumSize = new Size(300, 300);
 
-			MinimumSize = new Size(200, 200);
+			ovpSettings = new OVPSettings();
+			ovp2Settings = new OVPSettings();
 
-			updateSimUIMTFunc = updateSimUIMT_;
+			ovp2Settings.zoomFactor = 3;
 
-			configureProgressBarFunc = configureProgressBar_;
+			Title = "Eto.OpenTK Test";
 
-			numberOfCases = 25000;
-			timer_interval = 10;
 
-            ovpSettings = new OVPSettings ();
-			ovp2Settings = new OVPSettings ();
+			statusLine = new Label();
 
-            ovp2Settings.zoomFactor = 3;
+			progressBar = new ProgressBar();
+			progressBar.MaxValue = numberOfCases;
 
-            Title = "My Eto Form";
-
-			/*
-			  Test flags.
-			  0 : stamdard viewports in splitter test.
-			  1 : viewports in tabs (WPF has issues here due to the deferred evaluation; still need a better fix)
-			  3 : single viewport in panel, dropdown switches out the view settings.
-			*/
-
-			int mode = 0;
 
 			if (mode == 0)
 			{
-				viewport = new TestViewport(ref ovpSettings);
-				viewport.Size = new Size(250, 250);
+				viewport = new TestViewport(ovpSettings);
+				viewport.Size = new Size(350, 350);
 
-				viewport2 = new TestViewport(ref ovp2Settings);
-				viewport2.Size = new Size(200, 200);
+				viewport2 = new TestViewport(ovp2Settings);
+				viewport2.Size = new Size(300, 300);
 
-				Panel testing = new Panel();
-				testing.Size = new Size(viewport.Width + viewport2.Width, viewport.Height);
-				testing.Content = new Splitter
+				var testing = new Splitter
 				{
 					Orientation = Orientation.Horizontal,
 					FixedPanel = SplitterFixedPanel.None,
@@ -309,52 +187,11 @@ namespace TestEtoGl
 					Panel2 = viewport2
 				};
 
-				Panel testing2 = new Panel();
-				testing2.Content = new Splitter
-				{
-					Orientation = Orientation.Horizontal,
-					FixedPanel = SplitterFixedPanel.None,
-					Panel1 = statusLine,
-					Panel2 = progressBar
-				};
+				var layout = new DynamicLayout();
+				layout.Add(testing, xscale: true, yscale: true);
+				layout.Add(TableLayout.HorizontalScaled(statusLine, progressBar));
 
-				testComboBox_SelEntry = new Button();
-				testComboBox_SelEntry.Text = "Change";
-				testComboBox_SelEntry.Click += changeSelEntry;
-
-				testComboBox = new DropDown();
-				testComboBox.DataContext = DataContext;
-				testComboBox.BindDataContext(c => c.DataStore, (myStuff m) => m.entries[0]);
-				testComboBox.SelectedIndex = 0;
-				//testComboBox.SelectedIndexBinding.BindDataContext((myStuff m) => m.index);
-
-				Panel testing3 = new Panel();
-				testing3.Content = new Splitter
-				{
-					Orientation = Orientation.Horizontal,
-					FixedPanel = SplitterFixedPanel.None,
-					Panel1 = testComboBox_SelEntry,
-					Panel2 = testComboBox
-				};
-
-				Panel testing4 = new Panel();
-				testing4.Content = new Splitter
-				{
-					Orientation = Orientation.Vertical,
-					FixedPanel = SplitterFixedPanel.None,
-					Panel1 = testing3,
-					Panel2 = testing
-				};
-
-				Splitter mySplitter = new Splitter
-				{
-					Orientation = Orientation.Vertical,
-					FixedPanel = SplitterFixedPanel.None,
-					Panel1 = testing4,
-					Panel2 = testing2
-				};
-
-				Content = mySplitter;
+				Content = layout;
 			}
 			if (mode == 1)
 			{
@@ -379,297 +216,49 @@ namespace TestEtoGl
 				tab_2.Text = "2";
 				tabControl_main.Pages.Add(tab_2);
 
-				viewport = new TestViewport(ref ovpSettings);
+				viewport = new TestViewport(ovpSettings);
 				viewport.Size = new Size(200, 200);
 				tabPage_1_content.Add(viewport, 5, 5);
 
-				viewport2 = new TestViewport(ref ovp2Settings);
+				viewport2 = new TestViewport(ovp2Settings);
 				viewport2.Size = new Size(200, 200);
 				tab_2.Content = viewport2;
 			}
 			if (mode == 2)
 			{
-				ovpSettings.addPolygon(refPoly, Color.FromArgb(0, 255, 0), 0.7f, false);
-				ovp2Settings.addPolygon(refPoly, Color.FromArgb(255, 0, 0), 0.7f, false);
-
-				vSettings = new OVPSettings();
-				viewport = new TestViewport(ref vSettings);
-				viewport.Size = new Size(250, 250);
-
-				Panel testing = new Panel();
-				testing.Size = new Size(viewport.Width, viewport.Height);
-				PixelLayout p = new PixelLayout();
-				p.Add(viewport, 0, 0);
-				testing.Content = p;
-	
-				testComboBox_SelEntry = new Button();
-				testComboBox_SelEntry.Text = "Change";
-				testComboBox_SelEntry.Click += changeSelEntry;
-
-				testComboBox = new DropDown();
-				testComboBox.DataContext = DataContext;
-				testComboBox.BindDataContext(c => c.DataStore, (myStuff m) => m.entries[0]);
-				testComboBox.SelectedIndex = 0;
-				testComboBox.SelectedIndexChanged += adjustView_;
-				//testComboBox.SelectedIndexBinding.BindDataContext((myStuff m) => m.index);
-
-				var testing3 = new Splitter
-				{
-					Orientation = Orientation.Horizontal,
-					FixedPanel = SplitterFixedPanel.None,
-					Panel1 = testComboBox_SelEntry,
-					Panel2 = testComboBox
-				};
-
-				var testing4 = new Splitter
-				{
-					Orientation = Orientation.Vertical,
-					FixedPanel = SplitterFixedPanel.None,
-					Panel1 = testing3,
-					Panel2 = testing
-				};
-
-				var mySplitter = new Splitter
-				{
-					Orientation = Orientation.Vertical,
-					FixedPanel = SplitterFixedPanel.None,
-					Panel1 = testing4,
-					Panel2 = new Panel()
-				};
-
-				Content = mySplitter;
+				Content = viewport = new TestViewport(ovpSettings) { Size = new Size(600, 400) };
 			}
-
-			statusLine = new Label();
-			statusLine.Size = new Size(150, 11);
-			statusLine.Text = "Hello world";
-
-			progressBar = new ProgressBar();
-			progressBar.Height = 15;
-			progressBar.MaxValue = numberOfCases;
+			if (mode == 3)
+			{
+				Content = new SimpleView { Size = new Size(600, 400) };
+			}
 
 			// create a few commands that can be used for the menu and toolbar
-			var clickMe = new Command { MenuText = "Run", ToolBarText = "Run" };
-            clickMe.Executed += runCases;
+			var runCommand = new Command { MenuText = "Run", ToolBarText = "Run" };
+			runCommand.Executed += (sender, e) => StartRun();
 
-			var abort = new Command { MenuText = "Abort", ToolBarText = "Abort" };
-			abort.Executed += abortTheRun;
-
-			var adjustList = new Command { MenuText = "Add to list", ToolBarText = "Add" };
-			if (mode != 3)
-			{
-				adjustList.Executed += adjustList_;
-			}
+			var abortCommand = new Command { MenuText = "Abort", ToolBarText = "Abort" };
+			abortCommand.Executed += AbortTheRun;
 
 			var quitCommand = new Command { MenuText = "Quit", Shortcut = Application.Instance.CommonModifier | Keys.Q };
-            quitCommand.Executed += (sender, e) => Application.Instance.Quit ();
+			quitCommand.Executed += (sender, e) => Application.Instance.Quit();
 
-            var aboutCommand = new Command { MenuText = "About..." };
-            aboutCommand.Executed += (sender, e) => MessageBox.Show (this, "About my app...");
+			var aboutCommand = new Command { MenuText = "About..." };
+			aboutCommand.Executed += (sender, e) => new AboutDialog().ShowDialog(this);
 
-            // create menu
-            Menu = new MenuBar {
-                Items = {
+			// create menu
+			Menu = new MenuBar
+			{
+				Items = {
 					// File submenu
-					new ButtonMenuItem { Text = "&File", Items = { clickMe } },
-					// new ButtonMenuItem { Text = "&Edit", Items = { /* commands/items */ } },
-					// new ButtonMenuItem { Text = "&View", Items = { /* commands/items */ } },
+					new ButtonMenuItem { Text = "&File", Items = { runCommand, abortCommand } },
 				},
-                ApplicationItems = {
-					// application (OS X) or file menu (others)
-					new ButtonMenuItem { Text = "&Preferences..." },
-                },
-                QuitItem = quitCommand,
-                AboutItem = aboutCommand
-            };
+				QuitItem = quitCommand,
+				AboutItem = aboutCommand
+			};
 
-            // create toolbar			
-            ToolBar = new ToolBar { Items = { clickMe, abort, adjustList } };
-
-			//mySplitter.Panel1.SizeChanged += splitterSize;
-			//mySplitter.Panel2.SizeChanged += splitterSize;
-		}
-
-		void adjustView_(object sender, EventArgs e)
-		{
-			if (testComboBox.SelectedIndex == 0)
-			{
-				viewport.changeSettingsRef(ref ovpSettings);
-			}
-			else
-			{
-				viewport.changeSettingsRef(ref ovp2Settings);
-			}
-		}
-
-
-		void adjustList_(object sender, EventArgs e)
-		{
-			myList[0].Add("Entry " + myList[0].Count.ToString());
-			if (testComboBox.SelectedIndex == -1)
-			{
-				testComboBox.SelectedIndex = 0;
-			}
-			if (testComboBox.SelectedIndex >= myList[0].Count)
-			{
-				testComboBox.SelectedIndex = myList[0].Count - 1;
-			}
-//			testComboBox.SelectedIndex = 1;
-		}
-
-		/* These shouldn't be necessary
-		protected override void OnWindowStateChanged(EventArgs e)
-		{
-			base.OnWindowStateChanged(e);
-			viewport.updateViewport();
-			viewport.updateViewport();
-			if (viewport2 != null)
-			{
-				viewport2.updateViewport();
-			}
-		}
-
-		void splitterSize(object sender, EventArgs e)
-		{
-			viewport.updateViewport();
-			viewport.updateViewport();
-			if (viewport2 != null)
-			{
-				viewport2.updateViewport();
-			}
-		}
-
-		protected override void OnSizeChanged(EventArgs e)
-		{
-			base.OnSizeChanged(e);
-			viewport.updateViewport();
-			if (viewport2 != null)
-			{
-				viewport2.updateViewport();
-			}
-		}
-
-		protected override void OnShown(EventArgs e)
-		{
-			base.OnShown(e);
-			viewport.updateViewport();
-			viewport.updateViewport();
-			if (viewport2 != null)
-			{
-				viewport2.updateViewport();
-			}
-		}
-		*/
-
-	}
-
-
-	public static class RNG
-	{
-		/*
-         * This class is interesting. Originally, the intent was to have per-thread RNGs, but it became apparent that threads that instantiated an RNG
-         * would get the same random number distribution when the RNGs were initialized at the same system time.
-         * To avoid this, earlier systems made a common RNG and the threads would query from that RNG.
-         * However, this was not thread-safe, such that the calls to the RNG would start returning 0 and the application enters a spiral of death as the RNG was 
-         * continuously, and unsuccessfully, polled for a non-zero value.
-         * 
-         * Locking the RNG was one option, so that only one thread could query at a time, but this caused severe performance issues.
-         * 
-         * So, to address this, I've gone back to a per-thread RNG (referenced in jobSettings()) and then use the RNGCryptoServiceProvider to provide a 
-         * 'seed' value for a null RNG entity. This avoids some severe performance issues if the RNGCryptoServiceProvider is used for all random numbers.
-         * 
-         * Ref : http://blogs.msdn.com/b/pfxteam/archive/2009/02/19/9434171.aspx
-         */
-		private static RNGCryptoServiceProvider _global = new RNGCryptoServiceProvider();
-
-		[ThreadStatic]
-		private static Random _local;
-
-		public static double[] random_gauss3()
-		{
-			Random random = _local;
-
-			if (random == null)
-			{
-				byte[] buffer = new byte[4];
-				_global.GetBytes(buffer);
-				_local = random = new Random(BitConverter.ToInt32(buffer, 0));
-			}
-
-			// Box-Muller transform
-			// We aren't allowed 0, so we reject any values approaching zero.
-			double U1, U2;
-			U1 = random.NextDouble();
-			while (U1 < 1E-15)
-			{
-				U1 = random.NextDouble();
-			}
-			U2 = random.NextDouble();
-			while (U2 < 1E-15)
-			{
-				U2 = random.NextDouble();
-			}
-			// PAs are 3-sigma, so this needs to be divided by 3 to give single sigma value when used
-			double A1 = Math.Sqrt(-2 * Math.Log(U2, Math.E)) * Math.Cos(2 * Math.PI * U1) / 3;
-			double A2 = Math.Sqrt(-2 * Math.Log(U1, Math.E)) * Math.Sin(2 * Math.PI * U2) / 3;
-			double[] myReturn = { A1, A2 };
-			return myReturn;
-
-		}
-		// This is our Gaussian RNG
-		public static double random_gauss()
-		{
-			Random random = _local;
-
-			if (random == null)
-			{
-				byte[] buffer = new byte[4];
-				_global.GetBytes(buffer);
-				_local = random = new Random(BitConverter.ToInt32(buffer, 0));
-			}
-
-			// We aren't allowed 0, so we reject any values approaching zero.
-			double U1 = random.NextDouble();
-			while (U1 < 1E-15)
-			{
-				U1 = random.NextDouble();
-			}
-			double U2 = random.NextDouble();
-			while (U2 < 1E-15)
-			{
-				U2 = random.NextDouble();
-			}
-			// PAs are 3-sigma, so this needs to be divided by 3 to give single sigma value when used
-			double A1 = Math.Sqrt(-2 * Math.Log(U2, Math.E)) * Math.Cos(2 * Math.PI * U1) / 3;
-			double A2 = Math.Sqrt(-2 * Math.Log(U1, Math.E)) * Math.Sin(2 * Math.PI * U2) / 3;
-			return A1;
-		}
-
-		// This is a slightly different version of our Gaussian RNG
-		public static double random_gauss2()
-		{
-			Random random = _local;
-
-			if (random == null)
-			{
-				byte[] buffer = new byte[4];
-				_global.GetBytes(buffer);
-				_local = random = new Random(BitConverter.ToInt32(buffer, 0));
-			}
-			// We aren't allowed 0, so we reject any values approaching zero.
-			double U1 = random.NextDouble();
-			while (U1 < 1E-15)
-			{
-				U1 = random.NextDouble();
-			}
-			double U2 = random.NextDouble();
-			while (U2 < 1E-15)
-			{
-				U2 = random.NextDouble();
-			}
-			// PAs are 3-sigma, so this needs to be divided by 3 to give single sigma value when used
-			double A2 = Math.Sqrt(-2 * Math.Log(U1, Math.E)) * Math.Sin(2 * Math.PI * U2) / 3;
-			return A2;
+			// create toolbar			
+			ToolBar = new ToolBar { Items = { runCommand, abortCommand } };
 		}
 	}
 

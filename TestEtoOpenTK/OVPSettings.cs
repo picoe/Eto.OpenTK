@@ -5,7 +5,7 @@ using Eto.Drawing;
 using Eto.Forms;
 using LibTessDotNet.Double;
 
-namespace TestEtoGl
+namespace TestEtoOpenTK
 {
 	public static class errorReporter
 	{

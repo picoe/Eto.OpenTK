@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TestEtoGl.WPF_WinformsHost
+namespace TestEtoOpenTK.Wpf
 {
   static class Program
   {
@@ -16,7 +16,7 @@ namespace TestEtoGl.WPF_WinformsHost
     static void Main()
     {
       var platform = new Eto.Wpf.Platform();
-      platform.Add<GLSurface.IHandler>(() => new Eto.OpenTK.Wpf.WpfWinGLSurfaceHandler());
+    //   platform.Add<GLSurface.IHandler>(() => new Eto.OpenTK.Wpf.WpfWinGLSurfaceHandler());
 
       new Application(platform).Run(new MainForm());
     }
